@@ -1,0 +1,580 @@
+$icon-font-path: "./../bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
+@import 'bootstrap-sass-official/assets/stylesheets/bootstrap.scss';
+@import 'header';
+@import 'mmenu';
+@import 'requestform';
+@import 'component';
+@import 'delegation';
+@import 'checkstatus';
+@import 'subheader';
+
+body,
+html {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  min-width: 320px;
+}
+
+body {
+  background-color: #fff;
+  font-family: Arial, Verdana, "細明體", "新細明體", "標楷體", Helvetica;
+  position: relative;
+  -webkit-text-size-adjust: none;
+}
+
+body * {
+  text-shadow: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1;
+  font-weight: bold;
+  margin: 20px 0 10px;
+}
+
+h1,
+h2,
+h3 {
+  font-size: 18px;
+}
+
+h4,
+h5,
+h6 {
+  font-size: 16px;
+}
+
+p {
+  margin: 0 0 10px;
+}
+
+a,
+a:active,
+a:hover,
+a:link,
+a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+
+nav:not(.mm-menu) {
+  display: none;
+}
+
+textarea {
+  resize: none;
+}
+
+#footer,
+.content,
+.header {
+  text-align: center;
+}
+
+.footer,
+.header {
+  background: #777;
+  font-weight: bold;
+  color: #fff;
+  line-height: 40px;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  padding: 0 50px;
+}
+
+.header.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.footer.fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+#content {
+  padding: 100px 20px 20px;
+}
+
+#footer {
+  background-color: white;
+  color: #333;
+}
+
+#menu {
+  // ie not work
+  // z-index: 1;
+}
+
+#page {
+  // z-index: 1 ;
+  // z-index: 2;
+  pointer-events: none !important;
+}
+
+#mainContent.compress {
+  max-width: 700px;
+}
+
+#content,
+#footer,
+#header {
+  pointer-events: auto !important;
+}
+/* OVERRIDES LIBRARY'S STYLE START */
+.headingOne{
+  position: relative;
+}
+
+.modal-content{
+  padding: 3px;
+  border-radius: 2px;
+  .modal-header{
+    background: #F7A36B;
+    border: 1px #aaa solid;
+  }
+  .modal-body{
+    border: 1px #aaa solid;
+    border-top: none;
+    overflow: hidden;
+    font-weight: bold;
+    text-align: center;
+    .modal-actions{
+      padding: 20px;
+      padding-bottom: 8px;
+      button{
+        min-width: 120px;
+      }
+    }
+  }
+}
+
+.btn.btn-orange{
+  padding: 3px 10px !important;
+}
+
+.panel-default {
+  border: 0;
+  box-shadow: none;
+}
+
+.panel-default > .panel-heading {
+  background-color: white;
+  padding: 0px;
+  border-bottom: none;
+  & > div {
+
+    border: 1px rgba(0, 0, 0, .1) solid;
+    border-radius: 5px;
+  }
+}
+
+.panel-title {
+  text-align: left;
+  display: block;
+  width: 100%;
+  position: relative;
+}
+
+.panel-title > .btn-group {
+  display: inline-block;
+  width: 100%;
+}
+
+ul.dropdown-menu {
+  margin-left: 15px;
+  width: calc(100% - 30px);
+
+  & > li > a {
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: #e66100;
+    }
+  }
+}
+
+label.control-label {
+  color: #006bf0;
+  font-weight: lighter;
+  text-align: left;
+  float: left;
+}
+
+.btn-primary {
+  background: white;
+  border-color: #006bf0;
+  color: #006bf0;
+  margin-bottom: 2px;
+
+  &:hover {
+    background: white;
+    border-color: #e66100;
+    color: #e66100;
+  }
+}
+
+div.full-width > button:not(.dropdown-toggle):not(.btn-add) {
+  width: calc(100% - 26px);
+  text-align: left;
+  overflow: hidden;
+}
+
+span.glyphicon.glyphicon-remove.select-applicant-del {
+  display: block;
+  line-height: 30px;
+  width: 30px;
+  height: 30px;
+  background-color: #f57921;
+  border-radius: 50%;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+span.glyphicon.glyphicon-menu-down,
+span.glyphicon.glyphicon-menu-up {
+  cursor: pointer;
+}
+
+.form-control:focus {
+  border-color: rgb(244, 120, 32);
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(244, 120, 32, .6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(244, 120, 32, .6);
+}
+
+.form_input {
+  max-width: 600px;
+}
+
+.btn:focus {
+  outline-color: rgb(244, 120, 32);
+}
+// viocsys
+/*
+#statusTable thead tr th {
+  background-color: rgb(232, 232, 232);
+}
+*/
+.table-grey thead tr th {
+  background-color: rgb(232, 232, 232);
+}
+
+.ui-autocomplete {
+  max-height: 400px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+  /* add padding to account for vertical scrollbar */
+  z-index: 1000 !important;
+}
+
+.text-lg-right {
+  min-width: 100px;
+  max-width: 150px;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+
+.highlight {
+  background: rgba(100 , 100, 100, 0.1) !important;
+}
+/*=============================================>>>>>
+= DataTable Override =
+===============================================>>>>>*/
+div.dataTables_info,
+div.dataTables_length,
+div.dataTables_wrapper table {
+  text-align: left;
+}
+
+div.dataTables_wrapper div.dataTables_processing{
+  border: 1px solid #ddd;
+}
+#delegationTable > tbody > tr > td:last-child div,
+#statusTable > tbody > tr > td:last-child div {
+  text-align: center;
+  // margin:0 auto;
+}
+/*= End of DataTable Override =*/
+/*=============================================<<<<<*/
+// end vicosys
+/* RESPONSIVE PART - DO NOT MODIFY UP TO THIS LINE */
+
+@import 'header';
+@import 'mmenu';
+@import 'requestform';
+@import 'component';
+@import 'delegation';
+@import 'checkstatus';
+@import 'subheader';
+
+
+/* START -- app web view */
+#content{
+  &.app-web-view{
+    padding-top: 70px;
+    .headingOne{
+      display: none;
+    }
+  }
+}
+/* END -- app web view */
+
+
+@media screen and (max-width: 767px) {
+  #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
+    //font-size: 13px;
+    padding: 6px 0;
+    letter-spacing: -0.5px;
+  }
+  /* HEADER */
+  #header {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+
+  html.mm-opening #header {
+    position: absolute;
+  }
+
+  #header_top > .header-top-group > .sep-vertical {
+    margin: 7px 5px;
+  }
+
+  #header_top .logo-hktdc {
+    width: 100px;
+    //    margin-right: 10px;
+  }
+
+  #header_main .logo-hktdc {
+    display: none;
+  }
+
+  #header_main > span.sep-space {
+    width: 0;
+  }
+
+  span.nav-header-user-text {
+    display: none;
+  }
+
+  .header-top-group > .sep-vertical,
+  .header-top-group > a {
+    display: none;
+  }
+
+  .table-responsive {
+    border: 0;
+  }
+  // vicosys
+  #user-profile-menu {
+    display: none;
+  }
+  // end vicosys
+  @media screen and (min-width: 520px) {
+
+	  .nav-header-main{
+		  padding:0;
+
+	  }
+
+	#header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
+      font-size: 18px;
+    }
+  }
+}
+/* TABLET > Desktop */
+@media screen and (min-width: 768px) {
+  #header_top .logo-hktdc {
+    display: none;
+  }
+  /* MMenu OVERRIDES */
+  html.mm-opened.mm-opening #mm-blocker.mm-slideout {
+    position: fixed;
+    top: 30px;
+    left: -440px;
+    width: 60px;
+    height: 60px;
+  }
+
+  html.mm-opened.mm-opening .mm-menu.mm-offcanvas {
+    position: absolute;
+    left: -440px;
+    top: 90px;
+    z-index: 2;
+    max-width: 300px;
+  }
+
+  html.mm-opened .mm-menu.mm-offcanvas.mm-current {
+    left: 0;
+  }
+
+  html.mm-opening #page.mm-slideout {
+    transform: none;
+    background: initial;
+    height: 100%;
+  }
+
+  html.mm-opening #page.mm-slideout #content {
+    padding: 110px 20px 20px;
+    margin-left: 300px;
+    width: calc(100% - 300px);
+    height: calc(100%);
+    overflow-y: scroll;
+  }
+
+  #header_main > span.sep-space {
+    width: 0px;
+  }
+
+  html.mm-opening #header_main > span.sep-space {
+    // width: 90px;
+  }
+
+  html.mm-opening #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
+    width: 100%;
+    //    letter-spacing: -0.5px;
+  }
+  @media screen and (max-width:959px) {
+    span.nav-header-user-text {
+      display: none;
+    }
+
+    #header_main .logo-hktdc {
+      display: none;
+    }
+
+    #header_top .logo-hktdc {
+      display: initial;
+      width: 100px;
+      margin-right: 20px;
+    }
+
+    html.mm-opening #header_main > span.sep-space {
+      //      width: 250px;
+    }
+  }
+}
+// vicosys
+@media screen and (max-width: 768px) {
+
+  .footer {
+    padding: 0;
+    line-height: inherit;
+  }
+
+  .mobile-text-align-left {
+    text-align: left;
+  }
+
+  #header_main .btn-group.nav-header-main,
+  #header_main > .nav-icon,
+  #header_main > .sep-space {
+    table-layout: fixed;
+  }
+
+	#header_main .btn-group.nav-header-main{
+		width: calc(100% - 60px);
+	}
+
+
+}
+@media screen and (max-width: 520px) {
+  #content{
+    padding-left: 0;
+    padding-right: 0;
+    overflow: hidden;
+  }
+
+	.refId{
+		min-width: 65px;
+	}
+
+	#header_main .nav-header-main .btnnavheader{
+		width: 95%;
+		background: red;
+	}
+	.btn_txt
+	{
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		width: 84%;
+		display: inline-block;
+		float: left;
+	}
+
+	.text-lg-right{
+		padding-right:0;
+	}
+
+	.select-service-body{
+		padding: 0 !important;
+	}
+
+	#header_main .nav-header-main .glyphicon-menu-down
+	{
+		float: right;
+		margin-right: 10px;
+	}
+
+	#footer{
+		padding: 0 8px;
+	}
+
+	.buttons-container{
+		background: #e8e8e8;
+		padding: 0;
+		border: 0;
+	}
+
+}
+@media screen and (min-width: 768px) {
+  .mm-opened .text-lg-right {
+    //        min-width:80px;
+  }
+
+  .text-lg-right {
+    text-align: right !important;
+    max-width: 150px;
+  }
+}
+
+
+.w100p { width: 100%; }
+.p0{ padding:0 !important; }
+.p10{ padding:10px !important; }
+
+.p0m0{
+	padding:0 !important;
+	margin:0 !important;
+}
+
+.pr0{ padding-right:0; }
+.pl0{ padding-left:0; }
+
+.pl10{ padding-left:10px; }
+.pr10{ padding-right:10px; }
+.pt10{ padding-top:10px; }
+.pb10{ padding-bottom:10px; }
+
+
+.b{ border:1px solid red; }
+.reset-line-h { line-height: inherit !important; }
+.font-bold { font-weight: bold; }

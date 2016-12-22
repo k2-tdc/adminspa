@@ -1,0 +1,58 @@
+.red{
+  color: red;
+}
+
+.glyphicon-refresh-animate {
+   -webkit-animation-name: rotateThis;
+   -webkit-animation-duration: 2s;
+   -webkit-animation-iteration-count: infinite;
+   -webkit-animation-timing-function: linear;
+}
+
+@-webkit-keyframes "rotateThis" {
+ from {
+        -webkit-transform: rotate( 0deg );
+    }
+ to  {
+        -webkit-transform: rotate( 360deg );
+    }
+}
+
+.sep-space {
+  height: 15px;
+}
+
+.sep-space-sm {
+  height: 8px;
+  clear:both;
+}
+
+.sep-space-db-border {
+  height: 4px;
+  clear:both;
+  border-top: 1px #ddd solid;
+  border-bottom: 1px #ddd solid;
+}
+
+
+.btn-orange {
+  color: white;
+  background-color: #f57921;
+  border-color: #f57921;
+}
+
+.panel-title {
+  line-height: 40px;
+}
+
+.panel-active {
+  box-shadow: 0 0 10px #f57921;
+}
+
+.panel-highlight {
+  background: #fffeb3;
+}
+
+.datepicker-toggle-btn{
+  cursor: pointer;
+}

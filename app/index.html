@@ -1,0 +1,175 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <title>Hktdc</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=11" />
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/jQuery.mmenu/dist/css/jquery.mmenu.all.css" />
+    <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
+    <link rel="stylesheet" href="bower_components/nprogress/nprogress.css" />
+    <!-- endbower -->
+    <link rel="stylesheet" href="bower_components/blueimp-file-upload/css/jquery.fileupload.css" />
+    <link rel="stylesheet" href="bower_components/blueimp-file-upload/css/jquery.fileupload-ui.css" />
+    <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.min.css" />
+    <link rel="stylesheet" href="bower_components/nprogress/nprogress.css" />
+    <!-- endbuild -->
+
+
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/overrides.css">
+    <!-- endbuild -->
+  </head>
+  <body>
+    <!--[if lt IE 10]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <div id="page">
+      <div id="header" class="header"></div>
+
+      <div id="content">
+        <nav id="menu"></nav>
+        <div id="mainContent"></div>
+        <div id="footer" class="footer"></div>
+      </div>
+
+    </div>
+
+
+    <!-- build:js scripts/plugins.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/backbone/backbone.js"></script>
+    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
+    <script src="bower_components/jQuery.mmenu/dist/js/jquery.mmenu.all.min.umd.js"></script>
+    <script src="bower_components/datatables.net/js/jquery.dataTables.js"></script>
+    <script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.js"></script>
+    <script src="bower_components/js-cookie/src/js.cookie.js"></script>
+    <script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="bower_components/blueimp-file-upload/js/jquery.fileupload.js"></script>
+    <script src="bower_components/backbone.validation/dist/backbone-validation.js"></script>
+    <script src="bower_components/q/q.js"></script>
+    <script src="bower_components/bowser/src/bowser.js"></script>
+    <script src="bower_components/nprogress/nprogress.js"></script>
+    <!-- endbower -->
+    <script src="bower_components/nprogress/nprogress.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,app}) scripts/main.js -->
+    <script src="scripts/util.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/templates.js"></script>
+    <script src="scripts/routes/mainRouter.js"></script>
+
+    <script src="scripts/views/alertDialog.js"></script>
+    <script src="scripts/views/header.js"></script>
+    <script src="scripts/views/menu.js"></script>
+    <script src="scripts/views/checkStatus.js"></script>
+    <script src="scripts/views/newRequest.js"></script>
+    <script src="scripts/views/user.js"></script>
+    <script src="scripts/views/appShoutcut.js"></script>
+    <script src="scripts/views/stutusOption.js"></script>
+    <script src="scripts/views/applicant.js"></script>
+    <script src="scripts/views/status.js"></script>
+    <script src="scripts/views/draft.js"></script>
+    <script src="scripts/views/serviceCatagory.js"></script>
+    <script src="scripts/views/serviceType.js"></script>
+    <script src="scripts/views/serviceRequest.js"></script>
+    <script src="scripts/views/serviceObject.js"></script>
+    <script src="scripts/views/cc.js"></script>
+    <script src="scripts/views/recommend.js"></script>
+    <script src="scripts/views/selectedService.js"></script>
+    <script src="scripts/views/selectedCC.js"></script>
+    <script src="scripts/views/button.js"></script>
+    <script src="scripts/views/workflowLog.js"></script>
+    <script src="scripts/views/attachment.js"></script>
+    <script src="scripts/views/process.js"></script>
+    <script src="scripts/views/subheaderMenu.js"></script>
+    <script src="scripts/views/footer.js"></script>
+    <script src="scripts/views/delegation.js"></script>
+    <script src="scripts/views/delegationPage.js"></script>
+    <script src="scripts/views/delegationDialog.js"></script>
+    <script src="scripts/views/stepOption.js"></script>
+    <script src="scripts/views/step.js"></script>
+    <script src="scripts/views/toUser.js"></script>
+    <script src="scripts/views/fromUser.js"></script>
+    <script src="scripts/views/readRequest.js"></script>
+
+    <script src="scripts/models/menu.js"></script>
+    <script src="scripts/models/alertDialog.js"></script>
+    <script src="scripts/models/checkStatus.js"></script>
+    <script src="scripts/models/newRequest.js"></script>
+    <script src="scripts/models/user.js"></script>
+    <script src="scripts/models/appShoutcut.js"></script>
+    <script src="scripts/models/stutusOption.js"></script>
+    <script src="scripts/models/applicant.js"></script>
+    <script src="scripts/models/status.js"></script>
+    <script src="scripts/models/serviceCatagory.js"></script>
+    <script src="scripts/models/serviceType.js"></script>
+    <script src="scripts/models/serviceRequest.js"></script>
+    <script src="scripts/models/serviceObject.js"></script>
+    <script src="scripts/models/cc.js"></script>
+    <script src="scripts/models/employee.js"></script>
+    <script src="scripts/models/recommend.js"></script>
+    <script src="scripts/models/button.js"></script>
+    <script src="scripts/models/sendRequest.js"></script>
+    <script src="scripts/models/sendAttachment.js"></script>
+    <script src="scripts/models/referenceId.js"></script>
+    <script src="scripts/models/workflowLog.js"></script>
+    <script src="scripts/models/attachment.js"></script>
+    <script src="scripts/models/downloadFile.js"></script>
+    <script src="scripts/models/process.js"></script>
+    <script src="scripts/models/header.js"></script>
+    <script src="scripts/models/footer.js"></script>
+    <script src="scripts/models/subheaderMenu.js"></script>
+    <script src="scripts/models/deleteRequest.js"></script>
+    <script src="scripts/models/delegation.js"></script>
+    <script src="scripts/models/worklistAction.js"></script>
+    <script src="scripts/models/step.js"></script>
+    <script src="scripts/models/delegationPage.js"></script>
+    <script src="scripts/models/delegationDialog.js"></script>
+    <script src="scripts/models/submitDelegation.js"></script>
+    <script src="scripts/models/deleteDelegation.js"></script>
+    <script src="scripts/models/fileRule.js"></script>
+    <script src="scripts/models/deleteFile.js"></script>
+
+    <script src="scripts/collections/menu.js"></script>
+    <script src="scripts/collections/serviceCatagory.js"></script>
+    <script src="scripts/collections/serviceRequest.js"></script>
+    <script src="scripts/collections/serviceType.js"></script>
+    <script src="scripts/collections/serviceObject.js"></script>
+    <script src="scripts/collections/applicant.js"></script>
+    <script src="scripts/collections/recommend.js"></script>
+    <script src="scripts/collections/cc.js"></script>
+    <script src="scripts/collections/employee.js"></script>
+    <script src="scripts/collections/selectedCC.js"></script>
+    <script src="scripts/collections/selectedService.js"></script>
+    <script src="scripts/collections/newRequest.js"></script>
+    <script src="scripts/collections/workflowLog.js"></script>
+    <script src="scripts/collections/attachment.js"></script>
+    <script src="scripts/collections/selectedAttachment.js"></script>
+    <script src="scripts/collections/downloadFile.js"></script>
+    <script src="scripts/collections/process.js"></script>
+    <script src="scripts/collections/subheaderMenu.js"></script>
+    <script src="scripts/collections/status.js"></script>
+    <script src="scripts/collections/delegation.js"></script>
+    <script src="scripts/collections/step.js"></script>
+    <script src="scripts/collections/fromUser.js"></script>
+    <script src="scripts/collections/toUser.js"></script>
+    <script src="scripts/collections/deleteFile.js"></script>
+    <script src="scripts/views/confirmDialog.js"></script>
+    <script src="scripts/models/confirmDialog.js"></script>
+    <script src="scripts/views/logout.js"></script>
+    <script src="scripts/collections/colleague.js"></script>
+    <!-- endbuild -->
+</body>
+</html>
