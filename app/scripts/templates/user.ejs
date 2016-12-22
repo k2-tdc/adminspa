@@ -1,0 +1,21 @@
+<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="userMenu">
+  <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+  <span id="spnUsername" class="nav-header-user-text">
+    <%= user.UserName %>
+  </span>
+  <span class="glyphicon glyphicon-menu-down"></span>
+</button>
+
+<ul class="dropdown-menu userMenu">
+  <li>
+    <a>
+    <!-- <a href="<%= user.HomePath %>#delegation"> -->
+      Delegation (under construct)
+    </a>
+  </li>
+  <li id="logout">
+    <a>
+      Logout
+    </a>
+  </li>
+</ul>

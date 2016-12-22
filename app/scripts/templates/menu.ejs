@@ -1,0 +1,57 @@
+<div class="mm-panels mm-vertical">
+  <div class="mm-panel mm-vertical mm-opened mm-current" id="mm-0">
+      <ul class="mm-listview mm-vertical">
+
+
+        <%
+        _.each(data, function(items, index) {
+          // if no submenu
+          if (items.sumenu === null) {
+          %>
+
+          <li routename='<%= items.RouteName %>'>
+            <a href='<%= items.Route %>'>
+              <%= items.Name %>
+              <% if (items.Scount && String(items.Scount) !== '0') { %>
+              <span class='menu-index-value outline'><%=items.Scount%></span>
+              <% } %>
+              <span class='glyphicon glyphicon-menu-right'></span>
+            </a>
+          </li>
+
+          <%
+          // have submenu
+          } else {
+          %>
+
+          <li class='menu-section <% if (items.onlyMobileAndTablet) { %>visible-xs-block visible-sm-block<% } %>' >
+            <span><%=items.Name%></span>
+          </li>
+
+          <%
+          // looping the submenu
+          _.each(items.sumenu, function(submenu, sindex) {
+          %>
+
+          <li routename='<%= submenu.RouteName %>' <% if (items.onlyMobileAndTablet) { %>class='visible-xs-block visible-sm-block'<% } %>>
+            <a href='<%= submenu.Route %>'>
+              <%= submenu.Name %>
+              <% if(submenu.Scount && String(submenu.Scount) !== '0') { %>
+              <span class='menu-index-value outline'><%=submenu.Scount%></span>
+              <% }
+              %>
+              <span class='glyphicon glyphicon-menu-right'></span>
+            </a>
+          </li>
+
+          <%
+          });
+          %>
+
+        <%
+        }
+      });
+      %>
+    </ul>
+  </div>
+</div>
