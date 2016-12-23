@@ -2,29 +2,17 @@
 
 Hktdc.Models = Hktdc.Models || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Models.Process = Backbone.Model.extend({
 
 
-    initialize: function() {
-    },
+    initialize: function() {},
 
-    defaults: {
-      FULL_NAME: '',
-      IsDefault: '',
-      ProcessDisplayName: '',
-      ProcessID: null,
-      ProcessName: '',
-      RoleType: '',
-      UserId: '',
+    defaults: {},
 
-      type: 'li'
-    },
-
-    validate: function(attrs, options) {
-    },
+    validate: function(attrs, options) {},
 
     parse: function(response, options) {
       return response;

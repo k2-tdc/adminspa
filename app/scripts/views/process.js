@@ -5,9 +5,9 @@ Hktdc.Views = Hktdc.Views || {};
 (function() {
   'use strict';
 
-  Hktdc.Views.Process = Backbone.View.extend({
+  Hktdc.Views.ProcessItem = Backbone.View.extend({
 
-    template: JST['app/scripts/templates/process.ejs'],
+    template: JST['app/scripts/templates/processItem.ejs'],
 
     tagName: 'li',
 
@@ -63,9 +63,11 @@ Hktdc.Views = Hktdc.Views || {};
       var itemViewTagName = 'li';
       if (this.tagName === 'select') {
         itemViewTagName = 'option';
-        model.set({type: 'option'});
+        model.set({
+          type: 'option'
+        });
       }
-      var processItemView = new Hktdc.Views.Process({
+      var processItemView = new Hktdc.Views.ProcessItem({
         model: model,
         tagName: itemViewTagName,
         parentModel: this.parentModel
@@ -80,6 +82,60 @@ Hktdc.Views = Hktdc.Views || {};
       }
       // console.log(this.to);
       this.collection.each(this.renderProcessItem);
+    }
+
+  });
+
+  Hktdc.Views.ProcessSelect = Backbone.View.extend({
+
+    tagName: 'select',
+    className: 'form-control',
+    events: {
+      'change': 'selectProcessItemHandler'
+    },
+
+    initialize: function(props) {
+      console.debug('[ views/process.js ] initialize: ProcessSelect');
+      // var self = this;
+      _.extend(this, props);
+      _.bindAll(this, 'renderProcessItem');
+      this.listenTo(this.collection, 'change', this.render);
+    },
+
+    render: function() {
+      this.collection.unshift({Name: '-- Select --'});
+      this.collection.each(this.renderProcessItem);
+    },
+
+    selectProcessItemHandler: function(ev) {},
+
+    renderProcessItem: function(model) {
+      var processItemView = new Hktdc.Views.ProcessOption({
+        model: model
+        // parentModel: this.parentModel
+      });
+      this.$el.append(processItemView.el);
+    }
+  });
+
+  Hktdc.Views.ProcessOption = Backbone.View.extend({
+    template: JST['app/scripts/templates/processOption.ejs'],
+    tagName: 'option',
+    attributes: function() {
+      return {
+        value: this.model.toJSON().ProcessName
+      };
+    },
+
+    events: {},
+
+    initialize: function() {
+      console.debug('[ views/process.js ] initialize process option');
+      this.render();
+    },
+
+    render: function() {
+      this.$el.html(this.template(this.model.toJSON()));
     }
 
   });

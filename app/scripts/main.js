@@ -29,7 +29,7 @@ window.Hktdc = {
         api: {
           host: 'localhost',
           port: '84',
-          base: '/api/request'
+          base: '/api/admin'
         },
         needAuthHeader: false,
         SPADomain: 'https://workflowuat.tdc.org.hk',
@@ -47,7 +47,7 @@ window.Hktdc = {
           port: '9999',
           // host: '192.168.100.238',
           // port: '84',
-          base: '/api/request'
+          base: '/api/admin'
         },
         needAuthHeader: false,
         logoutURL: 'https://corpsso.tdc.org.hk/adfs/ls/?wa=wsignout1.0',
@@ -60,7 +60,7 @@ window.Hktdc = {
         api: {
           protocol: 'https',
           host: 'api.uat.hktdc.org',
-          base: '/workflowdev/api/request'
+          base: '/workflowdev/api/admin'
         },
         needAuthHeader: true,
         projectPath: '/vicosysspa/',
@@ -77,7 +77,7 @@ window.Hktdc = {
         api: {
           protocol: 'https',
           host: 'api.uat.hktdc.org',
-          base: '/workflow/api/request'
+          base: '/workflow/api/admin'
         },
         needAuthHeader: true,
         projectPath: '/chsw/',
@@ -94,7 +94,7 @@ window.Hktdc = {
 
   init: function(env) {
     'use strict';
-    console.debug('[ main.js ] - Initiating HKTDC Workflow Applicaiton...');
+    console.debug('[ main.js ] - Initialize');
     var utils = window.utils;
     var Hktdc = window.Hktdc;
     Hktdc.Config.environment = env;
@@ -325,5 +325,4 @@ $(document).ready(function() {
   'use strict';
   Hktdc.init('localDev');
   // Hktdc.init('uat');
-  // Hktdc.init('chsw');
 });

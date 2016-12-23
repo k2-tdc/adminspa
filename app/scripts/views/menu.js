@@ -9,32 +9,13 @@ Hktdc.Views = Hktdc.Views || {};
 
     template: JST['app/scripts/templates/menu.ejs'],
 
-
-    // getLinkMap: function() {
-    //   return {
-    //     'NEW_REQUEST': Hktdc.Config.projectPath + '/#new_request',
-    //     'DRAFT_LIST': Hktdc.Config.projectPath + '/#draft',
-    //     'ALL_TASKS': Hktdc.Config.projectPath + '/#',
-    //     'APPROVAL_TASKS': Hktdc.Config.projectPath + '/#',
-    //     'CHECK_STATUS': Hktdc.Config.projectPath + '/#check_status',
-    //     'USAGE_REPORT': Hktdc.Config.projectPath + '/#usage_report',
-    //     'QUICK_USER_GUIDE': Hktdc.Config.projectPath + '/#'
-    //   };
-    // },
-
     initialize: function() {
-      console.debug('Initiating side menu');
+      console.debug('[ menu.js ] - Initialize');
       this.render();
-      // var this.model = new this.Models['Menu']();
-      // this.listenTo(this.model, 'change', this.render);
-      // console.log(JSON.stringify(this.model, null, 2));
-
       this.model.on('change:activeTab', this.setActiveMenu.bind(this));
     },
 
     setActiveMenu: function(currentRoute, route) {
-      // console.log(currentRoute.toJSON().activeTab);
-      // console.log(this.model.toJSON().activeTab);
       var routeMap = {
         ALL: 'ALLTASK',
         APPROVAL: 'APPROVALTASK',
@@ -43,14 +24,9 @@ Hktdc.Views = Hktdc.Views || {};
       };
 
       try {
-        // var routename = currentRoute.toJSON().activeTab;
-        // console.log(route.split('/')[1].toUpperCase());
         var routeName = (route.indexOf('request/') >= 0) ? routeMap[route.split('/')[1].toUpperCase()] : route.toUpperCase();
         var routeBase = routeName.split('?')[0] || 'HOME';
-        // console.log('routeName', routeName);
-        // console.log('routeBase', routeBase);
         setTimeout(function() {
-          // console.log($('li[routename="' + routeBase + '"]'));
           if ($('li[routename="' + routeBase + '"]')) {
             $('nav#menu').data('mmenu').setSelected($('li[routename="' + routeBase + '"]'));
           }
@@ -62,10 +38,8 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-      // console.log(this.model.toJSON());
       var rawMenu = this.model.toJSON();
       var menu = rawMenu.Menu;
-      // var self = this;
       /* add PList and User into menu for mobile version */
       var PListMenu = {
         Mlink: '#',
@@ -111,7 +85,6 @@ Hktdc.Views = Hktdc.Views || {};
         }]
       };
       menu.push(UserMenu);
-      // menu.push(PListMenu, UserMenu);
       // console.log(menu);
       /* map the name, the server should return the route later */
       _.each(menu, function(raw) {
