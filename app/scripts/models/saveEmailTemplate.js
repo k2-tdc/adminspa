@@ -5,23 +5,22 @@ Hktdc.Models = Hktdc.Models || {};
 (function() {
   'use strict';
 
-  Hktdc.Models.EmailTemplate = Backbone.Model.extend({
+  Hktdc.Models.SaveEmailTemplate = Backbone.Model.extend({
 
-    url: function(tId) {
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-template/' + tId;
+    url: function() {
+      return Hktdc.Config.apiURL + '/email-template';
     },
 
+    initialize: function() {},
+
     defaults: {
+      UserId: '',
       TemplateId: '',
+      ProcessId: '',
+      StepId: '',
       Subject: '',
       Body: '',
-      Enable: false,
-
-      Application: '',
-      Process: '',
-
-      ApplicationCollection: null,
-      ProcessCollection: null
+      Enabled: false
     },
 
     validate: function(attrs, options) {},
@@ -30,4 +29,5 @@ Hktdc.Models = Hktdc.Models || {};
       return response;
     }
   });
+
 })();

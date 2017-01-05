@@ -1,6 +1,30 @@
 .red{
   color: red;
 }
+label.control-label {
+  color: #006bf0;
+  font-weight: lighter;
+  text-align: left;
+  float: left;
+}
+
+.buttons-container {
+  .btn {
+    margin-bottom: 4px;
+  }
+
+  .available-buttons {
+    border: 1px rgba(0,0,0,0.1) solid;
+    border-radius: 4px;
+    padding: 11px 5px;
+    text-align: center;
+  }
+}
+
+.form-label{
+  color: #006bf0;
+  line-height: 2.5em;
+}
 
 .glyphicon-refresh-animate {
    -webkit-animation-name: rotateThis;
@@ -35,8 +59,8 @@
 }
 
 .block-padding{
-  padding-left: 11px;
-  padding-right: 11px;
+  padding-left: 14px;
+  padding-right: 14px;
 }
 
 .btn-orange {

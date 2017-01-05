@@ -2,25 +2,19 @@
 
 Hktdc.Models = Hktdc.Models || {};
 
-(function () {
-    'use strict';
+(function() {
+  'use strict';
 
-    Hktdc.Models.Footer = Backbone.Model.extend({
+  Hktdc.Models.Footer = Backbone.Model.extend({
+    initialize: function() {},
 
-        url: '',
+    defaults: {},
 
-        initialize: function() {
-        },
+    validate: function(attrs, options) {},
 
-        defaults: {
-        },
-
-        validate: function(attrs, options) {
-        },
-
-        parse: function(response, options)  {
-            return response;
-        }
-    });
+    parse: function(response, options) {
+      return response;
+    }
+  });
 
 })();

@@ -6,19 +6,13 @@ Hktdc.Models = Hktdc.Models || {};
   'use strict';
 
   Hktdc.Models.StutusOption = Backbone.Model.extend({
+    initialize: function() {},
 
-    url: '',
+    defaults: {},
 
-    initialize: function() {
-    },
+    validate: function(attrs, options) {},
 
-    defaults: {
-    },
-
-    validate: function(attrs, options) {
-    },
-
-    parse: function(response, options)  {
+    parse: function(response, options) {
       return response;
     }
   });

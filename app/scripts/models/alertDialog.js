@@ -2,13 +2,10 @@
 
 Hktdc.Models = Hktdc.Models || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Models.AlertDialog = Backbone.Model.extend({
-
-    url: '',
-
     defaults: {
       message: '',
       title: '',
@@ -17,8 +14,7 @@ Hktdc.Models = Hktdc.Models || {};
       open: false
     },
 
-    validate: function(attrs, options) {
-    },
+    validate: function(attrs, options) {},
 
     parse: function(response, options) {
       return response;

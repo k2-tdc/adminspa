@@ -9,7 +9,7 @@ window.Hktdc = {
   Config: {
     procId: 1,
     isAppWebView: false,
-    apiURL: false,
+    apiURL: '',
     refreshTokenInterval: 2,  // in minutes
     gettingToken: false,
     accessToken: '',
@@ -24,34 +24,16 @@ window.Hktdc = {
     userName: '',
     RuleCode: 'IT0008;IT0009',
     environments: {
-      // local dev VM
-      dev: {
-        api: {
-          host: 'localhost',
-          port: '84',
-          base: '/api/admin'
-        },
-        needAuthHeader: false,
-        SPADomain: 'https://workflowuat.tdc.org.hk',
-        OAuthLoginPath: '/workflow/oauth2/login',
-        OAuthGetTokenPath: '/workflow/oauth2/token',
-        OAuthGetUserIDPath: '/workflow/oauth2/tokeninfo',
-        projectPath: '/',
-        SPAHomePath: '/vicosysspa/'
-      },
       // local host
       localDev: {
         api: {
           protocol: 'http',
           host: 'localhost',
           port: '9999',
-          // host: '192.168.100.238',
-          // port: '84',
-          base: '/api/admin'
+          base: '/api/phase2'
         },
         needAuthHeader: false,
         logoutURL: 'https://corpsso.tdc.org.hk/adfs/ls/?wa=wsignout1.0',
-        // needAuthHeader: true,
         projectPath: '/',
         SPAHomePath: '/'
       },
@@ -60,28 +42,11 @@ window.Hktdc = {
         api: {
           protocol: 'https',
           host: 'api.uat.hktdc.org',
-          base: '/workflowdev/api/admin'
+          base: '/workflowdev'
         },
         needAuthHeader: true,
-        projectPath: '/vicosysspa/',
-        SPAHomePath: '/vicosysspa/',
-        SPADomain: 'https://workflowuat.tdc.org.hk',
-        logoutURL: 'https://corpsso.tdc.org.hk/adfs/ls/?wa=wsignout1.0',
-        OAuthLoginPath: '/workflow/oauth2/login',
-        OAuthGetTokenPath: '/workflow/oauth2/token',
-        OAuthGetUserIDPath: '/workflow/oauth2/tokeninfo'
-      },
-
-      // REAL UAT VM - uat test
-      chsw: {
-        api: {
-          protocol: 'https',
-          host: 'api.uat.hktdc.org',
-          base: '/workflow/api/admin'
-        },
-        needAuthHeader: true,
-        projectPath: '/chsw/',
-        SPAHomePath: '/chsw/',
+        projectPath: '/vicosyscommon/',
+        SPAHomePath: '/vicosyscommon/',
         SPADomain: 'https://workflowuat.tdc.org.hk',
         logoutURL: 'https://corpsso.tdc.org.hk/adfs/ls/?wa=wsignout1.0',
         OAuthLoginPath: '/workflow/oauth2/login',
@@ -255,12 +220,16 @@ window.Hktdc = {
         });
 
         onSuccess(menuModel);
+      })
+      .catch(function(error) {
+        console.error(error);
       });
   },
 
   loadMenu: function() {
     var deferred = Q.defer();
     var menuModel = new Hktdc.Models.Menu();
+    console.log(menuModel.url());
     menuModel.fetch({
       beforeSend: utils.setAuthHeader,
       success: function(menuModel) {
@@ -268,8 +237,9 @@ window.Hktdc = {
         // onSuccess(menuModel);
         deferred.resolve(menuModel);
       },
-      error: function(error) {
-        console.log('error on rendering menu');
+      error: function(model, error, c) {
+        console.log(c);
+        console.error('error on rendering menu');
         deferred.reject(error);
       }
     });

@@ -183,17 +183,18 @@ module.exports = function(grunt) {
     useminPrepare: {
       html: '<%= yeoman.app %>/index.html',
       options: {
-        dest: '<%= yeoman.dist %>'
+        /* if NEED uglify */
+        // dest: '<%= yeoman.dist %>'
 
-        /* override default to not uglify -- start */
-        // flow: {
-        //   steps: {
-        //     js: ['concat'],
-        //     css: ['concat', 'cssmin']
-        //   },
-        //   post: {}
-        // }
-        /* override default to not uglify -- end */
+        /* else NO uglify */
+        flow: {
+          steps: {
+            js: ['concat'],
+            css: ['concat', 'cssmin']
+          },
+          post: {}
+        }
+        /* endif */
       }
     },
     usemin: {
@@ -286,7 +287,7 @@ module.exports = function(grunt) {
     compress: {
       main: {
         options: {
-          archive: 'dist.zip'
+          archive: 'adminSPA.zip'
         },
         files: [
           {src: ['<%= yeoman.dist %>/**'], dest: '/'} // includes files in path and its subdirs
@@ -365,7 +366,7 @@ module.exports = function(grunt) {
     'htmlmin',
     'concat',
     'cssmin',
-    'uglify',
+    // 'uglify',
     'copy',
     'rev',
     'usemin',

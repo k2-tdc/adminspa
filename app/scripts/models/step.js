@@ -2,23 +2,17 @@
 
 Hktdc.Models = Hktdc.Models || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Models.Step = Backbone.Model.extend({
+    initialize: function() {},
 
-    url: '',
+    defaults: {},
 
-    initialize: function() {
-    },
+    validate: function(attrs, options) {},
 
-    defaults: {
-    },
-
-    validate: function(attrs, options) {
-    },
-
-    parse: function(response, options)  {
+    parse: function(response, options) {
       return response;
     }
   });

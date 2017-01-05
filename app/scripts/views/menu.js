@@ -9,32 +9,14 @@ Hktdc.Views = Hktdc.Views || {};
 
     template: JST['app/scripts/templates/menu.ejs'],
 
+    events: {
+      'click li': 'onClickMenu'
+    },
+
     initialize: function() {
       console.debug('[ menu.js ] - Initialize');
       this.render();
       this.model.on('change:activeTab', this.setActiveMenu.bind(this));
-    },
-
-    setActiveMenu: function(currentRoute, route) {
-      var routeMap = {
-        ALL: 'ALLTASK',
-        APPROVAL: 'APPROVALTASK',
-        DRAFT: 'DRAFT',
-        CHECK: 'HOME'
-      };
-
-      try {
-        var routeName = (route.indexOf('request/') >= 0) ? routeMap[route.split('/')[1].toUpperCase()] : route.toUpperCase();
-        var routeBase = routeName.split('?')[0] || 'HOME';
-        setTimeout(function() {
-          if ($('li[routename="' + routeBase + '"]')) {
-            $('nav#menu').data('mmenu').setSelected($('li[routename="' + routeBase + '"]'));
-          }
-        });
-      } catch (e) {
-        // TODO: pop the error box
-        console.log(e);
-      }
     },
 
     render: function() {
@@ -94,17 +76,17 @@ Hktdc.Views = Hktdc.Views || {};
             // var upperLodash = subMenuRaw.Name.trim().toUpperCase().replace(' ', '_');
             // console.log(upperLodash);
             subMenuRaw.Route = Hktdc.Config.projectPath + subMenuRaw.Mlink || '/#';
-            subMenuRaw.RouteName = upperLodash || 'HOME';
+            subMenuRaw.RouteName = upperLodash || 'EMAILTEMPLATE';
           });
         } else {
           var upperLodash = raw.Mlink.trim().toUpperCase().replace('#', '');
           // var upperLodash = raw.Name.trim().toUpperCase().replace(' ', '_');
           raw.Route = Hktdc.Config.projectPath + raw.Mlink || '/#';
-          raw.RouteName = upperLodash || 'HOME';
+          raw.RouteName = upperLodash || 'EMAILTEMPLATE';
         }
         // console.log(upperLodash);
         // raw.Route = Hktdc.Config.projectPath + raw.Mlink || '/#';
-        // raw.RouteName = upperLodash || 'HOME';
+        // raw.RouteName = upperLodash || 'EMAILTEMPLATE';
       });
 
       // console.log(menu);
@@ -116,17 +98,48 @@ Hktdc.Views = Hktdc.Views || {};
       $('nav#menu').mmenu({
         // options
         slidingSubmenus: false
-        // offCanvas: false
+          // offCanvas: false
       });
       // console.log($('nav#menu'));
       if ($(window).width() <= 991) {
-      // if ($(window).width() <= 767) {
+        // if ($(window).width() <= 767) {
         $('nav#menu').data('mmenu').close();
       } else {
         $('nav#menu').data('mmenu').open();
       }
 
       // console.log('rendered menu.js');
+    },
+
+    setActiveMenu: function(currentRoute, route) {
+      var routeMap = {
+        EMAILTEMPLATE: 'EMAILTEMPLATE',
+        USERROLE: 'USERROLE',
+        USERPERMISSION: 'USERPERMISSION',
+        WORKERRULE: 'WORKERRULE'
+      };
+
+      try {
+        var routeName = (route.indexOf('/') >= 0) ? routeMap[route.split('/')[0].toUpperCase()] : route.toUpperCase();
+        var routeBase = routeName.split('?')[0] || 'EMAILTEMPLATE';
+        setTimeout(function() {
+          if ($('li[routename="' + routeBase + '"]')) {
+            $('nav#menu').data('mmenu').setSelected($('li[routename="' + routeBase + '"]'));
+          }
+        });
+      } catch (e) {
+        // TODO: pop the error box
+        console.log(e);
+      }
+    },
+
+    onClickMenu: function(ev) {
+      var $target = $(ev.target);
+
+      if ($(ev.target).is('a')) {
+        $target = $(ev.target).parent('li');
+      }
+      Hktdc.Dispatcher.trigger('reloadRoute', $target.attr('routename').toLowerCase());
     }
 
   });

@@ -1,0 +1,101 @@
+<div class="panel panel-default">
+  <div class="panel-heading headingOne" role="tab">
+    <div class="panel-title subheader-menu-container">
+      <!-- Single button -->
+    </div>
+    <!-- <span class="advanced-btn-wrapper">
+      <span class="glyphicon glyphicon-menu-down toggle-btn openBtn"></span>
+      <span class="glyphicon glyphicon-menu-up toggle-btn closeBtn"></span>
+
+      <span class="advanced-btn">
+        <span class="isShow">Show</span>
+        <span class="isHide">Hide</span>
+        Advanced Search
+      </span>
+    </span> -->
+
+  </div>
+
+
+  <div id="checkStatus">
+    <div class="panel-body">
+
+      <form class="form-horizontal">
+
+        <div class="form-group row">
+          <div class="col-sm-2">
+            <div class="form-label text-right">Process</div>
+          </div>
+          <div class="col-md-6 applicationContainer">
+            <!-- status Select list here -->
+          </div>
+        </div>
+
+        <!-- <div class="advanced-form"> -->
+          <div class="form-group">
+            <div class="col-md-2">
+              <div class="form-label text-right">Step Group</div>
+            </div>
+            <div class="col-md-6 processContainer"></div>
+          </div>
+
+          <!-- <div class="form-group">
+            <label for="create_date" class="col-xs-12 col-sm-2 control-label">Create Date</label>
+            <div class="create_date_pick1 col-xs-6 col-sm-3">
+              <div class="input-group">
+                <input type="text" id="txtIndexfromdate" name="FDate" class="form-control date" value="<%= FDate %>" placeholder="From Date">
+                <div class="input-group-addon datepicker-toggle-btn">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </div>
+              </div>
+            </div>
+            <div class="create_date_pick2 col-xs-6 col-sm-3">
+              <div class="input-group">
+                <input type="text" id="txtIndextodate" name="TDate" class="form-control date" value="<%= TDate %>" placeholder="To Date">
+                <div class="input-group-addon datepicker-toggle-btn">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <div class="form-group">
+            <label for="status" class="col-sm-2 control-label"><%= searchUserType %></label>
+            <div class="col-sm-6 user-container">
+
+            </div>
+          </div>
+        <!-- </div> -->
+
+
+        <div class="form-group buttons-container">
+          <div class="text-center available-buttons">
+            <input type="button" class="btn btn-primary" value="Create" id="btnCreateEmailTemplate">
+            <input type="button" class="btn btn-primary" value="Search" id="btnSearchEmailTemplate">
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+<div class="table-responsive">
+  <table id="statusTable" class="table table-striped table-bordered table-grey" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th>Process</th>
+        <th>Step Group</th>
+        <th>Subject</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Process</th>
+        <th>Step Group</th>
+        <th>Subject</th>
+      </tr>
+    </tfoot>
+    <!-- <tbody id="reqbody"></tbody> -->
+
+  </table>
+</div>

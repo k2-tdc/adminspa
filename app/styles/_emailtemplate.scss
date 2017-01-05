@@ -1,3 +1,17 @@
+/* listing page */
+.advanced-btn-wrapper{
+  text-align: center;
+  // padding: 8px 0px;
+  position: absolute;
+  top: 10px;
+  right: 18px;
+  .advanced-btn{
+    cursor: pointer;
+    color: #666;
+  }
+}
+
+/* detail page */
 .email-filter-container,
 .email-content-container{
   padding-top: 14px;

@@ -9,8 +9,14 @@ window.utils = {
     var host = envConfig.api.host;
     var port = (envConfig.api.port) ? ':' + envConfig.api.port : '';
     var base = envConfig.api.base;
+    // var commonBase = envConfig.api.commonBase;
+    // var adminBase = envConfig.api.adminBase;
+    // var otherBase = envConfig.api.otherBase;
     var protocol = envConfig.api.protocol || 'http';
     Hktdc.Config.apiURL = protocol + '://' + host + port + base;
+    // Hktdc.Config.apiURL = protocol + '://' + host + port + adminBase;
+    // Hktdc.Config.apiURL = protocol + '://' + host + port + commonBase;
+    // Hktdc.Config.apiURL = protocol + '://' + host + port + otherBase;
 
     // Hktdc.Config.SPADomain = envConfig.SPADomain;
     Hktdc.Config.projectPath = envConfig.projectPath;
