@@ -4,7 +4,7 @@ var $app = {
     getContextPromise: null,
     spContext: null,
 
-    // using jQuery promises to load a single shared spcontext across a client application
+    // using jQuery promises to load a single shared spcontext across a client process
     withSPContext: function (action) {
 
         if ($app.getContextPromise == null) {

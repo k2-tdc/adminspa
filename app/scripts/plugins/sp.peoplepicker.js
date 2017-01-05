@@ -129,13 +129,13 @@
 
                     var queryTerm = '' + settings.searchPrefix + currentValue + settings.searchSuffix;
 
-                    var query = new SP.UI.ApplicationPages.ClientPeoplePickerQueryParameters();
+                    var query = new SP.UI.ProcessPages.ClientPeoplePickerQueryParameters();
                     query.set_allowMultipleEntities(false);
                     query.set_maximumEntitySuggestions(settings.maximumEntitySuggestions);
                     query.set_principalType(settings.principalType);
                     query.set_principalSource(settings.principalSource);
                     query.set_queryString(queryTerm);
-                    var searchResult = SP.UI.ApplicationPages.ClientPeoplePickerWebServiceInterface.clientPeoplePickerSearchUser(spContext, query);
+                    var searchResult = SP.UI.ProcessPages.ClientPeoplePickerWebServiceInterface.clientPeoplePickerSearchUser(spContext, query);
 
                     // give ourselves some async context
                     var searchCtx = {

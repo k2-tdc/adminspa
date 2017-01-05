@@ -17,10 +17,10 @@ Hktdc.Models = Hktdc.Models || {};
       Body: '',
       Enable: false,
 
-      Application: '',
+      Process: '',
       Process: '',
 
-      ApplicationCollection: null,
+      ProcessCollection: null,
       ProcessCollection: null
     },
 

@@ -31,7 +31,7 @@ Hktdc.Views = Hktdc.Views || {};
         .then(function(results) {
           console.debug('[ emailTemplate.js ] - load all the remote resources');
           self.model.set({
-            applicationCollection: results[0],
+            processCollection: results[0],
             stpeCollection: results[1]
           }, {silent: true});
           // console.log(results);
@@ -51,10 +51,10 @@ Hktdc.Views = Hktdc.Views || {};
 
     loadProcess: function() {
       var deferred = Q.defer();
-      var applicationCollection = new Hktdc.Collections.Application();
-      applicationCollection.fetch({
+      var processCollection = new Hktdc.Collections.Process();
+      processCollection.fetch({
         success: function() {
-          deferred.resolve(applicationCollection);
+          deferred.resolve(processCollection);
         },
         error: function(collection, err) {
           deferred.reject(err);
@@ -79,11 +79,11 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderProcessSelect: function() {
       var self = this;
-      var ApplicationSelectView = new Hktdc.Views.ApplicationSelect({
-        collection: self.model.toJSON().applicationCollection
+      var ProcessSelectView = new Hktdc.Views.ProcessSelect({
+        collection: self.model.toJSON().processCollection
       });
-      ApplicationSelectView.render();
-      $('.applicationContainer', self.el).html(ApplicationSelectView.el);
+      ProcessSelectView.render();
+      $('.processContainer', self.el).html(ProcessSelectView.el);
     },
 
     renderStepSelect: function() {
@@ -103,7 +103,7 @@ Hktdc.Views = Hktdc.Views || {};
       var sendRequestModel = new Hktdc.Models.SaveEmailTemplate({
         UserId: Hktdc.Config.userID,
         TemplateId: this.model.toJSON().TemplateId,
-        ProcessId: this.model.toJSON().Application,
+        ProcessId: this.model.toJSON().Process,
         StepId: this.model.toJSON().Process,
         Subject: this.model.toJSON().Subject,
         Body: this.model.toJSON().Body,

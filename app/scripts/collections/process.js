@@ -5,13 +5,13 @@ Hktdc.Collections = Hktdc.Collections || {};
 (function() {
   'use strict';
 
-  Hktdc.Collections.Application = Backbone.Collection.extend({
+  Hktdc.Collections.Process = Backbone.Collection.extend({
 
     url: function() {
       return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/applications/admin/process-list';
     },
 
-    model: Hktdc.Models.Application
+    model: Hktdc.Models.Process
 
   });
 })();

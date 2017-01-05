@@ -4,37 +4,37 @@ Hktdc.Views = Hktdc.Views || {};
 
 (function() {
   'use strict';
-  Hktdc.Views.ApplicationSelect = Backbone.View.extend({
+  Hktdc.Views.ProcessSelect = Backbone.View.extend({
     tagName: 'select',
     className: 'form-control',
     events: {
-      'change': 'selectApplicationHandler'
+      'change': 'selectProcessHandler'
     },
     initialize: function() {
-      console.debug('[ views/application.js ] initialize: ApplicationSelect');
-      _.bindAll(this, 'renderApplicationItem');
+      console.debug('[ views/process.js ] initialize: ProcessSelect');
+      _.bindAll(this, 'renderProcessItem');
       this.listenTo(this.collection, 'change', this.render);
     },
 
     render: function() {
       // console.log(this.collection.toJSON());
       this.collection.unshift({ProcessDisplayName: '-- Select --'});
-      this.collection.each(this.renderApplicationItem);
+      this.collection.each(this.renderProcessItem);
     },
 
-    selectApplicationHandler: function() {},
+    selectProcessHandler: function() {},
 
-    renderApplicationItem: function(model) {
-      var applicationItemView = new Hktdc.Views.ApplicationOption({
+    renderProcessItem: function(model) {
+      var processItemView = new Hktdc.Views.ProcessOption({
         model: model
       });
-      this.$el.append(applicationItemView.el);
+      this.$el.append(processItemView.el);
     }
 
   });
 
-  Hktdc.Views.ApplicationOption = Backbone.View.extend({
-    template: JST['app/scripts/templates/applicationOption.ejs'],
+  Hktdc.Views.ProcessOption = Backbone.View.extend({
+    template: JST['app/scripts/templates/processOption.ejs'],
     tagName: 'option',
     attributes: function() {
       return {
@@ -45,7 +45,7 @@ Hktdc.Views = Hktdc.Views || {};
     events: {},
 
     initialize: function() {
-      console.debug('[ views/application.js ] initialize ApplicationOption');
+      console.debug('[ views/process.js ] initialize ProcessOption');
       this.render();
     },
 

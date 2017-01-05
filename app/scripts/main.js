@@ -158,7 +158,7 @@ window.Hktdc = {
     });
 
     if (Hktdc.Config.isAppWebView) {
-      // process switch
+      // application switch
       $('#header_main .nav-header-main').addClass('app-web-view');
 
       // web view show current page

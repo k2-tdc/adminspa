@@ -29,20 +29,20 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       this.$el.html(this.template(this.model.toJSON()));
       Q.all([
-          self.loadApplication(),
-          self.loadProcess()
+          self.loadProcess(),
+          self.loadStep()
         ])
         .then(function(results) {
           console.debug('[ emailTemplate.js ] - load all the remote resources');
           self.model.set({
-            applicationCollection: results[0],
-            processCollection: results[1]
+            processCollection: results[0],
+            stpeCollection: results[1]
           }, {
             silent: true
           });
           // console.log(results);
 
-          self.renderApplicationSelect();
+          self.renderProcessSelect();
           self.renderProcessSelect();
           self.renderDataTable();
         })
@@ -187,16 +187,16 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    renderApplicationSelect: function() {
+    renderProcessSelect: function() {
       var self = this;
-      var ApplicationSelectView = new Hktdc.Views.ApplicationSelect({
-        collection: self.model.toJSON().applicationCollection
+      var ProcessSelectView = new Hktdc.Views.ProcessSelect({
+        collection: self.model.toJSON().processCollection
       });
-      ApplicationSelectView.render();
-      $('.applicationContainer', self.el).html(ApplicationSelectView.el);
+      ProcessSelectView.render();
+      $('.processContainer', self.el).html(ProcessSelectView.el);
     },
 
-    renderProcessSelect: function() {
+    renderStepSelect: function() {
       var self = this;
       var processSelectView = new Hktdc.Views.ProcessSelect({
         collection: self.model.toJSON().processCollection
@@ -227,31 +227,6 @@ Hktdc.Views = Hktdc.Views || {};
 
       this.updateModel(field, value);
     },
-
-    // toggleAdvanceMode: function() {
-    //   this.model.set({
-    //     showAdvanced: !this.model.toJSON().showAdvanced
-    //   });
-    //   // console.log(this.model.toJSON().showAdvanced);
-    // },
-
-    /*
-    doToggleAdvanceMode: function(isShow) {
-      if (isShow) {
-        $('.advanced-form', this.el).show();
-        $('.advanced-btn .isHide', this.el).show();
-        $('.advanced-btn .isShow', this.el).hide();
-        $('.advanced-btn-wrapper .closeBtn', this.el).css('display', 'inline-block');
-        $('.advanced-btn-wrapper .openBtn', this.el).hide();
-      } else {
-        $('.advanced-form', this.el).hide();
-        $('.advanced-btn .isHide', this.el).hide();
-        $('.advanced-btn .isShow', this.el).show();
-        $('.advanced-btn-wrapper .openBtn', this.el).css('display', 'inline-block');
-        $('.advanced-btn-wrapper .closeBtn', this.el).hide();
-      }
-    },
-    */
 
     doSearch: function() {
       var queryParams = _.omit(this.model.toJSON(), 'UserId', 'canChooseStatus', 'mode', 'searchUserType');
@@ -291,13 +266,13 @@ Hktdc.Views = Hktdc.Views || {};
       */
     },
 
-    loadApplication: function() {
+    loadProcess: function() {
       var deferred = Q.defer();
-      var applicationCollection = new Hktdc.Collections.Application();
-      applicationCollection.fetch({
+      var processCollection = new Hktdc.Collections.Process();
+      processCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
-          deferred.resolve(applicationCollection);
+          deferred.resolve(processCollection);
         },
         error: function(collection, response) {
           deferred.reject(response);
@@ -306,7 +281,7 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
-    loadProcess: function() {
+    loadStep: function() {
       var deferred = Q.defer();
       var processCollection = new Hktdc.Collections.Step();
       processCollection.fetch({

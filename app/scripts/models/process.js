@@ -5,7 +5,7 @@ Hktdc.Models = Hktdc.Models || {};
 (function() {
   'use strict';
 
-  Hktdc.Models.Application = Backbone.Model.extend({
+  Hktdc.Models.Process = Backbone.Model.extend({
 
     initialize: function() {},
 
