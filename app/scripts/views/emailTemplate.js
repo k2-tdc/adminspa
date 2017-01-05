@@ -32,7 +32,7 @@ Hktdc.Views = Hktdc.Views || {};
           console.debug('[ emailTemplate.js ] - load all the remote resources');
           self.model.set({
             applicationCollection: results[0],
-            processCollection: results[1]
+            stpeCollection: results[1]
           }, {silent: true});
           // console.log(results);
 
@@ -65,10 +65,10 @@ Hktdc.Views = Hktdc.Views || {};
 
     loadStep: function() {
       var deferred = Q.defer();
-      var processCollection = new Hktdc.Collections.Process();
-      processCollection.fetch({
+      var stpeCollection = new Hktdc.Collections.Step();
+      stpeCollection.fetch({
         success: function() {
-          deferred.resolve(processCollection);
+          deferred.resolve(stpeCollection);
         },
         error: function(collection, err) {
           deferred.reject(err);
@@ -88,8 +88,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderStepSelect: function() {
       var self = this;
-      var processSelectView = new Hktdc.Views.ProcessSelect({
-        collection: self.model.toJSON().processCollection
+      var processSelectView = new Hktdc.Views.StepSelect({
+        collection: self.model.toJSON().stpeCollection
       });
       processSelectView.render();
       $('.processContainer', self.el).html(processSelectView.el);

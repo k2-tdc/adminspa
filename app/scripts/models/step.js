@@ -6,6 +6,7 @@ Hktdc.Models = Hktdc.Models || {};
   'use strict';
 
   Hktdc.Models.Step = Backbone.Model.extend({
+
     initialize: function() {},
 
     defaults: {},

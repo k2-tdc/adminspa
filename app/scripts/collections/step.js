@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, _ */
+/* global Hktdc, Backbone */
 
 Hktdc.Collections = Hktdc.Collections || {};
 
@@ -7,11 +7,12 @@ Hktdc.Collections = Hktdc.Collections || {};
 
   Hktdc.Collections.Step = Backbone.Collection.extend({
 
-    url: function(procId) {
-      procId = _.isNull(procId) ? '' : procId;
-      return Hktdc.Config.apiURL + '/GetProcessStepList?ProId=' + procId;
+    url: function(processId) {
+      processId = processId || 1;
+      return Hktdc.Config.apiURL + '/admin/users/' + Hktdc.Config.userID + '/applications/steps/' + processId;
     },
 
     model: Hktdc.Models.Step
+
   });
 })();

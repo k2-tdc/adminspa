@@ -5,45 +5,36 @@ Hktdc.Views = Hktdc.Views || {};
 (function() {
   'use strict';
 
-  Hktdc.Views.Step = Backbone.View.extend({
+  Hktdc.Views.StepItem = Backbone.View.extend({
 
-    template: JST['app/scripts/templates/stepOption.ejs'],
+    template: JST['app/scripts/templates/stepItem.ejs'],
 
-    tagName: 'option',
+    tagName: 'li',
+
+    events: {},
 
     initialize: function(props) {
-      // this.listenTo(this.model, 'change', this.render);
-      // console.log(this.model.toJSON());
       _.extend(this, props);
       this.render();
     },
 
     render: function() {
-      this.$el.html(this.template(this.model.toJSON()));
-
-      this.$el.attr('value', this.model.toJSON().StepID);
-      // console.log(this.parentModel.toJSON());
-      // console.log(this.model.toJSON().StepID);
-      var parentStepId = (this.parentModel.toJSON().OldStepId)
-        ? String(this.parentModel.toJSON().OldStepId)
-        : String(this.parentModel.toJSON().StepId);
-
-      if (parentStepId === String(this.model.toJSON().StepID)) {
-        this.$el.prop('selected', true);
+      // console.log(this.selectedStep);
+      // console.log(this.model.toJSON());
+      if (this.tagName === 'option') {
+        this.$el.attr('value', this.model.toJSON().StepID);
+        if (String(this.parentModel.toJSON().ProId) === String(this.model.toJSON().StepID)) {
+          this.$el.prop('selected', true);
+        }
       }
+      this.$el.html(this.template(this.model.toJSON()));
     }
   });
 
   Hktdc.Views.StepList = Backbone.View.extend({
 
-    template: JST['app/scripts/templates/step.ejs'],
-
-    tagName: 'select',
-
-    id: 'ddstep',
-
-    className: 'form-control',
-
+    tagName: 'ul',
+    className: 'dropdown-menu ulnav-header-main',
     events: {
       'change': 'selectStepItemHandler'
     },
@@ -51,33 +42,100 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function(props) {
       var self = this;
       _.extend(this, props);
-      _.bindAll(this, 'renderStepOptions', 'selectStepItemHandler');
-      this.render();
-      this.parentModel.on('change:StepId', function() {
-        self.$el.empty();
-        self.render();
-      });
+      _.bindAll(this, 'renderStepItem');
+      // console.log(this.collection.toJSON());
+      // this.listenTo(this.model, 'change', this.render);
+      if (this.tagName === 'select') {
+        this.parentModel.on('change:ProId', function() {
+          self.$el.empty();
+          self.render();
+        });
+      }
     },
 
     selectStepItemHandler: function(ev) {
       this.parentModel.set({
-        StepId: $(ev.target).val(),
-        OldStepId: ''
-      })
+        ProId: $(ev.target).val()
+      });
     },
 
-    renderStepOptions: function(model) {
-      var stepOptionView = new Hktdc.Views.Step({
+    renderStepItem: function(model) {
+      var itemViewTagName = 'li';
+      if (this.tagName === 'select') {
+        itemViewTagName = 'option';
+        model.set({
+          type: 'option'
+        });
+      }
+      var stepItemView = new Hktdc.Views.StepItem({
         model: model,
+        tagName: itemViewTagName,
         parentModel: this.parentModel
       });
-      this.$el.append(stepOptionView.el);
+      // console.log(stepItemView.el);
+      this.$el.append(stepItemView.el);
     },
 
     render: function() {
-      this.$el.append('<option value="null">--Select--</option>');
-      // console.log(this.collection.toJSON());
-      this.collection.each(this.renderStepOptions);
+      if (this.tagName === 'select') {
+        this.$el.prepend('<option value="" >--Select--</option>');
+      }
+      // console.log(this.to);
+      this.collection.each(this.renderStepItem);
+    }
+
+  });
+
+  Hktdc.Views.StepSelect = Backbone.View.extend({
+
+    tagName: 'select',
+    className: 'form-control',
+    events: {
+      'change': 'selectStepItemHandler'
+    },
+
+    initialize: function(props) {
+      console.debug('[ views/step.js ] initialize: StepSelect');
+      // var self = this;
+      _.extend(this, props);
+      _.bindAll(this, 'renderStepItem');
+      this.listenTo(this.collection, 'change', this.render);
+    },
+
+    render: function() {
+      this.collection.unshift({Name: '-- Select --'});
+      this.collection.each(this.renderStepItem);
+    },
+
+    selectStepItemHandler: function(ev) {},
+
+    renderStepItem: function(model) {
+      var stepItemView = new Hktdc.Views.StepOption({
+        model: model
+        // parentModel: this.parentModel
+      });
+      this.$el.append(stepItemView.el);
+    }
+  });
+
+  Hktdc.Views.StepOption = Backbone.View.extend({
+    template: JST['app/scripts/templates/stepOption.ejs'],
+    tagName: 'option',
+    attributes: function() {
+      return {
+        value: this.model.toJSON().StepName
+      };
+    },
+
+    events: {},
+
+    initialize: function() {
+      console.debug('[ views/step.js ] initialize step option');
+      this.render();
+    },
+
+    render: function() {
+      this.$el.html(this.template(this.model.toJSON()));
     }
 
   });

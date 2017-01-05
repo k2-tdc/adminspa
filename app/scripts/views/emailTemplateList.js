@@ -308,7 +308,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     loadProcess: function() {
       var deferred = Q.defer();
-      var processCollection = new Hktdc.Collections.Process();
+      var processCollection = new Hktdc.Collections.Step();
       processCollection.fetch({
         success: function() {
           deferred.resolve(processCollection);

@@ -16,14 +16,14 @@ Hktdc.Views = Hktdc.Views || {};
       // this.listenTo(this.model, 'change', this.render);
       var self = this;
       this.render();
-      this.model.on('change:processList', function(model, pList) {
+      this.model.on('change:stepList', function(model, pList) {
         // console.log(newValue.toJSON());
         // console.log('changed: ', pList);
-        var processListView = new Hktdc.Views.ProcessList({
-          collection: new Hktdc.Collections.Process(pList)
+        var stepListView = new Hktdc.Views.StepList({
+          collection: new Hktdc.Collections.Step(pList)
         });
-        processListView.render();
-        $('.process-switch', self.el).append(processListView.el);
+        stepListView.render();
+        $('.process-switch', self.el).append(stepListView.el);
       });
 
       // if (bowser.check({mobile: true})) {
