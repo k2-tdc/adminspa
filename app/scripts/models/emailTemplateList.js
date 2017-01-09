@@ -9,19 +9,10 @@ Hktdc.Models = Hktdc.Models || {};
     initialize: function() {},
 
     defaults: {
-      canChooseStatus: true,
-      searchUserType: '',
-
-      CStat: '',
-      ReferID: '',
-      FDate: '',
-      TDate: '',
-      Appl: '',
-      UserId: '',
-      SUser: '',
-      // for detail
-      ProsIncId: '',
-      showAdvanced: false
+      ProcessId: 0,
+      StepId: 0,
+      processCollection: null,
+      stepCollection: null
     },
 
     validate: function(attrs, options) {},

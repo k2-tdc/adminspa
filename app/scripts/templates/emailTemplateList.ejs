@@ -36,14 +36,18 @@
             <div class="col-md-2">
               <div class="form-label text-right">Step Group</div>
             </div>
-            <div class="col-md-6 processContainer"></div>
+            <div class="col-md-6 stepContainer">
+              <select class="form-control">
+                <option value="">Please select the process first</option>
+              </select>
+            </div>
           </div>
 
           <!-- <div class="form-group">
             <label for="create_date" class="col-xs-12 col-sm-2 control-label">Create Date</label>
             <div class="create_date_pick1 col-xs-6 col-sm-3">
               <div class="input-group">
-                <input type="text" id="txtIndexfromdate" name="FDate" class="form-control date" value="<%= FDate %>" placeholder="From Date">
+                <input type="text" id="txtIndexfromdate" name="FDate" class="form-control date" value="" placeholder="From Date">
                 <div class="input-group-addon datepicker-toggle-btn">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </div>
@@ -51,7 +55,7 @@
             </div>
             <div class="create_date_pick2 col-xs-6 col-sm-3">
               <div class="input-group">
-                <input type="text" id="txtIndextodate" name="TDate" class="form-control date" value="<%= TDate %>" placeholder="To Date">
+                <input type="text" id="txtIndextodate" name="TDate" class="form-control date" value="" placeholder="To Date">
                 <div class="input-group-addon datepicker-toggle-btn">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </div>
@@ -60,7 +64,7 @@
           </div> -->
 
           <div class="form-group">
-            <label for="status" class="col-sm-2 control-label"><%= searchUserType %></label>
+            <label for="status" class="col-sm-2 control-label"></label>
             <div class="col-sm-6 user-container">
 
             </div>
@@ -70,8 +74,8 @@
 
         <div class="form-group buttons-container">
           <div class="text-center available-buttons">
-            <input type="button" class="btn btn-primary" value="Create" id="btnCreateEmailTemplate">
-            <input type="button" class="btn btn-primary" value="Search" id="btnSearchEmailTemplate">
+            <input type="button" class="btn btn-primary createBtn" value="Create" id="btnCreateEmailTemplate">
+            <input type="button" class="btn btn-primary searchBtn" value="Search" id="btnSearchEmailTemplate">
           </div>
         </div>
 
@@ -86,6 +90,7 @@
         <th>Process</th>
         <th>Step Group</th>
         <th>Subject</th>
+        <th>Delete</th>
       </tr>
     </thead>
     <tfoot>
@@ -93,6 +98,7 @@
         <th>Process</th>
         <th>Step Group</th>
         <th>Subject</th>
+        <th>Delete</th>
       </tr>
     </tfoot>
     <!-- <tbody id="reqbody"></tbody> -->

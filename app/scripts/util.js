@@ -63,11 +63,17 @@ window.utils = {
     return params;
   },
 
-  getQueryString: function(obj) {
+  getQueryString: function(obj, notAllowEmpty) {
     var queryPart = _.map(obj, function(val, key) {
-      var value = (_.isNull(val)) ? '' : val;
+      var value;
+      if (notAllowEmpty) {
+        value = (!val) ? '0' : val;
+      } else {
+        value = (_.isNull(val)) ? '' : val;
+      }
       return key + '=' + value;
     });
+    // console.log(queryPart);
     if (queryPart.length) {
       return '?' + queryPart.join('&');
     }

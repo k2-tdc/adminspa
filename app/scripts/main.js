@@ -42,7 +42,7 @@ window.Hktdc = {
         api: {
           protocol: 'https',
           host: 'api.uat.hktdc.org',
-          base: '/workflowdev'
+          base: '/workflow'
         },
         needAuthHeader: true,
         projectPath: '/vicosyscommon/',

@@ -11,6 +11,9 @@ Hktdc.Routers = Hktdc.Routers || {};
       'emailtemplate': 'emailTemplateList',
       'emailtemplate/new': 'editEmailTemplate',
       'emailtemplate/:templateId': 'editEmailTemplate',
+      'emailprofile': 'emailProfileList',
+      'emailprofile/new': 'editEmailProfile',
+      'emailprofile/:templateId': 'editEmailProfile',
       'logout': 'logout'
     },
 
@@ -28,7 +31,11 @@ Hktdc.Routers = Hktdc.Routers || {};
     emailTemplateList: function() {
       try {
         var emailTemplateListModel = new Hktdc.Models.EmailTemplateList({});
-        emailTemplateListModel.set({ mode: 'EMAIL TEMPLATE' });
+        emailTemplateListModel.set({
+          mode: 'EMAIL TEMPLATE',
+          ProcessId: utils.getParameterByName('ProcessId'),
+          StepId: utils.getParameterByName('StepId')
+        });
         var emailTemplateListView = new Hktdc.Views.EmailTemplateList({
           model: emailTemplateListModel
         });
@@ -70,10 +77,90 @@ Hktdc.Routers = Hktdc.Routers || {};
           subheaderMenuListView.render();
           $('.subheader-menu-container').html(subheaderMenuListView.el);
         };
+
         if (tId) {
           emailTemplateModel.url = emailTemplateModel.url(tId);
           emailTemplateModel.fetch({
+            beforeSend: utils.setAuthHeader,
             success: function() {
+              emailTemplateModel.set({
+                TemplateId: tId,
+                ProcessId: emailTemplateModel.toJSON().ProcessID,
+                StepId: emailTemplateModel.toJSON().ActivityGroupID
+              });
+              onSuccess();
+            },
+            error: function(model, err) {
+              throw err;
+            }
+          });
+        } else {
+          onSuccess();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    emailProfileList: function() {
+      try {
+        var emailProfileListModel = new Hktdc.Models.EmailProfileList({});
+        emailProfileListModel.set({
+          mode: 'EMAIL PROFILE'
+          // UserId:
+        });
+        var emailProfileListView = new Hktdc.Views.EmailProfileList({
+          model: emailProfileListModel
+        });
+        emailProfileListView.render();
+        $('#mainContent').empty().html(emailProfileListView.el);
+
+        var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+        var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+          collection: subheaderMenuListCollection,
+          currentPageName: 'EMAIL PROFILE'
+        });
+        subheaderMenuListView.render();
+        $('.subheader-menu-container').html(subheaderMenuListView.el);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    editEmailProfile: function(profileId) {
+      console.log('edit email template');
+      try {
+        $('#mainContent').addClass('compress');
+
+        var emailProfileModel = new Hktdc.Models.EmailProfile({
+          mode: 'EMAIL PROFILE'
+        });
+        var onSuccess = function() {
+          var emailProfileView = new Hktdc.Views.EmailProfile({
+            model: emailProfileModel
+          });
+          emailProfileView.render();
+          $('#mainContent').empty().html(emailProfileView.el);
+
+          var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+          var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+            collection: subheaderMenuListCollection,
+            currentPageName: 'EMAIL PROFILE'
+          });
+          subheaderMenuListView.render();
+          $('.subheader-menu-container').html(subheaderMenuListView.el);
+        };
+
+        if (profileId) {
+          emailProfileModel.url = emailProfileModel.url(profileId);
+          emailProfileModel.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              emailProfileModel.set({
+                TemplateId: profileId,
+                ProcessId: emailProfileModel.toJSON().ProcessID,
+                StepId: emailProfileModel.toJSON().ActivityGroupID
+              });
               onSuccess();
             },
             error: function(model, err) {

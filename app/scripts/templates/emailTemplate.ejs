@@ -18,7 +18,11 @@
       <div class="col-md-2">
         <div class="form-label text-right">Step Group</div>
       </div>
-      <div class="col-md-10 processContainer"></div>
+      <div class="col-md-10 stepContainer">
+        <select class="form-control">
+          <option value="">Please select the process first</option>
+        </select>
+      </div>
     </div>
     <div class="sep-space"></div>
     <!-- </div> -->
@@ -29,7 +33,7 @@
         <div class="form-label text-right">Subject</div>
       </div>
       <div class="col-md-10">
-        <input type="text" class="form-control">
+        <input type="text" class="form-control formTextField" name="Subject" value="<%= Subject %>">
       </div>
     </div>
     <div class="sep-space"></div>
@@ -39,7 +43,7 @@
         <div class="form-label text-right">Body</div>
       </div>
       <div class="col-md-10">
-        <textarea class="form-control" rows="6"></textarea>
+        <textarea class="form-control formTextField" name="Body" rows="6"><%= Body %></textarea>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -50,7 +54,7 @@
 
         <span class="checkbox">
           <label>
-            <input type="checkbox">
+            <input type="checkbox" class="formCheckboxField" name="Enabled" <% if (Enabled) { %>checked<% } %> >
             Enable
           </label>
         </span>

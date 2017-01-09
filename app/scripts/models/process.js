@@ -25,5 +25,4 @@ Hktdc.Models = Hktdc.Models || {};
       return response;
     }
   });
-
 })();

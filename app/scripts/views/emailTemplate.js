@@ -13,31 +13,42 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {
       'click .saveBtn': 'saveTemplate',
-      // 'blur'
+      'blur .formTextField': 'updateFormModel',
+      'change .formCheckboxField': 'updateFormModel'
     },
 
     initialize: function() {
-      this.listenTo(this.model, 'change', this.render);
+      // this.listenTo(this.model, 'change', this.render);
+      var self = this;
+      if (this.model.toJSON().ProcessId) {
+        setTimeout(function() {
+          self.loadStep()
+            .then(function(stepCollection) {
+              self.model.set({
+                stepCollection: stepCollection
+              });
+            });
+        });
+      }
+      self.model.on('change:stepCollection', function() {
+        console.log('change step collection');
+        self.renderStepSelect();
+      });
     },
 
     render: function() {
       var self = this;
       self.$el.html(self.template(self.model.toJSON()));
 
-      Q.all([
-        self.loadProcess(),
-        self.loadStep()
-      ])
-        .then(function(results) {
+      self.loadProcess()
+        .then(function(processCollection) {
           console.debug('[ emailTemplate.js ] - load all the remote resources');
           self.model.set({
-            processCollection: results[0],
-            stpeCollection: results[1]
-          }, {silent: true});
-          // console.log(results);
-
+            processCollection: processCollection
+          }, {
+            silent: true
+          });
           self.renderProcessSelect();
-          self.renderStepSelect();
         })
         .catch(function(err) {
           console.error(err);
@@ -53,6 +64,7 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var processCollection = new Hktdc.Collections.Process();
       processCollection.fetch({
+        beforeSend: utils.setAuthHeader,
         success: function() {
           deferred.resolve(processCollection);
         },
@@ -66,7 +78,9 @@ Hktdc.Views = Hktdc.Views || {};
     loadStep: function() {
       var deferred = Q.defer();
       var stpeCollection = new Hktdc.Collections.Step();
+      stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessId);
       stpeCollection.fetch({
+        beforeSend: utils.setAuthHeader,
         success: function() {
           deferred.resolve(stpeCollection);
         },
@@ -79,40 +93,102 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderProcessSelect: function() {
       var self = this;
-      var ProcessSelectView = new Hktdc.Views.ProcessSelect({
-        collection: self.model.toJSON().processCollection
-      });
-      ProcessSelectView.render();
-      $('.processContainer', self.el).html(ProcessSelectView.el);
-    },
-
-    renderStepSelect: function() {
-      var self = this;
-      var processSelectView = new Hktdc.Views.StepSelect({
-        collection: self.model.toJSON().stpeCollection
+      var processSelectView = new Hktdc.Views.ProcessSelect({
+        collection: self.model.toJSON().processCollection,
+        selectedProcess: self.model.toJSON().ProcessId,
+        onSelected: function(processId) {
+          self.model.set({ProcessId: processId});
+          self.loadStep()
+            .then(function(stepCollection) {
+              self.model.set({
+                StepId: null,
+                stepCollection: stepCollection
+              });
+            });
+        }
       });
       processSelectView.render();
       $('.processContainer', self.el).html(processSelectView.el);
     },
 
+    renderStepSelect: function() {
+      var self = this;
+      var stepSelectView = new Hktdc.Views.StepSelect({
+        collection: self.model.toJSON().stepCollection,
+        selectedStep: self.model.toJSON().StepId,
+        onSelected: function(stepId) {
+          self.model.set({StepId: stepId});
+        }
+      });
+      stepSelectView.render();
+      setTimeout(function() {
+        $('.stepContainer', self.el).html(stepSelectView.el);
+      });
+    },
+
+    updateFormModel: function(ev) {
+      var updateObject = {};
+      var $target = $(ev.target);
+      var targetField = $target.attr('name');
+      if ($target.is('[type="checkbox"]')) {
+        updateObject[targetField] = ($target.prop('checked')) ? 1 : 0;
+      } else {
+        updateObject[targetField] = $target.val();
+      }
+      this.model.set(updateObject);
+      // this.model.set(updateObject, {
+      // validate: true,
+      // field: targetField
+      // });
+      // double set is to prevent invalid value bypass the set model process
+      // because if saved the valid model, then set the invalid model will not success and the model still in valid state
+    },
+
     saveTemplate: function() {
+      this.doSaveTemplate()
+        .then(function(response) {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            type: 'success',
+            title: 'Confirmation',
+            message: 'You have saved'
+          });
+          Backbone.history.navigate('emailtemplate', {trigger: true});
+        })
+        .catch(function(err) {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            type: 'success',
+            title: 'Confirmation',
+            message: err
+          });
+        });
+    },
+
+    doSaveTemplate: function() {
       var deferred = Q.defer();
       Backbone.emulateHTTP = true;
       Backbone.emulateJSON = true;
-
+      // console.log(this.model.toJSON());
       var sendRequestModel = new Hktdc.Models.SaveEmailTemplate({
         UserId: Hktdc.Config.userID,
-        TemplateId: this.model.toJSON().TemplateId,
-        ProcessId: this.model.toJSON().Process,
-        StepId: this.model.toJSON().Process,
+        TemplateId: (this.model.toJSON().TemplateId) ? parseInt(this.model.toJSON().TemplateId) : 0,
+        ProcessId: parseInt(this.model.toJSON().ProcessId),
+        StepId: parseInt(this.model.toJSON().StepId),
         Subject: this.model.toJSON().Subject,
         Body: this.model.toJSON().Body,
-        Enabled: this.model.toJSON().Enabled
+        Enabled: (this.model.toJSON().Enabled) ? 1 : 0
       });
+      // console.log(sendRequestModel.toJSON());
+      var method = (sendRequestModel.toJSON().TemplateId) ? 'PUT' : 'POST';
       sendRequestModel.save({}, {
         beforeSend: utils.setAuthHeader,
+        type: method,
         success: function(mymodel, response) {
-          deferred.resolve(response);
+          // console.log(response);
+          if (response.success) {
+            deferred.resolve(response);
+          } else {
+            deferred.reject('save failed');
+          }
         },
         error: function(model, e) {
           deferred.reject('Submit Request Error' + JSON.stringify(e, null, 2));

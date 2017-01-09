@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, _ */
+/* global Hktdc, Backbone, JST, _, $ */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -10,19 +10,28 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'change': 'selectProcessHandler'
     },
-    initialize: function() {
+    initialize: function(props) {
       console.debug('[ views/process.js ] initialize: ProcessSelect');
       _.bindAll(this, 'renderProcessItem');
+      _.extend(this, props);
       this.listenTo(this.collection, 'change', this.render);
     },
 
     render: function() {
       // console.log(this.collection.toJSON());
-      this.collection.unshift({ProcessDisplayName: '-- Select --'});
+      var self = this;
+      this.collection.unshift({ProcessDisplayName: '-- Select --', ProcessID: 0});
       this.collection.each(this.renderProcessItem);
+      setTimeout(function() {
+        self.$el.find('option[value="' + self.selectedProcess + '"]').prop('selected', true);
+      });
     },
 
-    selectProcessHandler: function() {},
+    selectProcessHandler: function(ev) {
+      if (this.onSelected) {
+        this.onSelected($(ev.target).find('option:selected').val());
+      }
+    },
 
     renderProcessItem: function(model) {
       var processItemView = new Hktdc.Views.ProcessOption({
@@ -38,7 +47,7 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'option',
     attributes: function() {
       return {
-        value: this.model.toJSON().name
+        value: String(this.model.toJSON().ProcessID)
       };
     },
 

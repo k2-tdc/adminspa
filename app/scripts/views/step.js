@@ -99,22 +99,38 @@ Hktdc.Views = Hktdc.Views || {};
       // var self = this;
       _.extend(this, props);
       _.bindAll(this, 'renderStepItem');
+      // console.log(this.collection);
       this.listenTo(this.collection, 'change', this.render);
     },
 
     render: function() {
-      this.collection.unshift({Name: '-- Select --'});
-      this.collection.each(this.renderStepItem);
+      try {
+        this.collection.unshift({
+          StepDisplayName: '-- Select --',
+          StepID: 0
+        });
+        this.collection.each(this.renderStepItem);
+      } catch (e) {
+        console.error(e);
+      }
     },
 
-    selectStepItemHandler: function(ev) {},
+    selectStepItemHandler: function(ev) {
+      if (this.onSelected) {
+        this.onSelected($(ev.target).find('option:selected').val());
+      }
+    },
 
     renderStepItem: function(model) {
+      var self = this;
       var stepItemView = new Hktdc.Views.StepOption({
         model: model
-        // parentModel: this.parentModel
       });
       this.$el.append(stepItemView.el);
+      setTimeout(function() {
+        console.log(self.selectedStep);
+        self.$el.find('option[value="' + self.selectedStep + '"]').prop('selected', true);
+      },100);
     }
   });
 
@@ -123,7 +139,7 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'option',
     attributes: function() {
       return {
-        value: this.model.toJSON().StepName
+        value: String(this.model.toJSON().StepID)
       };
     },
 

@@ -10,7 +10,8 @@ Hktdc.Views = Hktdc.Views || {};
     template: JST['app/scripts/templates/emailTemplateList.ejs'],
 
     events: {
-      'click .saveBtn': 'doSearch'
+      'click .searchBtn': 'doSearch',
+      'click .createBtn': 'goToCreatePage'
         // 'click .advanced-btn': 'toggleAdvanceMode',
         // 'change .user-select': 'updateModelByEvent',
         // 'change .status-select': 'updateModelByEvent',
@@ -20,29 +21,36 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function(props) {
       console.debug('[ views/emailTemplateList.js ] - Initialize');
+      var self = this;
       $('#mainContent').removeClass('compress');
+      if (this.model.toJSON().ProcessId) {
+        setTimeout(function() {
+          self.loadStep()
+            .then(function(stepCollection) {
+              self.model.set({
+                stepCollection: stepCollection
+              });
+            });
+        });
+      }
+      self.model.on('change:stepCollection', function() {
+        console.log('change step collection');
+        self.renderStepSelect();
+      });
     },
 
     render: function() {
-      // console.log(this.model.toJSON());
-      // console.log(this.template());
       var self = this;
       this.$el.html(this.template(this.model.toJSON()));
-      Q.all([
-          self.loadProcess(),
-          self.loadStep()
-        ])
-        .then(function(results) {
+
+      self.loadProcess()
+        .then(function(processCollection) {
           console.debug('[ emailTemplate.js ] - load all the remote resources');
           self.model.set({
-            processCollection: results[0],
-            stpeCollection: results[1]
+            processCollection: processCollection
           }, {
             silent: true
           });
-          // console.log(results);
-
-          self.renderProcessSelect();
           self.renderProcessSelect();
           self.renderDataTable();
         })
@@ -57,6 +65,37 @@ Hktdc.Views = Hktdc.Views || {};
 
       /* Use DataTable's AJAX instead of backbone fetch and render */
       /* because to make use of DataTable function */
+    },
+
+    loadProcess: function() {
+      var deferred = Q.defer();
+      var processCollection = new Hktdc.Collections.Process();
+      processCollection.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          deferred.resolve(processCollection);
+        },
+        error: function(collection, response) {
+          deferred.reject(response);
+        }
+      });
+      return deferred.promise;
+    },
+
+    loadStep: function() {
+      var deferred = Q.defer();
+      var stepCollection = new Hktdc.Collections.Step();
+      stepCollection.url = stepCollection.url(this.model.toJSON().ProcessId);
+      stepCollection.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          deferred.resolve(stepCollection);
+        },
+        error: function(collectoin, err) {
+          deferred.reject(err);
+        }
+      });
+      return deferred.promise;
     },
 
     renderDatePicker: function() {
@@ -104,7 +143,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderDataTable: function() {
       var self = this;
-      self.statusDataTable = $('#statusTable', self.el).DataTable({
+      self.templateDataTable = $('#statusTable', self.el).DataTable({
         bRetrieve: true,
         order: [0, 'desc'],
         searching: false,
@@ -122,10 +161,11 @@ Hktdc.Views = Hktdc.Views || {};
             var modData = _.map(data, function(row) {
               return {
                 // lastActionDate: row.SubmittedOn,
-                id: row.TemplateId,
+                id: row.EmailTemplateID,
                 process: row.ProcessName,
                 step: row.StepName,
-                subject: row.Subject
+                subject: row.Subject,
+                enabled: row.Enabled
               };
             });
             return modData;
@@ -147,22 +187,50 @@ Hktdc.Views = Hktdc.Views || {};
         columns: [{
           data: 'process'
         }, {
-          //   data: 'lastActionDate',
-          //   render: function(data) {
-          //     // return moment(data).format('DD MMM YYYY');
-          //     // TODO: temp use belows
-          //     return moment().format('DD MMM YYYY');
-          //   }
-          // }, {
           data: 'step'
         }, {
           data: 'subject'
+        }, {
+          data: 'delete',
+          render: function(data) {
+            return '<button type="button" class="form-control deleteBtn"><i class="glyphicon glyphicon-remove"></i></button>'
+          }
         }]
       });
 
+      $('#statusTable tbody', this.el).on('click', '.deleteBtn', function(ev) {
+        ev.stopPropagation();
+        var rowData = self.templateDataTable.row($(this).parents('tr')).data();
+        var targetId = rowData.id;
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: 'confirmation',
+          message: 'Are you sure want to Delete?',
+          onConfirm: function() {
+            self.deleteTemplate(targetId)
+              .then(function() {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  type: 'success',
+                  title: 'confirmation',
+                  message: 'deleted!'
+                });
+                Hktdc.Dispatcher.trigger('closeConfirm');
+              })
+              .catch(function() {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  type: 'error',
+                  title: 'error',
+                  message: 'delete failed'
+                });
+              });
+          }
+        });
+
+        // console.log('rowData', rowData);
+      });
+
       $('#statusTable tbody', this.el).on('click', 'tr', function(ev) {
-        var rowData = self.statusDataTable.row(this).data();
-        console.log('rowData', rowData);
+        var rowData = self.templateDataTable.row(this).data();
+        // console.log('rowData', rowData);
         // var SNOrProcIdPath = '';
         // if ((rowData.SN)) {
         //   SNOrProcIdPath = '/' + rowData.SN;
@@ -190,7 +258,20 @@ Hktdc.Views = Hktdc.Views || {};
     renderProcessSelect: function() {
       var self = this;
       var ProcessSelectView = new Hktdc.Views.ProcessSelect({
-        collection: self.model.toJSON().processCollection
+        collection: self.model.toJSON().processCollection,
+        selectedProcess: self.model.toJSON().ProcessId,
+        onSelected: function(processId) {
+          self.model.set({
+            ProcessId: processId
+          });
+          self.loadStep()
+            .then(function(stepCollection) {
+              self.model.set({
+                StepId: null,
+                stepCollection: stepCollection
+              });
+            });
+        }
       });
       ProcessSelectView.render();
       $('.processContainer', self.el).html(ProcessSelectView.el);
@@ -198,11 +279,45 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderStepSelect: function() {
       var self = this;
-      var processSelectView = new Hktdc.Views.ProcessSelect({
-        collection: self.model.toJSON().processCollection
+      var processSelectView = new Hktdc.Views.StepSelect({
+        collection: self.model.toJSON().stepCollection,
+        selectedStep: self.model.toJSON().StepId,
+        onSelected: function(stepId) {
+          self.model.set({
+            StepId: stepId
+          });
+        }
       });
       processSelectView.render();
-      $('.processContainer', self.el).html(processSelectView.el);
+      $('.stepContainer', self.el).html(processSelectView.el);
+    },
+
+    deleteTemplate: function(tId) {
+      var self = this;
+      var deferred = Q.defer();
+      var DeleteTemplateModel = Backbone.Model.extend({
+        url: Hktdc.Config.apiURL + '/admin/users/' + Hktdc.Config.userID + '/email-template/' + tId
+      });
+      var DeleteTemplatetance = new DeleteTemplateModel();
+      DeleteTemplatetance.save(null, {
+        type: 'DELETE',
+        beforeSend: utils.setAuthHeader,
+        success: function(model, response) {
+          self.templateDataTable.ajax.reload();
+          Hktdc.Dispatcher.trigger('reloadMenu');
+          deferred.resolve();
+        },
+        error: function(err) {
+          deferred.reject();
+          console.log(err);
+        }
+      });
+      return deferred.promise;
+    },
+
+    goToCreatePage: function() {
+      console.log('crash');
+      Backbone.history.navigate('emailtemplate/new', {trigger: true});
     },
 
     updateModel: function(field, value) {
@@ -229,20 +344,20 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     doSearch: function() {
-      var queryParams = _.omit(this.model.toJSON(), 'UserId', 'canChooseStatus', 'mode', 'searchUserType');
+      // console.log(this.model.toJSON());
+      var queryParams = _.omit(this.model.toJSON(), 'stepCollection', 'processCollection', 'mode');
+      // console.log(queryParams);
       // console.log(Backbone.history.getHash().split('?')[0]);
       var currentBase = Backbone.history.getHash().split('?')[0];
-      Backbone.history.navigate(currentBase + utils.getQueryString(queryParams));
-      this.statusDataTable.ajax.url(this.getAjaxURL()).load();
+      var queryString = utils.getQueryString(queryParams, true);
+      Backbone.history.navigate(currentBase + queryString);
+      this.templateDataTable.ajax.url(this.getAjaxURL()).load();
     },
 
     getAjaxURL: function() {
-      var usefulData = _.pick(this.model.toJSON(), 'CStat', 'ReferID', 'FDate', 'TDate', 'Appl', 'UserId', 'SUser', 'ProsIncId', 'EmployeeId');
-      var filterArr = _.map(usefulData, function(val, filter) {
-        var value = (_.isNull(val)) ? '' : val;
-        return filter + '=' + value;
-      });
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-template-list?' + filterArr.join('&');
+      var queryParams = _.omit(this.model.toJSON(), 'stepCollection', 'processCollection', 'mode');
+      var queryString = utils.getQueryString(queryParams, true);
+      return Hktdc.Config.apiURL + '/admin/users/' + Hktdc.Config.userID + '/email-template-list' + queryString;
       /*
       console.log(this.model.);
       switch (this.model.toJSON().mode) {
@@ -264,35 +379,6 @@ Hktdc.Views = Hktdc.Views || {};
       }
       return statusApiURL;
       */
-    },
-
-    loadProcess: function() {
-      var deferred = Q.defer();
-      var processCollection = new Hktdc.Collections.Process();
-      processCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(processCollection);
-        },
-        error: function(collection, response) {
-          deferred.reject(response);
-        }
-      });
-      return deferred.promise;
-    },
-
-    loadStep: function() {
-      var deferred = Q.defer();
-      var processCollection = new Hktdc.Collections.Step();
-      processCollection.fetch({
-        success: function() {
-          deferred.resolve(processCollection);
-        },
-        error: function(collectoin, err) {
-          deferred.reject(err);
-        }
-      });
-      return deferred.promise;
     }
   });
 })();

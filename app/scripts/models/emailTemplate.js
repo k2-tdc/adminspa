@@ -8,20 +8,19 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.EmailTemplate = Backbone.Model.extend({
 
     url: function(tId) {
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-template/' + tId;
+      return Hktdc.Config.apiURL + '/admin/users/' + Hktdc.Config.userID + '/email-template/' + tId;
     },
 
     defaults: {
-      TemplateId: '',
+      TemplateId: 0,
+      ProcessId: 0,
+      StepId: 0,
       Subject: '',
       Body: '',
-      Enable: false,
+      Enabled: true,
 
-      Process: '',
-      Process: '',
-
-      ProcessCollection: null,
-      ProcessCollection: null
+      processCollection: null,
+      stepCollection: null
     },
 
     validate: function(attrs, options) {},

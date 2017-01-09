@@ -8,7 +8,6 @@ Hktdc.Collections = Hktdc.Collections || {};
   Hktdc.Collections.Step = Backbone.Collection.extend({
 
     url: function(processId) {
-      processId = processId || 1;
       return Hktdc.Config.apiURL + '/admin/users/' + Hktdc.Config.userID + '/applications/steps/' + processId;
     },
 
