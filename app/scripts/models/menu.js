@@ -8,7 +8,7 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.Menu = Backbone.Model.extend({
 
     url: function() {
-      return Hktdc.Config.apiURL + '/admin/users/' + Hktdc.Config.userID + '/menuitems';
+      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/menuitems';
     },
 
     initialize: function() {},

@@ -8,7 +8,7 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.EmailTemplate = Backbone.Model.extend({
 
     url: function(tId) {
-      return Hktdc.Config.apiURL + '/admin/users/' + Hktdc.Config.userID + '/email-template/' + tId;
+      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-template/' + tId;
     },
 
     defaults: {

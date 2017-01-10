@@ -8,7 +8,7 @@ Hktdc.Collections = Hktdc.Collections || {};
   Hktdc.Collections.Process = Backbone.Collection.extend({
 
     url: function() {
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/applications/admin/process-list';
+      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/applications';
     },
 
     model: Hktdc.Models.Process

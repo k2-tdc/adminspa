@@ -54,7 +54,6 @@ Hktdc.Views = Hktdc.Views || {};
     events: {},
 
     initialize: function() {
-      console.debug('[ views/process.js ] initialize ProcessOption');
       this.render();
     },
 

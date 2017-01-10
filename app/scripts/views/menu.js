@@ -114,6 +114,7 @@ Hktdc.Views = Hktdc.Views || {};
     setActiveMenu: function(currentRoute, route) {
       var routeMap = {
         EMAILTEMPLATE: 'EMAILTEMPLATE',
+        EMAILPROFILE: 'EMAILPROFILE',
         USERROLE: 'USERROLE',
         USERPERMISSION: 'USERPERMISSION',
         WORKERRULE: 'WORKERRULE'
@@ -129,7 +130,7 @@ Hktdc.Views = Hktdc.Views || {};
         });
       } catch (e) {
         // TODO: pop the error box
-        console.log(e);
+        console.error(e);
       }
     },
 

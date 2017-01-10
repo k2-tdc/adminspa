@@ -296,7 +296,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var deferred = Q.defer();
       var DeleteTemplateModel = Backbone.Model.extend({
-        url: Hktdc.Config.apiURL + '/admin/users/' + Hktdc.Config.userID + '/email-template/' + tId
+        url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-template/' + tId
       });
       var DeleteTemplatetance = new DeleteTemplateModel();
       DeleteTemplatetance.save(null, {
@@ -357,7 +357,7 @@ Hktdc.Views = Hktdc.Views || {};
     getAjaxURL: function() {
       var queryParams = _.omit(this.model.toJSON(), 'stepCollection', 'processCollection', 'mode');
       var queryString = utils.getQueryString(queryParams, true);
-      return Hktdc.Config.apiURL + '/admin/users/' + Hktdc.Config.userID + '/email-template-list' + queryString;
+      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-template-list' + queryString;
       /*
       console.log(this.model.);
       switch (this.model.toJSON().mode) {

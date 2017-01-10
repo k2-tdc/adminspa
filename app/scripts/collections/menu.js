@@ -8,7 +8,7 @@ Hktdc.Collections = Hktdc.Collections || {};
   Hktdc.Collections.Menu = Backbone.Collection.extend({
 
     url: function() {
-      return Hktdc.Config.apiURL + '/admin/users/' + Hktdc.Config.userID + 'menuitems';
+      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + 'menuitems';
     },
 
     model: Hktdc.Models.Menu

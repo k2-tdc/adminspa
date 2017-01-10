@@ -128,9 +128,9 @@ Hktdc.Views = Hktdc.Views || {};
       });
       this.$el.append(stepItemView.el);
       setTimeout(function() {
-        console.log(self.selectedStep);
+        // console.log(self.selectedStep);
         self.$el.find('option[value="' + self.selectedStep + '"]').prop('selected', true);
-      },100);
+      });
     }
   });
 

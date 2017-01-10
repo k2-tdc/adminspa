@@ -1,8 +1,8 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, Q, utils, $, _ */
 
 Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.EmailProfile = Backbone.View.extend({
@@ -11,20 +11,308 @@ Hktdc.Views = Hktdc.Views || {};
 
     tagName: 'div',
 
-    id: '',
-
-    className: '',
-
-    events: {},
-
-    initialize: function () {
-      this.listenTo(this.model, 'change', this.render);
+    events: {
+      'click .saveBtn': 'saveProfile',
+      'click .delBtn': 'deleteProfile',
+      'blur .formTextField': 'updateFormModel',
+      'change [name="TimeSlot"]': 'updateFormModel',
+      'change [name="DayOfWeek"]': 'updateFormModel'
+        // 'click [name="DayOfWeek"] option': 'updateFormModel'
     },
 
-    render: function () {
+    initialize: function() {
+      // this.listenTo(this.model, 'change', this.render);
+      if (this.model.toJSON().ProcessId) {
+        setTimeout(function() {
+          self.loadStep()
+            .then(function(stepCollection) {
+              self.model.set({
+                stepCollection: stepCollection
+              });
+            });
+        });
+      }
+
+      var self = this;
+      self.model.on('change:stepCollection', function() {
+        console.log('change step collection');
+        self.renderStepSelect();
+      });
+    },
+
+    render: function() {
+      var self = this;
+      // console.log(this.model.toJSON());
       this.$el.html(this.template(this.model.toJSON()));
+      Q.all([
+          self.loadProcess(),
+          self.loadProfileUser()
+        ])
+        .then(function(results) {
+          var processCollection = results[0];
+          var profileUserCollection = results[1];
+          console.debug('[ emailTemplate.js ] - load all the remote resources');
+          self.model.set({
+            processCollection: processCollection,
+            profileUserCollection: profileUserCollection
+          }, {
+            silent: true
+          });
+          self.renderProcessSelect();
+          self.renderProfileUserSelect();
+        })
+        .catch(function(err) {
+          console.error(err);
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: err,
+            type: 'error',
+            title: 'Runtime Error'
+          });
+        });
+    },
+
+    loadProcess: function() {
+      var deferred = Q.defer();
+      var processCollection = new Hktdc.Collections.Process();
+      processCollection.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          deferred.resolve(processCollection);
+        },
+        error: function(collection, err) {
+          deferred.reject(err);
+        }
+      });
+      return deferred.promise;
+    },
+
+    loadProfileUser: function() {
+      var deferred = Q.defer();
+      var profileUserCollection = new Hktdc.Collections.ProfileUser();
+      profileUserCollection.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          deferred.resolve(profileUserCollection);
+        },
+        error: function(collectoin, err) {
+          deferred.reject(err);
+        }
+      });
+      return deferred.promise;
+    },
+
+    loadStep: function() {
+      var deferred = Q.defer();
+      var stpeCollection = new Hktdc.Collections.Step();
+      stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessId);
+      stpeCollection.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          deferred.resolve(stpeCollection);
+        },
+        error: function(collection, err) {
+          deferred.reject(err);
+        }
+      });
+      return deferred.promise;
+    },
+
+    renderProcessSelect: function() {
+      var self = this;
+      var processSelectView = new Hktdc.Views.ProcessSelect({
+        collection: self.model.toJSON().processCollection,
+        selectedProcess: self.model.toJSON().ProcessId,
+        onSelected: function(processId) {
+          self.model.set({
+            ProcessId: processId
+          });
+          self.loadStep()
+            .then(function(stepCollection) {
+              self.model.set({
+                StepId: null,
+                stepCollection: stepCollection
+              });
+            });
+        }
+      });
+      processSelectView.render();
+      $('.processContainer', self.el).html(processSelectView.el);
+    },
+
+    renderStepSelect: function() {
+      var self = this;
+      var stepSelectView = new Hktdc.Views.StepSelect({
+        collection: self.model.toJSON().stepCollection,
+        selectedStep: self.model.toJSON().StepId,
+        onSelected: function(stepId) {
+          self.model.set({
+            StepId: stepId
+          });
+        }
+      });
+      stepSelectView.render();
+      setTimeout(function() {
+        $('.stepContainer', self.el).html(stepSelectView.el);
+      });
+    },
+
+    renderProfileUserSelect: function() {
+      var self = this;
+      var ProfileUserView;
+      if (Hktdc.Config.isAdmin) {
+        ProfileUserView = new Hktdc.Views.ProfileUserSelect({
+          collection: self.model.toJSON().profileUserCollection,
+          selectedProfileUser: self.model.toJSON().UserID || Hktdc.Config.userID,
+          onSelected: function(profileUserId) {
+            self.model.set({
+              UserId: profileUserId
+            });
+          }
+        });
+
+        ProfileUserView.render();
+      } else {
+        ProfileUserView = new Hktdc.Views.ProfileUserLabel({
+          model: new Hktdc.Models.EmailProfile({FullName: Hktdc.Config.userName})
+        });
+      }
+
+      // console.log(ProfileUserView.el);
+      $('.profileUserContainer', self.el).html(ProfileUserView.el);
+    },
+
+    updateFormModel: function(ev) {
+      var updateObject = {};
+      var $target = $(ev.target);
+      var targetField = $target.attr('name');
+      if ($target.is('select')) {
+        updateObject[targetField] = $target.val();
+      } else {
+        updateObject[targetField] = $target.val();
+      }
+      this.model.set(updateObject);
+
+      // this.model.set(updateObject, {
+      // validate: true,
+      // field: targetField
+      // });
+      // double set is to prevent invalid value bypass the set model process
+      // because if saved the valid model, then set the invalid model will not success and the model still in valid state
+    },
+
+    saveProfile: function() {
+      this.doSaveProfile()
+        .then(function(response) {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            type: 'success',
+            title: 'Confirmation',
+            message: 'You have saved'
+          });
+          Backbone.history.navigate('emailprofile', {
+            trigger: true
+          });
+        })
+        .catch(function(err) {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            type: 'success',
+            title: 'Confirmation',
+            message: err
+          });
+        });
+    },
+
+    doSaveProfile: function() {
+      var deferred = Q.defer();
+      Backbone.emulateHTTP = true;
+      Backbone.emulateJSON = true;
+      console.log(this.model.toJSON());
+      var data = {
+        ProfileId: (this.model.toJSON().ProfileId) ? parseInt(this.model.toJSON().ProfileId) : 0,
+        ProcessId: parseInt(this.model.toJSON().ProcessId),
+        StepId: parseInt(this.model.toJSON().StepId),
+        UserId: this.model.toJSON().UserId, // "Profile" in UI
+        TimeSlot: parseInt(this.model.toJSON().TimeSlot),
+        CC: '',
+        BCC: ''
+      };
+
+      // var dayNameMapping
+      for (var weekDay = 1; weekDay <= 7; weekDay++) {
+        data['WeekDay' + weekDay] = (_.find(this.model.toJSON().DayOfWeek, function(selectedWeekDay, index) {
+          return String(selectedWeekDay) === String(weekDay);
+        })) ? 1 : 0;
+      }
+
+      var saveEmailProfileModel = new Hktdc.Models.SaveEmailProfile(data);
+      var method = (saveEmailProfileModel.toJSON().ProfileId) ? 'PUT' : 'POST';
+      saveEmailProfileModel.url = saveEmailProfileModel.url(data.ProfileId);
+      saveEmailProfileModel.save({}, {
+        beforeSend: utils.setAuthHeader,
+        type: method,
+        success: function(mymodel, response) {
+          // console.log(response);
+          if (response.success) {
+            deferred.resolve(response);
+          } else {
+            deferred.reject('save failed');
+          }
+        },
+        error: function(model, e) {
+          deferred.reject('Submit Request Error' + JSON.stringify(e, null, 2));
+        }
+      });
+      return deferred.promise;
+    },
+
+    deleteProfile: function() {
+      var self = this;
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'confirmation',
+        message: 'Are you sure want to Delete?',
+        onConfirm: function() {
+          self.doDeleteProfile(self.model.toJSON().ProfileId)
+            .then(function() {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                type: 'success',
+                title: 'confirmation',
+                message: 'deleted!'
+              });
+              Hktdc.Dispatcher.trigger('closeConfirm');
+              Backbone.history.navigate('emailprofile', {
+                trigger: true
+              });
+            })
+            .catch(function() {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                type: 'error',
+                title: 'error',
+                message: 'delete failed'
+              });
+            });
+        }
+      });
+    },
+
+    doDeleteProfile: function(profileId) {
+      var deferred = Q.defer();
+      var DeleteProfileModel = Backbone.Model.extend({
+        url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-profiles/' + profileId
+      });
+      var DeleteProfiletance = new DeleteProfileModel();
+      DeleteProfiletance.save(null, {
+        type: 'DELETE',
+        beforeSend: utils.setAuthHeader,
+        success: function(model, response) {
+          Hktdc.Dispatcher.trigger('reloadMenu');
+          deferred.resolve();
+        },
+        error: function(err) {
+          deferred.reject();
+          console.log(err);
+        }
+      });
+      return deferred.promise;
     }
 
   });
-
 })();

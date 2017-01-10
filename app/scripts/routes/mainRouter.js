@@ -106,8 +106,9 @@ Hktdc.Routers = Hktdc.Routers || {};
       try {
         var emailProfileListModel = new Hktdc.Models.EmailProfileList({});
         emailProfileListModel.set({
-          mode: 'EMAIL PROFILE'
-          // UserId:
+          mode: 'EMAIL PROFILE',
+          profile: utils.getParameterByName('profile'),
+          showSearch: Hktdc.Config.isAdmin
         });
         var emailProfileListView = new Hktdc.Views.EmailProfileList({
           model: emailProfileListModel
@@ -128,7 +129,7 @@ Hktdc.Routers = Hktdc.Routers || {};
     },
 
     editEmailProfile: function(profileId) {
-      console.log('edit email template');
+      // console.log('edit email template');
       try {
         $('#mainContent').addClass('compress');
 
@@ -156,10 +157,36 @@ Hktdc.Routers = Hktdc.Routers || {};
           emailProfileModel.fetch({
             beforeSend: utils.setAuthHeader,
             success: function() {
+              var dayOfWeek = [];
+              if (emailProfileModel.toJSON().WeekDay1) {
+                dayOfWeek.push('1');
+              }
+              if (emailProfileModel.toJSON().WeekDay2) {
+                dayOfWeek.push('2');
+              }
+              if (emailProfileModel.toJSON().WeekDay3) {
+                dayOfWeek.push('3');
+              }
+              if (emailProfileModel.toJSON().WeekDay4) {
+                dayOfWeek.push('4');
+              }
+              if (emailProfileModel.toJSON().WeekDay5) {
+                dayOfWeek.push('5');
+              }
+              if (emailProfileModel.toJSON().WeekDay6) {
+                dayOfWeek.push('6');
+              }
+              if (emailProfileModel.toJSON().WeekDay7) {
+                dayOfWeek.push('7');
+              }
               emailProfileModel.set({
-                TemplateId: profileId,
+                ProfileId: emailProfileModel.toJSON().EmailNotificationProfileID,
                 ProcessId: emailProfileModel.toJSON().ProcessID,
-                StepId: emailProfileModel.toJSON().ActivityGroupID
+                StepId: emailProfileModel.toJSON().StepID,
+                TimeSlot: emailProfileModel.toJSON().TimeSlot,
+                UserId: emailProfileModel.toJSON().UserID,
+                DayOfWeek: dayOfWeek,
+                showDelete: true
               });
               onSuccess();
             },

@@ -8,6 +8,7 @@ window.Hktdc = {
   Dispatcher: _.extend({}, Backbone.Events),
   Config: {
     procId: 1,
+    isAdmin: false,
     isAppWebView: false,
     apiURL: '',
     refreshTokenInterval: 2,  // in minutes
@@ -42,7 +43,7 @@ window.Hktdc = {
         api: {
           protocol: 'https',
           host: 'api.uat.hktdc.org',
-          base: '/workflow'
+          base: '/workflow/admin'
         },
         needAuthHeader: true,
         projectPath: '/vicosyscommon/',
@@ -179,6 +180,7 @@ window.Hktdc = {
         var menu = menuModel.toJSON();
         Hktdc.Config.userName = menu.UserName;
         Hktdc.Config.employeeID = menu.EmployeeNo;
+        Hktdc.Config.isAdmin = menu.IsAdmin;
         menuModel.set({
           Menu: menu.Menu,
           PList: menu.PList,
