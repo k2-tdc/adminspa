@@ -24,7 +24,9 @@ label.control-label {
 .form-label{
   color: #006bf0;
   line-height: 2.5em;
+  text-align: right;
 }
+
 .form-data{
   line-height: 2.5em;
   font-weight: bold;
@@ -87,4 +89,10 @@ label.control-label {
 
 .datepicker-toggle-btn{
   cursor: pointer;
+}
+
+@media screen and (max-width: 767px) {
+  .form-label{
+    text-align: left;
+  }
 }
