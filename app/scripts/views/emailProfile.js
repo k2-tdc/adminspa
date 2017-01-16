@@ -45,9 +45,9 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.model.toJSON());
       this.$el.html(this.template(this.model.toJSON()));
       Q.all([
-          self.loadProcess(),
-          self.loadProfileUser()
-        ])
+        self.loadProcess(),
+        self.loadProfileUser()
+      ])
         .then(function(results) {
           var processCollection = results[0];
           var profileUserCollection = results[1];
@@ -162,7 +162,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (Hktdc.Config.isAdmin) {
         ProfileUserView = new Hktdc.Views.ProfileUserSelect({
           collection: self.model.toJSON().profileUserCollection,
-          selectedProfileUser: self.model.toJSON().UserID || Hktdc.Config.userID,
+          selectedProfileUser: self.model.toJSON().UserId,
           onSelected: function(profileUserId) {
             self.model.set({
               UserId: profileUserId

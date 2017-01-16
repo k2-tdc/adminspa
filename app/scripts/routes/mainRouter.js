@@ -184,7 +184,7 @@ Hktdc.Routers = Hktdc.Routers || {};
                 ProcessId: emailProfileModel.toJSON().ProcessID,
                 StepId: emailProfileModel.toJSON().StepID,
                 TimeSlot: emailProfileModel.toJSON().TimeSlot,
-                UserId: emailProfileModel.toJSON().UserID,
+                UserId: emailProfileModel.toJSON().UserID || Hktdc.Config.userID,
                 DayOfWeek: dayOfWeek,
                 showDelete: true
               });
@@ -195,6 +195,9 @@ Hktdc.Routers = Hktdc.Routers || {};
             }
           });
         } else {
+          emailProfileModel.set({
+            UserId: Hktdc.Config.userID
+          });
           onSuccess();
         }
       } catch (e) {
