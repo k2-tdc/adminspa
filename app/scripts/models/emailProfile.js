@@ -11,13 +11,13 @@ Hktdc.Models = Hktdc.Models || {};
       return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-profiles/' + profileId;
     },
 
-
     initialize: function() {
     },
 
     defaults: {
       ProfileId: '',
       ProcessId: 0,
+      ProcessName: 0,
       StepId: 0,
       TimeSlot: 0,
       DayOfWeek: [],

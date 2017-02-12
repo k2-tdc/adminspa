@@ -104,7 +104,7 @@ Hktdc.Views = Hktdc.Views || {};
     loadStep: function() {
       var deferred = Q.defer();
       var stpeCollection = new Hktdc.Collections.Step();
-      stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessId);
+      stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessName);
       stpeCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
@@ -122,9 +122,10 @@ Hktdc.Views = Hktdc.Views || {};
       var processSelectView = new Hktdc.Views.ProcessSelect({
         collection: self.model.toJSON().processCollection,
         selectedProcess: self.model.toJSON().ProcessId,
-        onSelected: function(processId) {
+        onSelected: function(process) {
           self.model.set({
-            ProcessId: processId
+            ProcessId: process.ProcessID,
+            ProcessName: process.ProcessName
           });
           self.loadStep()
             .then(function(stepCollection) {

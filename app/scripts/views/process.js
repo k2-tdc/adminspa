@@ -29,7 +29,10 @@ Hktdc.Views = Hktdc.Views || {};
 
     selectProcessHandler: function(ev) {
       if (this.onSelected) {
-        this.onSelected($(ev.target).find('option:selected').val());
+        var processId = $(ev.target).find('option:selected').val();
+        this.onSelected(_.find(this.collection.toJSON(), function(process) {
+          return String(process.ProcessID) === String(processId);
+        }));
       }
     },
 

@@ -85,7 +85,7 @@ Hktdc.Views = Hktdc.Views || {};
     loadStep: function() {
       var deferred = Q.defer();
       var stepCollection = new Hktdc.Collections.Step();
-      stepCollection.url = stepCollection.url(this.model.toJSON().ProcessId);
+      stepCollection.url = stepCollection.url(this.model.toJSON().ProcessName);
       stepCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
@@ -260,9 +260,10 @@ Hktdc.Views = Hktdc.Views || {};
       var ProcessSelectView = new Hktdc.Views.ProcessSelect({
         collection: self.model.toJSON().processCollection,
         selectedProcess: self.model.toJSON().ProcessId,
-        onSelected: function(processId) {
+        onSelected: function(process) {
           self.model.set({
-            ProcessId: processId
+            ProcessId: process.ProcessID,
+            ProcessName: process.ProcessName
           });
           self.loadStep()
             .then(function(stepCollection) {
@@ -296,7 +297,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var deferred = Q.defer();
       var DeleteTemplateModel = Backbone.Model.extend({
-        url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-template/' + tId
+        url: Hktdc.Config.apiURL + '/email-templates/' + tId
       });
       var DeleteTemplatetance = new DeleteTemplateModel();
       DeleteTemplatetance.save(null, {
@@ -357,28 +358,7 @@ Hktdc.Views = Hktdc.Views || {};
     getAjaxURL: function() {
       var queryParams = _.omit(this.model.toJSON(), 'stepCollection', 'processCollection', 'mode');
       var queryString = utils.getQueryString(queryParams, true);
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-template-list' + queryString;
-      /*
-      console.log(this.model.);
-      switch (this.model.toJSON().mode) {
-        case 'DRAFT':
-          statusApiURL = Hktdc.Config.apiURL + '/GetEmailTemplateList?' + filterArr.join('&');
-          break;
-        case 'ALL TASKS':
-          statusApiURL = Hktdc.Config.apiURL + '/GetWorklist?' + filterArr.join('&');
-          break;
-        case 'APPROVAL TASKS':
-          statusApiURL = Hktdc.Config.apiURL + '/GetApproveList?' + filterArr.join('&');
-          break;
-        case 'CHECK STATUS':
-          statusApiURL = Hktdc.Config.apiURL + '/GetRequestList?' + filterArr.join('&');
-          break;
-        default:
-          console.log('mode error');
-          statusApiURL = Hktdc.Config.apiURL + '/GetRequestDetails?' + filterArr.join('&');
-      }
-      return statusApiURL;
-      */
+      return Hktdc.Config.apiURL + '/email-templates' + queryString;
     }
   });
 })();
