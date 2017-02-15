@@ -23,7 +23,7 @@ Hktdc.Views = Hktdc.Views || {};
       console.debug('[ views/emailTemplateList.js ] - Initialize');
       var self = this;
       $('#mainContent').removeClass('compress');
-      if (this.model.toJSON().ProcessId) {
+      if (this.model.toJSON().processId) {
         setTimeout(function() {
           self.loadStep()
             .then(function(stepCollection) {
@@ -85,7 +85,7 @@ Hktdc.Views = Hktdc.Views || {};
     loadStep: function() {
       var deferred = Q.defer();
       var stepCollection = new Hktdc.Collections.Step();
-      stepCollection.url = stepCollection.url(this.model.toJSON().ProcessName);
+      stepCollection.url = stepCollection.url(this.model.toJSON().process, 'Email');
       stepCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
@@ -207,20 +207,32 @@ Hktdc.Views = Hktdc.Views || {};
           message: 'Are you sure want to Delete?',
           onConfirm: function() {
             self.deleteTemplate(targetId)
-              .then(function() {
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  type: 'success',
-                  title: 'confirmation',
-                  message: 'deleted!'
-                });
+              .then(function(response) {
+                if (String(response.success) === '1') {
+                  Hktdc.Dispatcher.trigger('openAlert', {
+                    type: 'success',
+                    title: 'confirmation',
+                    message: 'Deleted record: ' + rowData.process + ' - ' + rowData.step
+                  });
+
+                  self.templateDataTable.ajax.reload();
+                  Hktdc.Dispatcher.trigger('reloadMenu');
+                } else {
+                  Hktdc.Dispatcher.trigger('openAlert', {
+                    type: 'error',
+                    title: 'error',
+                    message: response.Msg
+                  });
+                }
                 Hktdc.Dispatcher.trigger('closeConfirm');
               })
-              .catch(function() {
+              .catch(function(err) {
                 Hktdc.Dispatcher.trigger('openAlert', {
                   type: 'error',
                   title: 'error',
                   message: 'delete failed'
                 });
+                console.error(err);
               });
           }
         });
@@ -259,16 +271,16 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var ProcessSelectView = new Hktdc.Views.ProcessSelect({
         collection: self.model.toJSON().processCollection,
-        selectedProcess: self.model.toJSON().ProcessId,
+        selectedProcess: self.model.toJSON().processId,
         onSelected: function(process) {
           self.model.set({
-            ProcessId: process.ProcessID,
-            ProcessName: process.ProcessName
+            processId: process.ProcessID,
+            process: process.ProcessName
           });
           self.loadStep()
             .then(function(stepCollection) {
               self.model.set({
-                StepId: null,
+                step: null,
                 stepCollection: stepCollection
               });
             });
@@ -282,10 +294,10 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var processSelectView = new Hktdc.Views.StepSelect({
         collection: self.model.toJSON().stepCollection,
-        selectedStep: self.model.toJSON().StepId,
+        selectedStep: self.model.toJSON().step,
         onSelected: function(stepId) {
           self.model.set({
-            StepId: stepId
+            step: stepId
           });
         }
       });
@@ -294,23 +306,19 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     deleteTemplate: function(tId) {
-      var self = this;
       var deferred = Q.defer();
       var DeleteTemplateModel = Backbone.Model.extend({
         url: Hktdc.Config.apiURL + '/email-templates/' + tId
       });
-      var DeleteTemplatetance = new DeleteTemplateModel();
-      DeleteTemplatetance.save(null, {
+      var DeleteTemplateInstance = new DeleteTemplateModel();
+      DeleteTemplateInstance.save(null, {
         type: 'DELETE',
         beforeSend: utils.setAuthHeader,
         success: function(model, response) {
-          self.templateDataTable.ajax.reload();
-          Hktdc.Dispatcher.trigger('reloadMenu');
-          deferred.resolve();
+          deferred.resolve(response);
         },
         error: function(err) {
-          deferred.reject();
-          console.log(err);
+          deferred.reject(err);
         }
       });
       return deferred.promise;

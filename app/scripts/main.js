@@ -295,6 +295,6 @@ window.Hktdc = {
 
 $(document).ready(function() {
   'use strict';
-  Hktdc.init('localDev');
-  // Hktdc.init('uat');
+  // Hktdc.init('localDev');
+  Hktdc.init('uat');
 });

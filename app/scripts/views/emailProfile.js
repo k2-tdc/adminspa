@@ -104,7 +104,7 @@ Hktdc.Views = Hktdc.Views || {};
     loadStep: function() {
       var deferred = Q.defer();
       var stpeCollection = new Hktdc.Collections.Step();
-      stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessName);
+      stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessName, encodeURI('Email Profile'));
       stpeCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
@@ -269,14 +269,14 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'confirmation',
-        message: 'Are you sure want to Delete?',
+        message: 'Are you sure to delete the profile?',
         onConfirm: function() {
           self.doDeleteProfile(self.model.toJSON().ProfileId)
             .then(function() {
               Hktdc.Dispatcher.trigger('openAlert', {
                 type: 'success',
                 title: 'confirmation',
-                message: 'deleted!'
+                message: 'You have deleted the record!'
               });
               Hktdc.Dispatcher.trigger('closeConfirm');
               Backbone.history.navigate('emailprofile', {
@@ -287,7 +287,7 @@ Hktdc.Views = Hktdc.Views || {};
               Hktdc.Dispatcher.trigger('openAlert', {
                 type: 'error',
                 title: 'error',
-                message: 'delete failed'
+                message: 'Error on deleting record.'
               });
             });
         }

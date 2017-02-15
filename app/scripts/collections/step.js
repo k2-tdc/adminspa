@@ -7,9 +7,9 @@ Hktdc.Collections = Hktdc.Collections || {};
 
   Hktdc.Collections.Step = Backbone.Collection.extend({
 
-    url: function(processName) {
+    url: function(processName, type) {
       // return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/applications/steps/' + processId;
-      return Hktdc.Config.apiURL + '/activity-groups?activity-group-type=email&process' + processName;
+      return Hktdc.Config.apiURL + '/activity-groups?activity-group-type=' + (type || 'Email') + '&process=' + processName;
     },
 
     model: Hktdc.Models.Step

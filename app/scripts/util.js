@@ -67,12 +67,12 @@ window.utils = {
     var queryPart = _.map(obj, function(val, key) {
       var value;
       if (notAllowEmpty) {
-        console.log('notAllowEmpty');
+        // console.log('notAllowEmpty');
         if (!val || val === '0') {
-          console.log('no value');
+          // console.log('no value');
           return '';
         }
-        console.log('have value');
+        // console.log('have value');
         return key + '=' + val;
       } else {
         value = (_.isNull(val)) ? '' : val;
@@ -80,7 +80,7 @@ window.utils = {
       }
     });
     if (_.compact(queryPart).length) {
-      return '?' + queryPart.join('&');
+      return '?' + _.compact(queryPart).join('&');
     }
     return '';
   },

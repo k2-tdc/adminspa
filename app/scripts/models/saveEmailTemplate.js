@@ -7,8 +7,9 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.SaveEmailTemplate = Backbone.Model.extend({
 
-    url: function() {
-      return Hktdc.Config.apiURL + '/email-templates';
+    url: function(tId) {
+      var templateIdURI = (tId) ? '/' + tId : '';
+      return Hktdc.Config.apiURL + '/email-templates' + templateIdURI;
     },
 
     initialize: function() {},

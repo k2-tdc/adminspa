@@ -9,8 +9,9 @@ Hktdc.Models = Hktdc.Models || {};
     initialize: function() {},
 
     defaults: {
-      ProcessId: 0,
-      StepId: 0,
+      processId: 0,
+      process: '',
+      step: 0,
       processCollection: null,
       stepCollection: null
     },

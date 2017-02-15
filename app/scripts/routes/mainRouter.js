@@ -33,8 +33,8 @@ Hktdc.Routers = Hktdc.Routers || {};
         var emailTemplateListModel = new Hktdc.Models.EmailTemplateList({});
         emailTemplateListModel.set({
           mode: 'EMAIL TEMPLATE',
-          ProcessId: utils.getParameterByName('ProcessId'),
-          StepId: utils.getParameterByName('StepId')
+          processId: utils.getParameterByName('processId'),
+          step: utils.getParameterByName('step')
         });
         var emailTemplateListView = new Hktdc.Views.EmailTemplateList({
           model: emailTemplateListModel

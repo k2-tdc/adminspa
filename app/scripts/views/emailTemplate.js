@@ -78,7 +78,7 @@ Hktdc.Views = Hktdc.Views || {};
     loadStep: function() {
       var deferred = Q.defer();
       var stpeCollection = new Hktdc.Collections.Step();
-      stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessName);
+      stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessName, 'Email');
       stpeCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
@@ -171,7 +171,7 @@ Hktdc.Views = Hktdc.Views || {};
       Backbone.emulateHTTP = true;
       Backbone.emulateJSON = true;
       // console.log(this.model.toJSON());
-      var sendRequestModel = new Hktdc.Models.SaveEmailTemplate({
+      var sendEmailTemplateModel = new Hktdc.Models.SaveEmailTemplate({
         UserId: Hktdc.Config.userID,
         TemplateId: (this.model.toJSON().TemplateId) ? parseInt(this.model.toJSON().TemplateId) : 0,
         ProcessId: parseInt(this.model.toJSON().ProcessId),
@@ -180,17 +180,22 @@ Hktdc.Views = Hktdc.Views || {};
         Body: this.model.toJSON().Body,
         Enabled: (this.model.toJSON().Enabled) ? 1 : 0
       });
-      // console.log(sendRequestModel.toJSON());
-      var method = (sendRequestModel.toJSON().TemplateId) ? 'PUT' : 'POST';
-      sendRequestModel.save({}, {
+
+      if (sendEmailTemplateModel.toJSON().TemplateId) {
+        var method = 'PUT';
+        sendEmailTemplateModel.url = sendEmailTemplateModel.url(parseInt(this.model.toJSON().TemplateId));
+      } else {
+        var method = 'POST';
+      }
+      sendEmailTemplateModel.save({}, {
         beforeSend: utils.setAuthHeader,
         type: method,
         success: function(mymodel, response) {
           // console.log(response);
-          if (response.success) {
-            deferred.resolve(response);
+          if (response.Success === '1' || response.Success === 1) {
+            deferred.resolve();
           } else {
-            deferred.reject('save failed');
+            deferred.reject(response.Msg);
           }
         },
         error: function(model, e) {
