@@ -22,7 +22,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
-      if (this.model.toJSON().ProcessId) {
+      if (this.model.toJSON().ProcessName) {
         setTimeout(function() {
           self.loadStep()
             .then(function(stepCollection) {
@@ -61,6 +61,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderProcessSelect();
           self.renderProfileUserSelect();
         })
+        
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
@@ -121,16 +122,16 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var processSelectView = new Hktdc.Views.ProcessSelect({
         collection: self.model.toJSON().processCollection,
-        selectedProcess: self.model.toJSON().ProcessId,
+        selectedProcess: self.model.toJSON().ProcessID,
         onSelected: function(process) {
           self.model.set({
-            ProcessId: process.ProcessID,
+            ProcessID: process.ProcessID,
             ProcessName: process.ProcessName
           });
           self.loadStep()
             .then(function(stepCollection) {
               self.model.set({
-                StepId: null,
+                StepID: null,
                 stepCollection: stepCollection
               });
             });
@@ -144,10 +145,10 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var stepSelectView = new Hktdc.Views.StepSelect({
         collection: self.model.toJSON().stepCollection,
-        selectedStep: self.model.toJSON().StepId,
+        selectedStep: self.model.toJSON().StepID,
         onSelected: function(stepId) {
           self.model.set({
-            StepId: stepId
+            StepID: stepId
           });
         }
       });
@@ -229,8 +230,8 @@ Hktdc.Views = Hktdc.Views || {};
       console.log(this.model.toJSON());
       var data = {
         ProfileId: (this.model.toJSON().ProfileId) ? parseInt(this.model.toJSON().ProfileId) : 0,
-        ProcessId: parseInt(this.model.toJSON().ProcessId),
-        StepId: parseInt(this.model.toJSON().StepId),
+        ProcessId: parseInt(this.model.toJSON().ProcessID),
+        StepId: parseInt(this.model.toJSON().StepID),
         UserId: this.model.toJSON().UserId, // "Profile" in UI
         TimeSlot: parseInt(this.model.toJSON().TimeSlot),
         CC: '',

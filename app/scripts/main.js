@@ -31,7 +31,7 @@ window.Hktdc = {
           protocol: 'http',
           host: 'localhost',
           port: '9999',
-          base: '/api/phase2'
+          base: '/api'
         },
         needAuthHeader: false,
         logoutURL: 'https://corpsso.tdc.org.hk/adfs/ls/?wa=wsignout1.0',
@@ -43,7 +43,7 @@ window.Hktdc = {
         api: {
           protocol: 'https',
           host: 'api.uat.hktdc.org',
-          base: '/workflow/admin'
+          base: '/workflow'
         },
         needAuthHeader: true,
         projectPath: '/vicosyscommon/',
@@ -295,6 +295,6 @@ window.Hktdc = {
 
 $(document).ready(function() {
   'use strict';
-  // Hktdc.init('localDev');
-  Hktdc.init('uat');
+  Hktdc.init('localDev');
+  // Hktdc.init('uat');
 });

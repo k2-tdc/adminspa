@@ -18,7 +18,7 @@ Hktdc.Models = Hktdc.Models || {};
       ProfileId: '',
       ProcessId: 0,
       ProcessName: 0,
-      StepId: 0,
+      StepID: 0,
       TimeSlot: 0,
       DayOfWeek: [],
       UserId: '', // "Profile" in UI

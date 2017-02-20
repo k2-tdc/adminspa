@@ -20,7 +20,7 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
       var self = this;
-      if (this.model.toJSON().ProcessId) {
+      if (this.model.toJSON().ProcessName) {
         setTimeout(function() {
           self.loadStep()
             .then(function(stepCollection) {
