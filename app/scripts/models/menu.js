@@ -7,8 +7,9 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.Menu = Backbone.Model.extend({
 
-    url: function() {
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/applications/authorized-pages?process=admin';
+    url: function(page) {
+      var pageQS = page ? '&page=' + page : '';
+      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/applications/authorized-pages?process=admin' + pageQS;
     },
 
     initialize: function() {},
