@@ -110,7 +110,7 @@ Hktdc.Views = Hktdc.Views || {};
                 'WeekDay7': 'Sun'
               };
               var timeNameMapping = [
-                '-- Select --',
+                '-- N/A --',
                 '00:00 - 00:59',
                 '01:00 - 01:59',
                 '02:00 - 02:59',
