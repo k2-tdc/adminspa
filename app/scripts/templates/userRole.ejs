@@ -1,0 +1,65 @@
+<div class="panel panel-default">
+  <div class="panel-title panel-heading subheader-menu-container headingOne">
+    <!-- subheader menu here -->
+  </div>
+
+  <div class="email-template-container block-padding" style="padding-top:14px; padding-bottom:14px; ">
+
+    <!-- <div class="email-filter-container"> -->
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-label text-right">Role Name: </div>
+      </div>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="rolename" value="">
+      </div>
+    </div>
+    <div class="sep-space"></div>
+
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-label text-right">Process Name: </div>
+      </div>
+      <div class="col-md-9 processContainer"></div>
+    </div>
+    <div class="sep-space"></div>
+
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-label text-right">Entity Name: </div>
+      </div>
+      <div class="col-md-9">
+        <table class="entity-table">
+          <thead>
+            <tr>
+              <td colspan="3">
+                Multi-Select
+              </td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+    <div class="sep-space"></div>
+
+
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-label text-right">Remark: </div>
+      </div>
+      <div class="col-md-9">
+        <textarea name="remark" class="form-control" rows="8" cols="80"><%= Remark %></textarea>
+      </div>
+    </div>
+    <div class="sep-space"></div>
+
+    <div class="buttons-container">
+      <div class="available-buttons">
+        <button type="button" class="btn btn-primary delBtn">Delete</button>
+        <button type="button" class="btn btn-primary saveBtn">Save</button>
+      </div>
+    </div>
+    <!-- </div> -->
+
+  </div>
+</div>

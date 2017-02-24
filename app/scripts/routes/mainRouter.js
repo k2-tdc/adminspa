@@ -14,6 +14,8 @@ Hktdc.Routers = Hktdc.Routers || {};
       'emailprofile': 'emailProfileList',
       'emailprofile/new': 'editEmailProfile',
       'emailprofile/:templateId': 'editEmailProfile',
+      'userrole': 'userRoleList',
+      'userrole/:roleId': 'editUserRole',
       'logout': 'logout'
     },
 
@@ -196,6 +198,88 @@ Hktdc.Routers = Hktdc.Routers || {};
           });
         } else {
           emailProfileModel.set({
+            UserId: Hktdc.Config.userID
+          });
+          onSuccess();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    userRoleList: function() {
+      try {
+        var emailProfileListModel = new Hktdc.Models.UserRoleList({});
+        emailProfileListModel.set({
+          mode: 'User Role',
+          profile: utils.getParameterByName('profile'),
+          showSearch: Hktdc.Config.isAdmin
+        });
+        var emailProfileListView = new Hktdc.Views.UserRoleList({
+          model: emailProfileListModel
+        });
+        emailProfileListView.render();
+        $('#mainContent').empty().html(emailProfileListView.el);
+
+        var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+        var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+          collection: subheaderMenuListCollection,
+          currentPageName: 'USER ROLE'
+        });
+        subheaderMenuListView.render();
+        $('.subheader-menu-container').html(subheaderMenuListView.el);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    editUserRole: function(profileId) {
+      // console.log('edit email template');
+      try {
+        $('#mainContent').addClass('compress');
+
+        var userRoleModel = new Hktdc.Models.UserRole({
+          mode: 'User Role'
+        });
+        var onSuccess = function() {
+          var emailProfileView = new Hktdc.Views.UserRole({
+            model: userRoleModel
+          });
+          emailProfileView.render();
+          $('#mainContent').empty().html(emailProfileView.el);
+
+          var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+          var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+            collection: subheaderMenuListCollection,
+            currentPageName: 'USER ROLE'
+          });
+          subheaderMenuListView.render();
+          $('.subheader-menu-container').html(subheaderMenuListView.el);
+        };
+
+        if (profileId) {
+          userRoleModel.url = userRoleModel.url(profileId);
+          userRoleModel.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              var dayOfWeek = [];
+              userRoleModel.set({
+                ProfileId: userRoleModel.toJSON().EmailNotificationProfileID,
+                ProcessId: userRoleModel.toJSON().ProcessID,
+                StepId: userRoleModel.toJSON().StepID,
+                TimeSlot: userRoleModel.toJSON().TimeSlot,
+                UserId: userRoleModel.toJSON().UserID || Hktdc.Config.userID,
+                DayOfWeek: dayOfWeek,
+                showDelete: true
+              });
+              onSuccess();
+            },
+            error: function(model, err) {
+              throw err;
+            }
+          });
+        } else {
+          userRoleModel.set({
             UserId: Hktdc.Config.userID
           });
           onSuccess();

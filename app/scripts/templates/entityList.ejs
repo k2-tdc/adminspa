@@ -1,0 +1,15 @@
+<% for (var i=0; i < entity.length; i++) { %>
+  <tr>
+    <% for (var k=0; k < entity[i].length; k++) { %>
+    <td>
+      <div class="">
+        <label>
+          <input type="checkbox" name="" value="">
+          <span><%= entity[i][k].Name %></span>
+        </label>
+
+      </div>
+    </td>
+    <% } %>
+  </tr>
+<% } %>
