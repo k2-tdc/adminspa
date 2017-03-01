@@ -220,9 +220,7 @@ window.Hktdc = {
         // headerModel.set({
         //   stepList: menuModel.toJSON().PList
         // });
-        Hktdc.Dispatcher.trigger('checkPagePermission', function() {
-          onSuccess(menuModel);
-        });
+        onSuccess(menuModel);
       })
       .catch(function(error) {
         console.error(error);

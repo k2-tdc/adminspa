@@ -8,36 +8,10 @@
     <!-- <div class="email-filter-container"> -->
     <div class="row">
       <div class="col-md-3">
-        <div class="form-label text-right">Role Name: </div>
+        <div class="form-label text-right">Role</div>
       </div>
       <div class="col-md-9">
-        <input type="text" class="form-control" name="rolename" value="">
-      </div>
-    </div>
-    <div class="sep-space"></div>
-
-    <div class="row">
-      <div class="col-md-3">
-        <div class="form-label text-right">Process Name: </div>
-      </div>
-      <div class="col-md-9 processContainer"></div>
-    </div>
-    <div class="sep-space"></div>
-
-    <div class="row">
-      <div class="col-md-3">
-        <div class="form-label text-right">Entity Name: </div>
-      </div>
-      <div class="col-md-9">
-        <table class="entity-table">
-          <thead>
-            <tr>
-              <td colspan="3">
-                Multi-Select
-              </td>
-            </tr>
-          </thead>
-        </table>
+        <input type="text" class="form-control formTextField" name="Role" value="<%= Role%>">
       </div>
     </div>
     <div class="sep-space"></div>
@@ -45,13 +19,70 @@
 
     <div class="row">
       <div class="col-md-3">
-        <div class="form-label text-right">Remark: </div>
+        <div class="form-label text-right">Description</div>
       </div>
       <div class="col-md-9">
-        <textarea name="remark" class="form-control" rows="8" cols="80"><%= Remark %></textarea>
+        <textarea name="Desc" class="form-control formTextField" rows="8" cols="80"><%= Desc %></textarea>
       </div>
     </div>
     <div class="sep-space"></div>
+
+    <div class="form-group row">
+      <div class="col-sm-3">
+        <div class="form-label text-right">Process</div>
+      </div>
+      <div class="col-md-9 processContainer">
+        <!-- status Select list here -->
+      </div>
+    </div>
+
+
+    <% if (showMember) { %>
+    <div>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-label text-right">Members</div>
+        </div>
+        <div class="col-md-9"></div>
+      </div>
+      <div class="">
+
+        <div class="table-responsive">
+          <table id="memberTable" class="table table-striped table-bordered table-grey" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Object Type</th>
+                <th>Name</th>
+                <th>Expiry Date</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th>Object Type</th>
+                <th>Name</th>
+                <th>Expiry Date</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="sep-space"></div>
+
+    <div class="">
+      <button class="btn">
+        <i class="glyphicon glyphicon-plus"></i>
+        add
+      </button>
+      <button class="btn">
+        <i class="glyphicon glyphicon-minus"></i>
+        remove
+      </button>
+    </div>
+    <div class="sep-space"></div>
+    <% } %>
 
     <div class="buttons-container">
       <div class="available-buttons">

@@ -18,7 +18,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       this.render();
       self.listenTo(Hktdc.Dispatcher, 'checkPagePermission', function(onSuccess) {
-        var path = Backbone.history.getHash().split('?')[0];
+        var path = Backbone.history.getHash().split('?')[0].split('/')[0];
         self.checkPagePermission(path, function() {
           onSuccess();
         }, function() {
@@ -162,22 +162,27 @@ Hktdc.Views = Hktdc.Views || {};
         }
         return menu.RouteName.toLowerCase() === path;
       });
-      var pageGUID = menuObj.MenuId;
-      var checkPagePermissionModel = new Hktdc.Models.Menu();
-      checkPagePermissionModel.url = checkPagePermissionModel.url(pageGUID);
-      checkPagePermissionModel.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function(model, data) {
-          if (data.EmployeeNo) {
-            onSuccess();
-          } else {
+
+      if (!(menuObj && menuObj.MenuId)) {
+        onError();
+      } else {
+        var pageGUID = menuObj.MenuId;
+        var checkPagePermissionModel = new Hktdc.Models.Menu();
+        checkPagePermissionModel.url = checkPagePermissionModel.url(pageGUID);
+        checkPagePermissionModel.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function(model, data) {
+            if (data.EmployeeNo) {
+              onSuccess();
+            } else {
+              onError();
+            }
+          },
+          error: function() {
             onError();
           }
-        },
-        error: function() {
-          onError();
-        }
-      });
+        });
+      }
     },
 
     onClickMenu: function(ev) {
@@ -188,19 +193,11 @@ Hktdc.Views = Hktdc.Views || {};
 
       var pagePath = $target.attr('routename').toLowerCase();
 
-      this.checkPagePermission(pagePath, function() {
-        if (Backbone.history.getHash().indexOf(pagePath) >= 0) {
-          Hktdc.Dispatcher.trigger('reloadRoute', pagePath);
-        } else {
-          Backbone.history.navigate(pagePath, true);
-        }
-      }, function() {
-        Hktdc.Dispatcher.trigger('openAlert', {
-          message: 'Permission denied for accessing this page',
-          title: 'error',
-          type: 'error'
-        });
-      });
+      if (Backbone.history.getHash().indexOf(pagePath) >= 0) {
+        Hktdc.Dispatcher.trigger('reloadRoute', pagePath);
+      } else {
+        Backbone.history.navigate(pagePath, true);
+      }
     }
 
   });

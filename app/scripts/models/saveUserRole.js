@@ -5,9 +5,7 @@ Hktdc.Models = Hktdc.Models || {};
 (function() {
   'use strict';
 
-  Hktdc.Models.UserRole = Backbone.Model.extend({
-
-    idAttribute: 'UserRoleGUID',
+  Hktdc.Models.SaveUserRole = Backbone.Model.extend({
 
     url: function(roleId) {
       var roleIdPath = (roleId) ? '/' + roleId : '';
@@ -17,21 +15,12 @@ Hktdc.Models = Hktdc.Models || {};
     initialize: function() {},
 
     defaults: {
-      UserRoleGUID: '',
       Role: '',
       Desc: '',
-      ProcessId: '',
-      ProcessName: '',
-      Member: [
-        // UserRoleMemberGUID: xxx,
-        // Type: xxx,
-        // Name: xxx,
-        // ExpiryDate: xxx (DateTime)
-      ],
+      ProcessId: 0,
 
-      processCollection: null,
-      showMember: false,
-      saveType: 'POST'
+      // absent if insert
+      UserRoleGUID: null
     },
 
     validate: function(attrs, options) {},

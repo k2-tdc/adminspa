@@ -5,10 +5,9 @@ Hktdc.Collections = Hktdc.Collections || {};
 (function() {
   'use strict';
 
-  Hktdc.Collections.UserRole = Backbone.Collection.extend({
+  Hktdc.Collections.UserPicker = Backbone.Collection.extend({
 
-    model: Hktdc.Models.UserRole
+    model: Hktdc.Models.UserPicker
 
   });
-
 })();
