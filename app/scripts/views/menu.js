@@ -136,7 +136,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       try {
         var routeName = (route.indexOf('/') >= 0) ? routeMap[route.split('/')[0].toUpperCase()] : route.toUpperCase();
-        var routeBase = routeName.split('?')[0] || 'EMAILTEMPLATE';
+        var routeBase = routeName.split('?')[0] || 'EMAILPROFILE';
         setTimeout(function() {
           if ($('li[routename="' + routeBase + '"]')) {
             $('nav#menu').data('mmenu').setSelected($('li[routename="' + routeBase + '"]'));
@@ -158,7 +158,7 @@ Hktdc.Views = Hktdc.Views || {};
       var allMenu = allMainMenu.concat(allSubMenu);
       var menuObj = _.find(allMenu, function(menu) {
         if (path === '') {
-          return menu.RouteName.toLowerCase() === 'emailtemplate';
+          return menu.RouteName.toLowerCase() === 'emailprofile';
         }
         return menu.RouteName.toLowerCase() === path;
       });
