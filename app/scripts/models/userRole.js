@@ -31,7 +31,8 @@ Hktdc.Models = Hktdc.Models || {};
 
       processCollection: null,
       showMember: false,
-      saveType: 'POST'
+      saveType: 'POST',
+      selectedMember: []
     },
 
     validate: function(attrs, options) {},

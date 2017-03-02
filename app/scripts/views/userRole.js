@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, utils, Q, $ */
+/* global Hktdc, Backbone, JST, utils, Q, $, _ */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -14,7 +14,9 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'change .formTextField': 'updateFormModel',
       'click .delBtn': 'deleteButtonHandler',
-      'click .saveBtn': 'saveButtonHandler'
+      'click .saveBtn': 'saveButtonHandler',
+      'click .addMemeberBtn': 'addMemberButtonHandler',
+      'click .removeMemeberBtn': 'removeMemberButtonHandler'
     },
 
     initialize: function() {
@@ -69,9 +71,12 @@ Hktdc.Views = Hktdc.Views || {};
           });
         },
         columns: [
-          { data: function() {
-            return '';
-          }},
+          {
+            data: 'UserRoleMemberGUID',
+            render: function(data) {
+              return '<input type="checkbox" class="selectUser"/>';
+            }
+          },
           { data: 'Type' },
           { data: 'Name' },
           { data: 'ExpiryDate' }
@@ -82,6 +87,27 @@ Hktdc.Views = Hktdc.Views || {};
         var rowData = self.userRoleDataTable.row(this).data();
         Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID + '/member/' + rowData.UserRoleMemberGUID, {
           trigger: true
+        });
+      });
+
+      $('#memberTable tbody', this.el).on('click', 'td:first-child', function(ev) {
+        ev.stopPropagation();
+      });
+
+      $('#memberTable tbody', this.el).on('click', '.selectUser', function(ev) {
+        ev.stopPropagation();
+        var rowData = self.userRoleDataTable.row($(this).parents('tr')).data();
+        var originalMember = self.model.toJSON().selectedMember;
+        var newMember;
+        if ($(this).prop('checked')) {
+          newMember = _.union(originalMember, [rowData.UserRoleMemberGUID]);
+        } else {
+          newMember = _.reject(originalMember, function(memberGUID) {
+            return rowData.UserRoleMemberGUID === memberGUID;
+          });
+        }
+        self.model.set({
+          selectedMember: newMember
         });
       });
     },
@@ -143,16 +169,17 @@ Hktdc.Views = Hktdc.Views || {};
         saveUserRoleModel.unset('UserRoleGUID');
       }
 
-      // saveUserRoleModel.url = saveUserRoleModel.url(this.model.toJSON().UserRoleGUID);
-      saveUserRoleModel.save(null, {
+      saveUserRoleModel.url = saveUserRoleModel.url(this.model.toJSON().UserRoleGUID);
+      saveUserRoleModel.save({}, {
         beforeSend: utils.setAuthHeader,
         type: this.model.toJSON().saveType,
         success: function() {
           Hktdc.Dispatcher.trigger('openAlert', {
             message: 'saved',
             type: 'confirmation',
-            title: 'Runtime Error'
+            title: 'Confirmation'
           });
+          Backbone.history.navigate('userrole', {trigger: true});
         },
         error: function(err) {
           Hktdc.Dispatcher.trigger('openAlert', {
@@ -165,25 +192,87 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     deleteButtonHandler: function() {
-      var saveUserRoleModel = new Hktdc.Models.SaveUserRole();
-      saveUserRoleModel.clear();
-      saveUserRoleModel.url = saveUserRoleModel.url(this.model.toJSON().UserRoleGUID);
-      saveUserRoleModel.save(null, {
-        beforeSend: utils.setAuthHeader,
-        type: 'DELETE',
-        success: function(response) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'deleted',
-            type: 'confirmation',
-            title: 'Runtime Error'
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'Confirmation',
+        message: 'Are you sure to delete?',
+        onConfirm: function() {
+          var saveUserRoleModel = new Hktdc.Models.SaveUserRole();
+          saveUserRoleModel.clear();
+          saveUserRoleModel.url = saveUserRoleModel.url(this.model.toJSON().UserRoleGUID);
+          saveUserRoleModel.save(null, {
+            beforeSend: utils.setAuthHeader,
+            type: 'DELETE',
+            success: function(response) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'deleted',
+                type: 'confirmation',
+                title: 'Confirmation'
+              });
+
+              Backbone.history.navigate('userrole', {trigger: true});
+            },
+            error: function(err) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: err,
+                type: 'error',
+                title: 'error on saving user role'
+              });
+            }
           });
-        },
-        error: function(err) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'error on saving user role'
-          });
+        }
+      });
+    },
+
+    addMemberButtonHandler: function() {
+      Backbone.history.navigate('userrole/' + this.model.toJSON().UserRoleGUID + '/member/new', {
+        trigger: true
+      });
+    },
+
+    removeMemberButtonHandler: function() {
+      var self = this;
+      var removeSingleMember = function(guid) {
+        var deferred = Q.defer();
+        var saveUserRoleMemberModel = new Hktdc.Models.SaveUserRoleMember();
+        saveUserRoleMemberModel.clear();
+        saveUserRoleMemberModel.url = saveUserRoleMemberModel.url(guid);
+        saveUserRoleMemberModel.save(null, {
+          type: 'DELETE',
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve();
+          },
+          error: function(err) {
+            deferred.reject(err);
+          }
+        });
+        return deferred.promise;
+      };
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'Confirmation',
+        message: 'Are you sure to remove this member?',
+        onConfirm: function() {
+          Q.all(_.map(self.model.toJSON().selectedMember, function(memberGUID) {
+            return removeSingleMember(memberGUID);
+          }))
+            .then(function() {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'deleted',
+                type: 'confirmation',
+                title: 'confirmation'
+              });
+              Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, true);
+              Backbone.history.loadUrl('userrole/' + self.model.toJSON().UserRoleGUID, {
+                trigger: true
+              });
+            })
+            .fail(function(err) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: err,
+                type: 'error',
+                title: 'error on deleting user role'
+              });
+            });
         }
       });
     }

@@ -204,7 +204,7 @@ Hktdc.Views = Hktdc.Views || {};
         var targetId = rowData.id;
         Hktdc.Dispatcher.trigger('openConfirm', {
           title: 'confirmation',
-          message: 'Are you sure want to Delete?',
+          message: 'Are you sure to Delete?',
           onConfirm: function() {
             self.deleteTemplate(targetId)
               .then(function(response) {

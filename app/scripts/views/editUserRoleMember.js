@@ -80,45 +80,47 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     deleteButtonHandler: function() {
-      var rawData = this.model.toJSON();
-      var saveUserRoleMemberModel = new Hktdc.Models.SaveUserRoleMember();
-      saveUserRoleMemberModel.clear();
-      saveUserRoleMemberModel.url = saveUserRoleMemberModel.url(rawData.UserRoleMemberGUID);
-      saveUserRoleMemberModel.save(null, {
-        type: 'DELETE',
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'saved',
-            type: 'confirmation',
-            title: 'Runtime Error'
-          });
-        },
-        error: function(err) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'error on saving user role'
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'Confirmation',
+        message: 'Are you sure to delete?',
+        onConfirm: function() {
+          var rawData = this.model.toJSON();
+          var saveUserRoleMemberModel = new Hktdc.Models.SaveUserRoleMember();
+          saveUserRoleMemberModel.clear();
+          saveUserRoleMemberModel.url = saveUserRoleMemberModel.url(rawData.UserRoleMemberGUID);
+          saveUserRoleMemberModel.save(null, {
+            type: 'DELETE',
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'saved',
+                type: 'confirmation',
+                title: 'Runtime Error'
+              });
+            },
+            error: function(err) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: err,
+                type: 'error',
+                title: 'error on saving user role'
+              });
+            }
           });
         }
       });
     },
 
     saveButtonHandler: function() {
+      var self = this;
       var rawData = this.model.toJSON();
-      var saveData = {
-        Role: rawData.Role,
-        Desc: rawData.Desc,
-        ProcessId: rawData.ProcessId,
-        UserRoleGUID: rawData.UserRoleGUID
-      };
-      var saveUserRoleMemberModel = new Hktdc.Models.SaveUserRoleMember(saveData);
+      var saveUserRoleMemberModel = new Hktdc.Models.SaveUserRoleMember();
 
-      if (!rawData.UserRoleGUID) {
-        saveUserRoleMemberModel.unset('UserRoleGUID');
-      }
-
-      // saveUserRoleMemberModel.url = saveUserRoleMemberModel.url(this.model.toJSON().UserRoleGUID);
+      saveUserRoleMemberModel.clear();
+      saveUserRoleMemberModel.set({
+        UserRoleMemberGUID: rawData.UserRoleMemberGUID,
+        ExpiryDate: rawData.ExpiryDate
+      });
+      saveUserRoleMemberModel.url = saveUserRoleMemberModel.url(rawData.UserRoleMemberGUID);
       saveUserRoleMemberModel.save(null, {
         beforeSend: utils.setAuthHeader,
         type: this.model.toJSON().saveType,
@@ -126,8 +128,10 @@ Hktdc.Views = Hktdc.Views || {};
           Hktdc.Dispatcher.trigger('openAlert', {
             message: 'saved',
             type: 'confirmation',
-            title: 'Runtime Error'
+            title: 'Confirmation'
           });
+
+          Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
         },
         error: function(err) {
           Hktdc.Dispatcher.trigger('openAlert', {

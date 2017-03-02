@@ -338,6 +338,7 @@ Hktdc.Routers = Hktdc.Routers || {};
             });
             userRoleMemberModel.url = userRoleMemberModel.url(memberId);
             userRoleMemberModel.fetch({
+              beforeSend: utils.setAuthHeader,
               success: function() {
                 userRoleMemberView = new Hktdc.Views.EditUserRoleMember({
                   model: userRoleMemberModel

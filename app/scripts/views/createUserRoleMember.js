@@ -161,8 +161,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     saveButtonHandler: function() {
       var rawData = this.model.toJSON();
+      var self = this;
       var saveData = {
-        Dept: rawData.Role,
+        Dept: rawData.Dept,
         ExpiryDate: rawData.ExpiryDate,
         Query: rawData.Query,
         User: rawData.User,
@@ -170,15 +171,16 @@ Hktdc.Views = Hktdc.Views || {};
       };
       var saveUserRoleMemberModel = new Hktdc.Models.SaveUserRoleMember(saveData);
 
-      saveUserRoleMemberModel.save(null, {
+      saveUserRoleMemberModel.save({}, {
         beforeSend: utils.setAuthHeader,
         type: this.model.toJSON().saveType,
         success: function() {
           Hktdc.Dispatcher.trigger('openAlert', {
             message: 'saved',
             type: 'confirmation',
-            title: 'Runtime Error'
+            title: 'Confirmation'
           });
+          Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
         },
         error: function(err) {
           Hktdc.Dispatcher.trigger('openAlert', {

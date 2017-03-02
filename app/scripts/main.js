@@ -64,6 +64,8 @@ window.Hktdc = {
     var utils = window.utils;
     var Hktdc = window.Hktdc;
     Hktdc.Config.environment = env;
+    Backbone.emulateHTTP = true;
+    Backbone.emulateJSON = true;
     try {
       var self = this;
       utils.setURL(env);
@@ -294,6 +296,6 @@ window.Hktdc = {
 
 $(document).ready(function() {
   'use strict';
-  Hktdc.init('localDev');
-  // Hktdc.init('uat');
+  // Hktdc.init('localDev');
+  Hktdc.init('uat');
 });
