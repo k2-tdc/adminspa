@@ -203,6 +203,7 @@ Hktdc.Views = Hktdc.Views || {};
             beforeSend: utils.setAuthHeader,
             type: 'DELETE',
             success: function(response) {
+              Hktdc.Dispatcher.trigger('closeConfirm');
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: 'deleted',
                 type: 'confirmation',
@@ -256,6 +257,7 @@ Hktdc.Views = Hktdc.Views || {};
             return removeSingleMember(memberGUID);
           }))
             .then(function() {
+              Hktdc.Dispatcher.trigger('closeConfirm');
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: 'deleted',
                 type: 'confirmation',

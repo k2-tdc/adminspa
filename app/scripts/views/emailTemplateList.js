@@ -208,6 +208,7 @@ Hktdc.Views = Hktdc.Views || {};
           onConfirm: function() {
             self.deleteTemplate(targetId)
               .then(function(response) {
+                Hktdc.Dispatcher.trigger('closeConfirm');
                 if (String(response.success) === '1') {
                   Hktdc.Dispatcher.trigger('openAlert', {
                     type: 'success',
@@ -224,7 +225,6 @@ Hktdc.Views = Hktdc.Views || {};
                     message: response.Msg
                   });
                 }
-                Hktdc.Dispatcher.trigger('closeConfirm');
               })
               .catch(function(err) {
                 Hktdc.Dispatcher.trigger('openAlert', {

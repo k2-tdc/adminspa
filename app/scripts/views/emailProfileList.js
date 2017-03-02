@@ -200,12 +200,12 @@ Hktdc.Views = Hktdc.Views || {};
           onConfirm: function() {
             self.deleteProfile(targetId)
               .then(function() {
+                Hktdc.Dispatcher.trigger('closeConfirm');
                 Hktdc.Dispatcher.trigger('openAlert', {
                   type: 'success',
                   title: 'confirmation',
                   message: 'deleted!'
                 });
-                Hktdc.Dispatcher.trigger('closeConfirm');
               })
               .catch(function() {
                 Hktdc.Dispatcher.trigger('openAlert', {

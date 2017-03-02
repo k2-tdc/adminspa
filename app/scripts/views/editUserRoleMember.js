@@ -80,11 +80,12 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     deleteButtonHandler: function() {
+      var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
         message: 'Are you sure to delete?',
         onConfirm: function() {
-          var rawData = this.model.toJSON();
+          var rawData = self.model.toJSON();
           var saveUserRoleMemberModel = new Hktdc.Models.SaveUserRoleMember();
           saveUserRoleMemberModel.clear();
           saveUserRoleMemberModel.url = saveUserRoleMemberModel.url(rawData.UserRoleMemberGUID);
@@ -92,11 +93,13 @@ Hktdc.Views = Hktdc.Views || {};
             type: 'DELETE',
             beforeSend: utils.setAuthHeader,
             success: function() {
+              Hktdc.Dispatcher.trigger('closeConfirm');
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'saved',
+                message: 'Deleted',
                 type: 'confirmation',
-                title: 'Runtime Error'
+                title: 'Confirmation'
               });
+              Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
             },
             error: function(err) {
               Hktdc.Dispatcher.trigger('openAlert', {
