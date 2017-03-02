@@ -33,7 +33,7 @@ Hktdc.Views = Hktdc.Views || {};
         model: new Hktdc.Models.DatePicker({
           placeholder: 'Expiry Date',
           value: (self.model.toJSON().ExpiryDate)
-            ? moment(self.model.toJSON().ExpiryDate, 'MM/DD/YYYY').format('DD MMM YYYY')
+            ? moment(self.model.toJSON().ExpiryDate).format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {

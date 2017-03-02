@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, utils, Q, $, _ */
+/* global Hktdc, Backbone, JST, utils, Q, $, _, moment */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -20,7 +20,9 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     initialize: function() {
-      console.log(this.model.toJSON().showMember);
+      this.model.on('change:selectedMember', function(model, value) {
+        console.log(value);
+      });
     },
 
     render: function() {
@@ -46,20 +48,19 @@ Hktdc.Views = Hktdc.Views || {};
             title: 'Runtime Error'
           });
         });
-
     },
 
     renderDataTable: function() {
       var self = this;
       self.userRoleDataTable = $('#memberTable', self.el).DataTable({
         bRetrieve: true,
-        order: [0, 'desc'],
         searching: false,
         processing: true,
         oLanguage: {
           sProcessing: '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>'
         },
         data: self.model.toJSON().Member,
+        order: [[1, 'asc']],
         createdRow: function(row, data, index) {
           $(row).css({
             cursor: 'pointer'
@@ -75,11 +76,17 @@ Hktdc.Views = Hktdc.Views || {};
             data: 'UserRoleMemberGUID',
             render: function(data) {
               return '<input type="checkbox" class="selectUser"/>';
-            }
+            },
+            orderable: false
           },
           { data: 'Type' },
           { data: 'Name' },
-          { data: 'ExpiryDate' }
+          {
+            data: 'ExpiryDate',
+            render: function(data) {
+              return (moment(data).isValid()) ? moment(data).format('DD MMM YYYY') : '';
+            }
+          }
         ]
       });
 
@@ -90,11 +97,36 @@ Hktdc.Views = Hktdc.Views || {};
         });
       });
 
+      $('#memberTable thead', this.el).on('change', '.checkAll', function(ev) {
+        var $checkAllCheckbox = $(this);
+        var isCheckAll = $checkAllCheckbox.prop('checked');
+        $('#memberTable tbody tr', self.el).each(function() {
+          var $checkbox = $(this).find('td:first-child').find('.selectUser');
+          $checkbox.prop('checked', isCheckAll);
+          var rowData = self.userRoleDataTable.row($(this)).data();
+
+          var originalMember = self.model.toJSON().selectedMember;
+          var newMember;
+
+          if (isCheckAll) {
+            newMember = _.union(originalMember, [rowData.UserRoleMemberGUID]);
+          } else {
+            newMember = _.reject(originalMember, function(memberGUID) {
+              return rowData.UserRoleMemberGUID === memberGUID;
+            });
+          }
+          self.model.set({
+            selectedMember: newMember
+          });
+          // $checkbox.trigger('change');
+        });
+      });
+
       $('#memberTable tbody', this.el).on('click', 'td:first-child', function(ev) {
         ev.stopPropagation();
       });
 
-      $('#memberTable tbody', this.el).on('click', '.selectUser', function(ev) {
+      $('#memberTable tbody', this.el).on('change', '.selectUser', function(ev) {
         ev.stopPropagation();
         var rowData = self.userRoleDataTable.row($(this).parents('tr')).data();
         var originalMember = self.model.toJSON().selectedMember;
@@ -106,6 +138,12 @@ Hktdc.Views = Hktdc.Views || {};
             return rowData.UserRoleMemberGUID === memberGUID;
           });
         }
+        var allChecked = (
+          $('#memberTable tbody tr', self.el).length ===
+          $('#memberTable tbody .selectUser:checked', self.el).length
+        );
+
+        $('#memberTable thead .checkAll', self.el).prop('checked', allChecked);
         self.model.set({
           selectedMember: newMember
         });
