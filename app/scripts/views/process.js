@@ -15,6 +15,7 @@ Hktdc.Views = Hktdc.Views || {};
       _.bindAll(this, 'renderProcessItem');
       _.extend(this, props);
       this.listenTo(this.collection, 'change', this.render);
+      // this.render();
     },
 
     render: function() {
@@ -22,6 +23,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       this.collection.unshift({ProcessDisplayName: '-- Select --', ProcessID: 0});
       this.collection.each(this.renderProcessItem);
+      self.$el.prop('disabled', self.disable);
       setTimeout(function() {
         self.$el.find('option[value="' + self.selectedProcess + '"]').prop('selected', true);
       });

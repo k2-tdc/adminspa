@@ -69,13 +69,13 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderUserPickerItem: function(model) {
-      var selectedCCItemView = new Hktdc.Views.UserPickerItem({
+      var selectedUserItemView = new Hktdc.Views.UserPickerItem({
         model: model,
         collection: this.collection,
         onRemove: this.onRemove
       });
-      selectedCCItemView.render();
-      $(this.el).append(selectedCCItemView.el);
+      selectedUserItemView.render();
+      $(this.el).append(selectedUserItemView.el);
     },
 
     render: function() {
