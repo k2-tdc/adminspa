@@ -21,16 +21,16 @@
     <div class="panel-body">
 
       <form class="form-horizontal">
-
-        <div class="form-group row">
-          <div class="col-sm-2">
-            <div class="form-label text-right">Profile</div>
+        <% if (showSearch) { %>
+          <div class="form-group row">
+            <div class="col-sm-2">
+              <div class="form-label text-right">Profile</div>
+            </div>
+            <div class="col-md-6 profileUserContainer">
+              <!-- status Select list here -->
+            </div>
           </div>
-          <div class="col-md-6 profileUserContainer">
-            <!-- status Select list here -->
-          </div>
-        </div>
-
+        <% } %>
 
         <div class="form-group">
           <label for="status" class="col-sm-2 control-label"></label>

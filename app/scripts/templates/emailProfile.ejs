@@ -5,14 +5,16 @@
 
   <div class="email-template-container block-padding" style="padding-top:14px; padding-bottom:14px; ">
 
-    <!-- <div class="email-filter-container"> -->
-    <div class="row">
-      <div class="col-md-2">
-        <div class="form-label text-right">Profile of: </div>
+    <% if (showProfile) { %>
+      <div class="row">
+        <div class="col-md-2">
+          <div class="form-label text-right">Profile of: </div>
+        </div>
+        <div class="col-md-10 profileUserContainer"></div>
       </div>
-      <div class="col-md-10 profileUserContainer"></div>
-    </div>
-    <div class="sep-space"></div>
+      <div class="sep-space"></div>
+
+    <% } %>
 
     <div class="row">
       <div class="col-md-2">

@@ -61,7 +61,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderProcessSelect();
           self.renderProfileUserSelect();
         })
-        
+
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
@@ -210,9 +210,10 @@ Hktdc.Views = Hktdc.Views || {};
             title: 'Confirmation',
             message: 'You have saved'
           });
-          Backbone.history.navigate('emailprofile', {
-            trigger: true
-          });
+          window.history.back();
+          // Backbone.history.navigate('emailprofile', {
+          //   trigger: true
+          // });
         })
         .catch(function(err) {
           Hktdc.Dispatcher.trigger('openAlert', {

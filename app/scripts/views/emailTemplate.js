@@ -155,7 +155,7 @@ Hktdc.Views = Hktdc.Views || {};
             title: 'Confirmation',
             message: 'You have saved'
           });
-          Backbone.history.back();
+          window.history.back();
           // Backbone.history.navigate('emailtemplate', {trigger: true});
         })
         .catch(function(err) {
