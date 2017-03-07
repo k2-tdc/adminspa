@@ -364,7 +364,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getAjaxURL: function() {
-      var queryParams = _.omit(this.model.toJSON(), 'stepCollection', 'processCollection', 'mode');
+      var queryParams = _.omit(this.model.toJSON(), 'stepCollection', 'processCollection', 'mode', 'processId');
       var queryString = utils.getQueryString(queryParams, true);
       return Hktdc.Config.apiURL + '/email-templates' + queryString;
     }

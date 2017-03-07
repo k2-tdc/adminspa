@@ -11,7 +11,7 @@ Hktdc.Models = Hktdc.Models || {};
     defaults: {
       processId: 0,
       process: '',
-      step: 0,
+      'activity-group': 0,
       processCollection: null,
       stepCollection: null
     },
