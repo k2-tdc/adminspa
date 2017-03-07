@@ -181,8 +181,9 @@ Hktdc.Views = Hktdc.Views || {};
           }, function() {
             $(this).removeClass('highlight');
           });
-          // if (data.condition) {
-          // }
+          if (!data.enabled) {
+            $(row).addClass('disabled');
+          }
         },
         columns: [{
           data: 'process'

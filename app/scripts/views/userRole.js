@@ -97,6 +97,11 @@ Hktdc.Views = Hktdc.Views || {};
         });
       });
 
+      $('#memberTable tbody', this.el).on('click', 'td:first-child', function(ev) {
+        ev.stopPropagation();
+      });
+
+      /* checkbox event */
       $('#memberTable thead', this.el).on('change', '.checkAll', function(ev) {
         var $checkAllCheckbox = $(this);
         var isCheckAll = $checkAllCheckbox.prop('checked');
@@ -120,10 +125,6 @@ Hktdc.Views = Hktdc.Views || {};
           });
           // $checkbox.trigger('change');
         });
-      });
-
-      $('#memberTable tbody', this.el).on('click', 'td:first-child', function(ev) {
-        ev.stopPropagation();
       });
 
       $('#memberTable tbody', this.el).on('change', '.selectUser', function(ev) {
