@@ -453,6 +453,7 @@ Hktdc.Routers = Hktdc.Routers || {};
               showDelete: !isCreateRecord,
               permissionCollection: rolePermissionCollection,
               ProcessId: ProcessId,
+              deletePermissionArray: [],
               ProcessName: ProcessName,
               MenuItemGUID: MenuItemGUID
             });
