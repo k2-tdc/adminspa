@@ -155,7 +155,8 @@ Hktdc.Views = Hktdc.Views || {};
             title: 'Confirmation',
             message: 'You have saved'
           });
-          Backbone.history.navigate('emailtemplate', {trigger: true});
+          Backbone.history.back();
+          // Backbone.history.navigate('emailtemplate', {trigger: true});
         })
         .catch(function(err) {
           Hktdc.Dispatcher.trigger('openAlert', {
