@@ -26,6 +26,8 @@ Hktdc.Views = Hktdc.Views || {};
         var $input = $('.fullUserPicker', self.el);
         $input.autocomplete({
           source: self.users,
+          delay: 500,
+          minLength: 2,
           select: function(ev, ui) {
             pickedUsersCollection.add([ui.item]);
             self.onSelect(ui.item);

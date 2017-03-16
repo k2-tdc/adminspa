@@ -25,6 +25,8 @@ Hktdc.Views = Hktdc.Views || {};
         var $input = $('.fullRolePicker', self.el);
         $input.autocomplete({
           source: self.roles,
+          delay: 500,
+          minLength: 2,
           select: function(ev, ui) {
             if (!pickedRolesCollection.get(ui.item.UserRoleGUID)) {
               pickedRolesCollection.add([ui.item]);
