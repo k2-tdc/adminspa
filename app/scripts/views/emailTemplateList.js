@@ -194,7 +194,7 @@ Hktdc.Views = Hktdc.Views || {};
         }, {
           data: 'delete',
           render: function(data) {
-            return '<button type="button" class="form-control deleteBtn"><i class="glyphicon glyphicon-remove"></i></button>'
+            return '<button type="button" class="form-control deleteBtn"><i class="glyphicon glyphicon-remove"></i></button>';
           }
         }]
       });
@@ -281,7 +281,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.loadStep()
             .then(function(stepCollection) {
               self.model.set({
-                step: null,
+                'activity-group': null,
                 stepCollection: stepCollection
               });
             });
@@ -295,10 +295,10 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var processSelectView = new Hktdc.Views.StepSelect({
         collection: self.model.toJSON().stepCollection,
-        selectedStep: self.model.toJSON().step,
+        selectedStep: self.model.toJSON()['activity-group'],
         onSelected: function(stepId) {
           self.model.set({
-            step: stepId
+            'activity-group': stepId
           });
         }
       });

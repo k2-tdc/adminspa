@@ -7,7 +7,7 @@ Hktdc.Collections = Hktdc.Collections || {};
 
   Hktdc.Collections.ProfileUser = Backbone.Collection.extend({
     url: function(processId) {
-      return Hktdc.Config.apiURL + '/profile-list';
+      return Hktdc.Config.apiURL + '/users';
     },
 
     model: Hktdc.Models.ProfileUser
