@@ -306,7 +306,7 @@ Hktdc.Views = Hktdc.Views || {};
         type: 'DELETE',
         beforeSend: utils.setAuthHeader,
         success: function(model, response) {
-          Hktdc.Dispatcher.trigger('reloadMenu');
+          // Hktdc.Dispatcher.trigger('reloadMenu');
           deferred.resolve();
         },
         error: function(err) {

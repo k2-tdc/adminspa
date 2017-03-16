@@ -280,7 +280,7 @@ Hktdc.Views = Hktdc.Views || {};
         beforeSend: utils.setAuthHeader,
         success: function(model, response) {
           self.profileDataTable.ajax.reload();
-          Hktdc.Dispatcher.trigger('reloadMenu');
+          // Hktdc.Dispatcher.trigger('reloadMenu');
           deferred.resolve();
         },
         error: function(err) {

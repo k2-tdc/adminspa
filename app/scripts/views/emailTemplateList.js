@@ -218,7 +218,7 @@ Hktdc.Views = Hktdc.Views || {};
                   });
 
                   self.templateDataTable.ajax.reload();
-                  Hktdc.Dispatcher.trigger('reloadMenu');
+                  // Hktdc.Dispatcher.trigger('reloadMenu');
                 } else {
                   Hktdc.Dispatcher.trigger('openAlert', {
                     type: 'error',
