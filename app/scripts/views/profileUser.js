@@ -33,6 +33,7 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       // console.log(this.collection.toJSON());
       var self = this;
+      this.collection.unshift({FullName: '-- Default --', UserID: 'DEFAULT', EmployeeID: 'DEFAULT' });
       this.collection.unshift({FullName: '-- Select --', UserID: 0});
       this.collection.each(this.renderProfileUserItem);
       setTimeout(function() {
