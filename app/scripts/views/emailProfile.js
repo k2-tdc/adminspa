@@ -173,14 +173,14 @@ Hktdc.Views = Hktdc.Views || {};
         });
 
         ProfileUserView.render();
-      } else {
-        ProfileUserView = new Hktdc.Views.ProfileUserLabel({
-          model: new Hktdc.Models.EmailProfile({FullName: Hktdc.Config.userName})
-        });
+      // } else {
+      //   ProfileUserView = new Hktdc.Views.ProfileUserLabel({
+      //     model: new Hktdc.Models.EmailProfile({FullName: Hktdc.Config.userName})
+      //   });
+        $('.profileUserContainer', self.el).html(ProfileUserView.el);
       }
 
       // console.log(ProfileUserView.el);
-      $('.profileUserContainer', self.el).html(ProfileUserView.el);
     },
 
     updateFormModel: function(ev) {
