@@ -116,6 +116,7 @@ window.Hktdc = {
               }, function(error) {
                 /* else */
                 console.log('OAuth Error', error);
+                window.location.href = window.Hktdc.Config.OAuthLoginUrl;
               });
             }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
           }, function(error) {
@@ -124,6 +125,7 @@ window.Hktdc = {
         }, function(error) {
           /* else */
           console.log('OAuth Error', error);
+          window.location.href = window.Hktdc.Config.OAuthLoginUrl;
         });
       } else {
         Hktdc.Config.userID = 'aachen';
