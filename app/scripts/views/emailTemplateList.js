@@ -143,9 +143,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderDataTable: function() {
       var self = this;
-      self.templateDataTable = $('#statusTable', self.el).DataTable({
+      self.templateDataTable = $('#templateTable', self.el).DataTable({
         bRetrieve: true,
-        order: [0, 'desc'],
+        order: [1, 'asc'],
         searching: false,
         processing: true,
         oLanguage: {
@@ -186,6 +186,12 @@ Hktdc.Views = Hktdc.Views || {};
           }
         },
         columns: [{
+          data: 'id',
+          render: function(data) {
+            return '<input type="checkbox" class="selectTemplate"/>';
+          },
+          orderable: false
+        }, {
           data: 'process'
         }, {
           data: 'step'
@@ -199,7 +205,7 @@ Hktdc.Views = Hktdc.Views || {};
         }]
       });
 
-      $('#statusTable tbody', this.el).on('click', '.deleteBtn', function(ev) {
+      $('#templateTable tbody', this.el).on('click', '.deleteBtn', function(ev) {
         ev.stopPropagation();
         var rowData = self.templateDataTable.row($(this).parents('tr')).data();
         var targetId = rowData.id;
@@ -241,29 +247,58 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log('rowData', rowData);
       });
 
-      $('#statusTable tbody', this.el).on('click', 'tr', function(ev) {
+      $('#templateTable tbody', this.el).on('click', 'tr', function(ev) {
         var rowData = self.templateDataTable.row(this).data();
-        // console.log('rowData', rowData);
-        // var SNOrProcIdPath = '';
-        // if ((rowData.SN)) {
-        //   SNOrProcIdPath = '/' + rowData.SN;
-        // } else {
-        //   if (rowData.ProcInstID) {
-        //     SNOrProcIdPath = '/' + rowData.ProcInstID;
-        //   }
-        // }
-        // var typePath;
-        // if (self.model.toJSON().mode === 'APPROVAL TASKS') {
-        //   typePath = '/approval/';
-        // } else if (self.model.toJSON().mode === 'ALL TASKS') {
-        //   typePath = '/all/';
-        // } else if (self.model.toJSON().mode === 'DRAFT') {
-        //   typePath = '/draft/';
-        // } else {
-        //   typePath = '/check/';
-        // }
         Backbone.history.navigate('emailtemplate/' + rowData.id, {
           trigger: true
+        });
+      });
+
+      $('#templateTable thead', this.el).on('change', '.checkAll', function(ev) {
+        var $checkAllCheckbox = $(this);
+        var isCheckAll = $checkAllCheckbox.prop('checked');
+        $('#templateTable tbody tr', self.el).each(function() {
+          var $checkbox = $(this).find('td:first-child').find('.selectTemplate');
+          $checkbox.prop('checked', isCheckAll);
+          var rowData = self.templateDataTable.row($(this)).data();
+
+          var originalMember = self.model.toJSON().selectedMember;
+          var newMember;
+
+          if (isCheckAll) {
+            newMember = _.union(originalMember, [rowData.UserRoleMemberGUID]);
+          } else {
+            newMember = _.reject(originalMember, function(memberGUID) {
+              return rowData.UserRoleMemberGUID === memberGUID;
+            });
+          }
+          self.model.set({
+            selectedMember: newMember
+          });
+          // $checkbox.trigger('change');
+        });
+      });
+
+      $('#templateTable tbody', this.el).on('change', '.selectTemplate', function(ev) {
+        ev.stopPropagation();
+        var rowData = self.templateDataTable.row($(this).parents('tr')).data();
+        var originalMember = self.model.toJSON().selectedMember;
+        var newMember;
+        if ($(this).prop('checked')) {
+          newMember = _.union(originalMember, [rowData.UserRoleMemberGUID]);
+        } else {
+          newMember = _.reject(originalMember, function(memberGUID) {
+            return rowData.UserRoleMemberGUID === memberGUID;
+          });
+        }
+        var allChecked = (
+          $('#templateTable tbody tr', self.el).length ===
+          $('#templateTable tbody .selectTemplate:checked', self.el).length
+        );
+
+        $('#templateTable thead .checkAll', self.el).prop('checked', allChecked);
+        self.model.set({
+          selectedMember: newMember
         });
       });
     },
