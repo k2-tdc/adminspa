@@ -57,13 +57,24 @@ window.utils = {
     return params;
   },
 
-  getQueryString: function(obj) {
+  getQueryString: function(obj, notAllowEmpty) {
     var queryPart = _.map(obj, function(val, key) {
-      var value = (_.isNull(val)) ? '' : val;
-      return key + '=' + encodeURIComponent(value);
+      var value;
+      if (notAllowEmpty) {
+        // console.log('notAllowEmpty');
+        if (!val || val === '0') {
+          // console.log('no value');
+          return '';
+        }
+        // console.log('have value');
+        return key + '=' + val;
+      } else {
+        value = (_.isNull(val)) ? '' : val;
+        return key + '=' + value;
+      }
     });
-    if (queryPart.length) {
-      return '?' + queryPart.join('&');
+    if (_.compact(queryPart).length) {
+      return '?' + _.compact(queryPart).join('&');
     }
     return '';
   },
