@@ -11,7 +11,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {
       'click .searchBtn': 'doSearch',
-      'click .createBtn': 'goToCreatePage'
+      'click .createBtn': 'goToCreatePage',
+      'click .batchDeleteBtn': 'batchDeleteTemplate'
         // 'click .advanced-btn': 'toggleAdvanceMode',
         // 'change .user-select': 'updateModelByEvent',
         // 'change .status-select': 'updateModelByEvent',
@@ -262,33 +263,38 @@ Hktdc.Views = Hktdc.Views || {};
           $checkbox.prop('checked', isCheckAll);
           var rowData = self.templateDataTable.row($(this)).data();
 
-          var originalMember = self.model.toJSON().selectedMember;
+          var originalMember = self.model.toJSON().selectedTemplate;
           var newMember;
 
           if (isCheckAll) {
-            newMember = _.union(originalMember, [rowData.UserRoleMemberGUID]);
+            newMember = _.union(originalMember, [rowData.id]);
           } else {
             newMember = _.reject(originalMember, function(memberGUID) {
-              return rowData.UserRoleMemberGUID === memberGUID;
+              return rowData.id === memberGUID;
             });
           }
           self.model.set({
-            selectedMember: newMember
+            selectedTemplate: newMember
           });
           // $checkbox.trigger('change');
         });
       });
 
+      $('#templateTable tbody', this.el).on('click', 'td:first-child', function(ev) {
+        ev.stopPropagation();
+      });
+
       $('#templateTable tbody', this.el).on('change', '.selectTemplate', function(ev) {
         ev.stopPropagation();
         var rowData = self.templateDataTable.row($(this).parents('tr')).data();
-        var originalMember = self.model.toJSON().selectedMember;
+        var originalMember = self.model.toJSON().selectedTemplate;
         var newMember;
+        // console.log(originalMember);
         if ($(this).prop('checked')) {
-          newMember = _.union(originalMember, [rowData.UserRoleMemberGUID]);
+          newMember = _.union(originalMember, [rowData.id]);
         } else {
           newMember = _.reject(originalMember, function(memberGUID) {
-            return rowData.UserRoleMemberGUID === memberGUID;
+            return rowData.id === memberGUID;
           });
         }
         var allChecked = (
@@ -298,7 +304,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         $('#templateTable thead .checkAll', self.el).prop('checked', allChecked);
         self.model.set({
-          selectedMember: newMember
+          selectedTemplate: newMember
         });
       });
     },
@@ -341,14 +347,19 @@ Hktdc.Views = Hktdc.Views || {};
       $('.stepContainer', self.el).html(processSelectView.el);
     },
 
-    deleteTemplate: function(tId) {
+    deleteTemplate: function(input) {
       var deferred = Q.defer();
+      var data = (_.isArray(input))
+        ? _.map(input, function(tId) {
+          return {TemplateId: tId };
+        })
+        : [{ TemplateId: input }];
       var DeleteTemplateModel = Backbone.Model.extend({
-        url: Hktdc.Config.apiURL + '/email-templates/' + tId
+        url: Hktdc.Config.apiURL + '/email-templates/delete-templates'
       });
-      var DeleteTemplateInstance = new DeleteTemplateModel();
+      var DeleteTemplateInstance = new DeleteTemplateModel({data: data});
       DeleteTemplateInstance.save(null, {
-        type: 'DELETE',
+        type: 'POST',
         beforeSend: utils.setAuthHeader,
         success: function(model, response) {
           deferred.resolve(response);
@@ -403,6 +414,44 @@ Hktdc.Views = Hktdc.Views || {};
       var queryParams = _.omit(this.model.toJSON(), 'stepCollection', 'processCollection', 'mode', 'processId');
       var queryString = utils.getQueryString(queryParams, true);
       return Hktdc.Config.apiURL + '/email-templates' + queryString;
+    },
+
+    batchDeleteTemplate: function() {
+      var self = this;
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'confirmation',
+        message: 'Are you sure to Delete?',
+        onConfirm: function() {
+          self.deleteTemplate(self.model.toJSON().selectedTemplate)
+            .then(function(response) {
+              Hktdc.Dispatcher.trigger('closeConfirm');
+              if (String(response.success) === '1') {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  type: 'success',
+                  title: 'confirmation',
+                  message: 'Batch Deleted record'
+                });
+
+                self.templateDataTable.ajax.reload();
+                // Hktdc.Dispatcher.trigger('reloadMenu');
+              } else {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  type: 'error',
+                  title: 'error',
+                  message: response.Msg
+                });
+              }
+            })
+            .catch(function(err) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                type: 'error',
+                title: 'error',
+                message: 'delete failed'
+              });
+              console.error(err);
+            });
+        }
+      });
     }
   });
 })();

@@ -13,7 +13,8 @@ Hktdc.Models = Hktdc.Models || {};
       process: '',
       'activity-group': 0,
       processCollection: null,
-      stepCollection: null
+      stepCollection: null,
+      selectedTemplate: []
     },
 
     validate: function(attrs, options) {},
