@@ -113,6 +113,9 @@ window.Hktdc = {
                 Hktdc.Config.gettingToken = false;
                 Hktdc.Config.accessToken = accessToken;
                 console.log('refreshed the access token: ', accessToken);
+              }, function(error) {
+                /* else */
+                console.log('OAuth Error', error);
               });
             }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
           }, function(error) {
