@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -30,11 +30,42 @@ Hktdc.Models = Hktdc.Models || {};
       WeekDay7: 0 // Sun
     },
 
-    validate: function(attrs, options) {},
+    validate: function(attrs, options) {
+      var errors = [];
+      if (!attrs.ProfileId) {
+        errors.push('Profile must be selected.');
+      }
+      if (!attrs.ProcessId) {
+        errors.push('Process must be selected.');
+      }
+      if (!attrs.StepId) {
+        errors.push('Notification must be selected.');
+      }
+      if (!attrs.UserId) {
+        errors.push('Profile must be selected.');
+      }
+      if (!attrs.TimeSlot) {
+        errors.push('Time must be selected.');
+      }
+      if (
+        !attrs.WeekDay1 &&
+        !attrs.WeekDay2 &&
+        !attrs.WeekDay3 &&
+        !attrs.WeekDay4 &&
+        !attrs.WeekDay5 &&
+        !attrs.WeekDay6 &&
+        !attrs.WeekDay7
+      ) {
+        errors.push('Day of Week must be selected.');
+      }
+      if (errors.length) {
+        return errors.join('<br>');
+      }
+      return true;
+    },
 
     parse: function(response, options) {
       return response;
     }
   });
-
 })();

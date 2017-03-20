@@ -2,7 +2,7 @@
 
 Hktdc.Models = Hktdc.Models || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Models.EmailProfile = Backbone.Model.extend({
@@ -11,8 +11,7 @@ Hktdc.Models = Hktdc.Models || {};
       return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-profiles/' + profileId;
     },
 
-    initialize: function() {
-    },
+    initialize: function() {},
 
     defaults: {
       ProfileId: '',
@@ -36,10 +35,9 @@ Hktdc.Models = Hktdc.Models || {};
       profileUserCollection: null
     },
 
-    validate: function(attrs, options) {
-    },
+    validate: function(attrs, options) {},
 
-    parse: function(response, options)  {
+    parse: function(response, options) {
       return response;
     }
   });

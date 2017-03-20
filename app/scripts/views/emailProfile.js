@@ -217,7 +217,7 @@ Hktdc.Views = Hktdc.Views || {};
         })
         .catch(function(err) {
           Hktdc.Dispatcher.trigger('openAlert', {
-            type: 'success',
+            type: 'error',
             title: 'Confirmation',
             message: err
           });
@@ -228,7 +228,7 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       Backbone.emulateHTTP = true;
       Backbone.emulateJSON = true;
-      console.log(this.model.toJSON());
+      // console.log(this.model.toJSON());
       var data = {
         ProfileId: (this.model.toJSON().ProfileId) ? parseInt(this.model.toJSON().ProfileId) : 0,
         ProcessId: parseInt(this.model.toJSON().ProcessID),
@@ -246,24 +246,39 @@ Hktdc.Views = Hktdc.Views || {};
         })) ? 1 : 0;
       }
 
-      var saveEmailProfileModel = new Hktdc.Models.SaveEmailProfile(data);
-      var method = (saveEmailProfileModel.toJSON().ProfileId) ? 'PUT' : 'POST';
-      saveEmailProfileModel.url = saveEmailProfileModel.url(data.ProfileId);
-      saveEmailProfileModel.save({}, {
-        beforeSend: utils.setAuthHeader,
-        type: method,
-        success: function(mymodel, response) {
-          // console.log(response);
-          if (response.success) {
-            deferred.resolve(response);
-          } else {
-            deferred.reject('save failed');
-          }
-        },
-        error: function(model, e) {
-          deferred.reject('Submit Request Error' + JSON.stringify(e, null, 2));
-        }
+      var saveEmailProfileModel = new Hktdc.Models.SaveEmailProfile();
+      saveEmailProfileModel.set(data);
+      saveEmailProfileModel.on('invalid', function(model, err) {
+        // console.log('invalid');
+        // console.log(err);
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: err,
+          type: 'error',
+          title: 'Error'
+        });
       });
+      // console.log('is valid: ', saveEmailProfileModel.isValid());
+      if (saveEmailProfileModel.isValid()) {
+        var method = (saveEmailProfileModel.toJSON().ProfileId) ? 'PUT' : 'POST';
+        saveEmailProfileModel.url = saveEmailProfileModel.url(data.ProfileId);
+        saveEmailProfileModel.save({}, {
+          beforeSend: utils.setAuthHeader,
+          type: method,
+          success: function(mymodel, response) {
+            // console.log(response);
+            if (response.success) {
+              deferred.resolve(response);
+            } else {
+              deferred.reject('save failed');
+            }
+          },
+          error: function(model, e) {
+            deferred.reject('Submit Request Error' + JSON.stringify(e, null, 2));
+          }
+        });
+      // } else {
+      //   deferred.reject('Please fill all the fields.');
+      }
       return deferred.promise;
     },
 
