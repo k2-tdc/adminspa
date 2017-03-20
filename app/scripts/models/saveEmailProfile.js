@@ -32,9 +32,6 @@ Hktdc.Models = Hktdc.Models || {};
 
     validate: function(attrs, options) {
       var errors = [];
-      if (!attrs.ProfileId) {
-        errors.push('Profile must be selected.');
-      }
       if (!attrs.ProcessId) {
         errors.push('Process must be selected.');
       }
