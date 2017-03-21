@@ -38,12 +38,6 @@ Hktdc.Models = Hktdc.Models || {};
       if (!attrs.WorkerType) {
         errors.push('WorkerType is required.');
       }
-      if (!attrs.Summary) {
-        errors.push('Summary is required.');
-      }
-      if (!attrs.Remark) {
-        errors.push('Remark is required.');
-      }
       if (!attrs.Score) {
         errors.push('Score is required.');
       }
