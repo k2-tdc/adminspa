@@ -58,7 +58,7 @@ Hktdc.Models = Hktdc.Models || {};
       if (errors.length) {
         return errors.join('<br>');
       }
-      return true;
+      return false;
     },
 
     parse: function(response, options) {

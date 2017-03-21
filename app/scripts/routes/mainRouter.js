@@ -22,6 +22,12 @@ Hktdc.Routers = Hktdc.Routers || {};
       'permission': 'rolePermissionList',
       'permission/new': 'editRolePermission',
       'permission/:permissionIds': 'editRolePermission',
+      'worker-rule': 'workerRoleList',
+      'worker-rule/new': 'editWorkerRule',
+      'worker-rule/:workerRuleId': 'editWorkerRule',
+      // 'worker-rule/:workerRuleId/member/new': 'editUserRoleMember',
+      // 'worker-rule/:workerRuleId/member/:memberId': 'editUserRoleMember',
+
       'logout': 'logout'
     },
 
@@ -490,6 +496,156 @@ Hktdc.Routers = Hktdc.Routers || {};
               });
           } else {
             onSuccess(true);
+          }
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    workerRoleList: function() {
+      try {
+        Hktdc.Dispatcher.trigger('checkPagePermission', function() {
+          var workerRuleListModel = new Hktdc.Models.WorkerRuleList({});
+          workerRuleListModel.set({
+            profile: utils.getParameterByName('profile'),
+            showSearch: Hktdc.Config.isAdmin
+          });
+          var workerRoleListView = new Hktdc.Views.WorkerRuleList({
+            model: workerRuleListModel
+          });
+          workerRoleListView.render();
+          $('#mainContent').empty().html(workerRoleListView.el);
+
+          var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+          var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+            collection: subheaderMenuListCollection,
+            currentPageName: 'WORKER ROLE'
+          });
+          subheaderMenuListView.render();
+          $('.subheader-menu-container').html(subheaderMenuListView.el);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    editWorkerRule: function(workerRuleId) {
+      try {
+        Hktdc.Dispatcher.trigger('checkPagePermission', function() {
+          $('#mainContent').addClass('compress');
+
+          var workerRule = new Hktdc.Models.WorkerRule({
+            showRules: !!workerRuleId,
+            saveType: (workerRuleId) ? 'PUT' : 'POST'
+          });
+          var onSuccess = function() {
+            var userRoleView = new Hktdc.Views.WorkerRule({
+              model: workerRule
+            });
+            userRoleView.render();
+            $('#mainContent').empty().html(userRoleView.el);
+
+            var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+            var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+              collection: subheaderMenuListCollection,
+              currentPageName: 'WORKER RULE'
+            });
+            subheaderMenuListView.render();
+            $('.subheader-menu-container').html(subheaderMenuListView.el);
+          };
+
+          if (workerRuleId) {
+            workerRule.url = workerRule.url(workerRuleId);
+            workerRule.fetch({
+              beforeSend: utils.setAuthHeader,
+              success: function() {
+                onSuccess();
+              },
+              error: function(model, err) {
+                throw err;
+              }
+            });
+          } else {
+            onSuccess();
+          }
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    editWorkerRuleMember: function(userRoleId, memberId) {
+      console.log('edit role member', memberId);
+      try {
+        Hktdc.Dispatcher.trigger('checkPagePermission', function() {
+          $('#mainContent').addClass('compress');
+          var workerRuleMemberModel;
+          var workerRuleMemberView;
+          var getWorkerRule = function() {
+            var workerRuleModel = new Hktdc.Models.UserRole({
+              saveType: (userRoleId) ? 'PUT' : 'POST'
+            });
+            var deferred = Q.defer();
+            workerRuleModel.url = workerRuleModel.url(userRoleId);
+            workerRuleModel.fetch({
+              beforeSend: utils.setAuthHeader,
+              success: function() {
+                deferred.resolve(workerRuleModel.toJSON());
+              },
+              error: function(model, err) {
+                deferred.reject();
+              }
+            });
+            return deferred.promise;
+          };
+          var onSuccess = function() {
+            workerRuleMemberView.render();
+            $('#mainContent').empty().html(workerRuleMemberView.el);
+            var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+            var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+              collection: subheaderMenuListCollection,
+              currentPageName: 'WORKER RULE MEMBER'
+            });
+            subheaderMenuListView.render();
+
+            $('.subheader-menu-container').html(subheaderMenuListView.el);
+          };
+          // var renderUserRoleMember = function(userRole) {
+
+          // edit
+          if (memberId) {
+            workerRuleMemberModel = new Hktdc.Models.EditWorkerRuleMember({
+              saveType: 'PUT'
+            });
+            workerRuleMemberModel.url = workerRuleMemberModel.url(memberId);
+            workerRuleMemberModel.fetch({
+              beforeSend: utils.setAuthHeader,
+              success: function() {
+                workerRuleMemberView = new Hktdc.Views.EditWorkerRuleMember({
+                  model: workerRuleMemberModel
+                });
+                onSuccess();
+              },
+              error: function(err) {
+                console.error(err);
+              }
+            });
+          // create
+          } else {
+            getWorkerRule()
+              .then(function(userRole) {
+                workerRuleMemberModel = new Hktdc.Models.CreateWorkerRuleMember({
+                  saveType: 'POST',
+                  Role: userRole.Role,
+                  UserRoleGUID: userRole.UserRoleGUID
+                });
+                workerRuleMemberView = new Hktdc.Views.CreateWorkerRuleMember({
+                  model: workerRuleMemberModel
+                });
+
+                onSuccess();
+              });
           }
         });
       } catch (e) {

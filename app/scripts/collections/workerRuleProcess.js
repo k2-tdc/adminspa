@@ -5,10 +5,10 @@ Hktdc.Collections = Hktdc.Collections || {};
 (function() {
   'use strict';
 
-  Hktdc.Collections.Process = Backbone.Collection.extend({
+  Hktdc.Collections.WorkerRuleProcess = Backbone.Collection.extend({
 
     url: function() {
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/applications';
+      return Hktdc.Config.apiURL + '/worker-rule/process';
     },
 
     model: Hktdc.Models.Process
