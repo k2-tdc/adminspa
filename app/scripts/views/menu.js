@@ -32,7 +32,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       self.listenTo(Hktdc.Dispatcher, 'getMenu', function(opt) {
         var foundMenu = _.find(self.model.toJSON().Menu, function(menu) {
-          return menu.RouteName === opt.name;
+          return menu.Name === opt.name;
         });
         opt.onSuccess(foundMenu);
       });

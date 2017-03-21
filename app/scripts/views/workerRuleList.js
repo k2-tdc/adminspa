@@ -26,7 +26,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       self.$el.html(self.template(self.model.toJSON()));
       Hktdc.Dispatcher.trigger('getMenu', {
-        name: 'WORKER-RULE',
+        name: 'Worker Rule',
         onSuccess: function(menu) {
           self.model.set({
             menuId: menu.MenuId
