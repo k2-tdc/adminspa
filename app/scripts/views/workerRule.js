@@ -51,7 +51,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     loadProcess: function() {
       var deferred = Q.defer();
-      var processCollection = new Hktdc.Collections.WorkerRuleProcess();
+      var processCollection = new Hktdc.Collections.Process();
       processCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {

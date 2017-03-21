@@ -19,35 +19,45 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
+      var self = this;
     },
 
     render: function() {
       var self = this;
       self.$el.html(self.template(self.model.toJSON()));
-      self.loadProcess()
-        .then(function(processCollection) {
-          console.debug('[ emailTemplate.js ] - load all the remote resources');
+      Hktdc.Dispatcher.trigger('getMenu', {
+        name: 'WORKER-RULE',
+        onSuccess: function(menu) {
           self.model.set({
-            processCollection: processCollection
-          }, {
-            silent: true
+            menuId: menu.MenuId
           });
-          self.renderWokerRuleProcessSelect();
-          self.renderDataTable();
-        })
-        .catch(function(err) {
-          console.error(err);
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'Runtime Error'
-          });
-        });
+          self.loadProcess()
+            .then(function(processCollection) {
+              console.debug('[ emailTemplate.js ] - load all the remote resources');
+              self.model.set({
+                processCollection: processCollection
+              }, {
+                silent: true
+              });
+              self.renderWokerRuleProcessSelect();
+              self.renderDataTable();
+            })
+            .catch(function(err) {
+              console.error(err);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: err,
+                type: 'error',
+                title: 'Runtime Error'
+              });
+            });
+        }}
+      );
     },
 
     loadProcess: function() {
       var deferred = Q.defer();
       var processCollection = new Hktdc.Collections.WorkerRuleProcess();
+      processCollection.url = processCollection.url(this.model.menuId);
       processCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {

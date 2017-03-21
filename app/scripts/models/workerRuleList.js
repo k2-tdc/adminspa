@@ -11,7 +11,8 @@ Hktdc.Models = Hktdc.Models || {};
 
     defaults: {
       processCollection: null,
-      process: ''
+      process: '',
+      menuId: ''
     },
 
     validate: function(attrs, options) {},
