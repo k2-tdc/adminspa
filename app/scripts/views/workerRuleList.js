@@ -19,7 +19,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
-      var self = this;
+      // var self = this;
     },
 
     render: function() {
@@ -57,7 +57,7 @@ Hktdc.Views = Hktdc.Views || {};
     loadProcess: function() {
       var deferred = Q.defer();
       var processCollection = new Hktdc.Collections.WorkerRuleProcess();
-      processCollection.url = processCollection.url(this.model.menuId);
+      processCollection.url = processCollection.url(this.model.toJSON().menuId);
       processCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
