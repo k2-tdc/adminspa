@@ -25,8 +25,8 @@ Hktdc.Routers = Hktdc.Routers || {};
       'worker-rule': 'workerRoleList',
       'worker-rule/new': 'editWorkerRule',
       'worker-rule/:workerRuleId': 'editWorkerRule',
-      // 'worker-rule/:workerRuleId/member/new': 'editUserRoleMember',
-      // 'worker-rule/:workerRuleId/member/:memberId': 'editUserRoleMember',
+      'worker-rule/:workerRuleId/member/new': 'editWorkerRuleMember',
+      'worker-rule/:workerRuleId/member/:memberId': 'editWorkerRuleMember',
 
       'logout': 'logout'
     },
@@ -535,13 +535,13 @@ Hktdc.Routers = Hktdc.Routers || {};
         Hktdc.Dispatcher.trigger('checkPagePermission', function() {
           $('#mainContent').addClass('compress');
 
-          var workerRule = new Hktdc.Models.WorkerRule({
+          var workerRuleModel = new Hktdc.Models.WorkerRule({
             showRules: !!workerRuleId,
             saveType: (workerRuleId) ? 'PUT' : 'POST'
           });
           var onSuccess = function() {
             var userRoleView = new Hktdc.Views.WorkerRule({
-              model: workerRule
+              model: workerRuleModel
             });
             userRoleView.render();
             $('#mainContent').empty().html(userRoleView.el);
@@ -556,8 +556,8 @@ Hktdc.Routers = Hktdc.Routers || {};
           };
 
           if (workerRuleId) {
-            workerRule.url = workerRule.url(workerRuleId);
-            workerRule.fetch({
+            workerRuleModel.url = workerRuleModel.url(workerRuleId);
+            workerRuleModel.fetch({
               beforeSend: utils.setAuthHeader,
               success: function() {
                 onSuccess();
@@ -583,7 +583,7 @@ Hktdc.Routers = Hktdc.Routers || {};
           var workerRuleMemberModel;
           var workerRuleMemberView;
           var getWorkerRule = function() {
-            var workerRuleModel = new Hktdc.Models.UserRole({
+            var workerRuleModel = new Hktdc.Models.WorkerRule({
               saveType: (userRoleId) ? 'PUT' : 'POST'
             });
             var deferred = Q.defer();
@@ -615,7 +615,7 @@ Hktdc.Routers = Hktdc.Routers || {};
 
           // edit
           if (memberId) {
-            workerRuleMemberModel = new Hktdc.Models.EditWorkerRuleMember({
+            workerRuleMemberModel = new Hktdc.Models.SaveWorkerRuleMember({
               saveType: 'PUT'
             });
             workerRuleMemberModel.url = workerRuleMemberModel.url(memberId);
@@ -634,17 +634,17 @@ Hktdc.Routers = Hktdc.Routers || {};
           // create
           } else {
             getWorkerRule()
-              .then(function(userRole) {
-                workerRuleMemberModel = new Hktdc.Models.CreateWorkerRuleMember({
-                  saveType: 'POST',
-                  Role: userRole.Role,
-                  UserRoleGUID: userRole.UserRoleGUID
-                });
-                workerRuleMemberView = new Hktdc.Views.CreateWorkerRuleMember({
+              .then(function(workerRule) {
+                _.extend(workerRule, { saveType: 'POST' });
+                workerRuleMemberModel = new Hktdc.Models.WorkerRuleMember(workerRule);
+                workerRuleMemberView = new Hktdc.Views.EditWorkerRuleMember({
                   model: workerRuleMemberModel
                 });
 
                 onSuccess();
+              })
+              .catch(function(err) {
+                console.log(err);
               });
           }
         });

@@ -7,8 +7,9 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.WorkerRule = Backbone.Model.extend({
 
-    url: function() {
-      return Hktdc.Config.apiURL + '/worker-rule/process';
+    url: function(workerRuleId) {
+      var path = workerRuleId ? '/' + workerRuleId : '';
+      return Hktdc.Config.apiURL + '/worker-rule' + path;
     },
 
     initialize: function() {},

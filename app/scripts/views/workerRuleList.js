@@ -188,7 +188,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       $('#workerTable tbody', this.el).on('click', 'tr', function(ev) {
         var rowData = self.templateDataTable.row(this).data();
-        Backbone.history.navigate('emailtemplate/' + rowData.id, {
+        Backbone.history.navigate('worker-rule/' + rowData.id, {
           trigger: true
         });
       });
@@ -248,7 +248,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     doSearch: function() {
-      var queryParams = _.omit(this.model.toJSON(), 'showSearch', 'processCollection', 'mode');
+      var queryParams = _.omit(this.model.toJSON(), 'showSearch', 'processCollection', 'mode', 'menuId');
       var currentBase = Backbone.history.getHash().split('?')[0];
       var queryString = utils.getQueryString(queryParams, true);
       Backbone.history.navigate(currentBase + queryString);
@@ -256,7 +256,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getAjaxURL: function() {
-      var queryParams = _.omit(this.model.toJSON(), 'showSearch', 'processCollection', 'mode');
+      var queryParams = _.omit(this.model.toJSON(), 'showSearch', 'processCollection', 'mode', 'menuId');
       var queryString = utils.getQueryString(queryParams, true);
       return Hktdc.Config.apiURL + '/worker-rule' + queryString;
     },

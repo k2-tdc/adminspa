@@ -18,6 +18,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
+      console.log(this.model.toJSON());
     },
 
     render: function() {
@@ -44,8 +45,9 @@ Hktdc.Views = Hktdc.Views || {};
 
       if (self.model.toJSON().showRules) {
         // self.load
-        self.renderUsers();
-        self.renderWorkers();
+        // self.renderUsers();
+        // self.renderWorkers();
+        self.renderDataTable();
       }
     },
 
@@ -136,7 +138,7 @@ Hktdc.Views = Hktdc.Views || {};
         oLanguage: {
           sProcessing: '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>'
         },
-        data: self.model.toJSON().Member,
+        data: self.model.toJSON().Rules,
         order: [
           [1, 'asc']
         ],
@@ -152,30 +154,36 @@ Hktdc.Views = Hktdc.Views || {};
         },
         columns: [
           {
-            data: 'UserRoleMemberGUID',
+            data: 'WorkerRuleSettingId',
             render: function(data) {
               return '<input type="checkbox" class="selectUser"/>';
             },
             orderable: false
           },
           {
-            data: 'Type'
+            data: 'ModifiedOn'
           },
           {
-            data: 'Name'
+            data: 'ModifiedBy'
           },
           {
-            data: 'ExpiryDate',
-            render: function(data) {
-              return (moment(data).isValid()) ? moment(data).format('DD MMM YYYY') : '';
-            }
+            data: 'Summary'
+          },
+          {
+            data: 'Score'
+          },
+          {
+            data: 'StartDate'
+          },
+          {
+            data: 'EndDate'
           }
         ]
       });
 
       $('#memberTable tbody', this.el).on('click', 'tr', function(ev) {
         var rowData = self.userRoleDataTable.row(this).data();
-        Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID + '/member/' + rowData.UserRoleMemberGUID, {
+        Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId + '/member/' + rowData.WorkerRuleSettingId, {
           trigger: true
         });
       });
