@@ -950,14 +950,14 @@ Hktdc.Views = Hktdc.Views || {};
               }
             }
             if (blob) {
-              window.navigator.msSaveBlob(blob, 'report.xls');
+              window.navigator.msSaveBlob(blob, 'preview.xls');
             }
           } else {
             // Trick for making downloadable link
             anchorLink = document.createElement('a');
             anchorLink.href = window.URL.createObjectURL(xhr.response);
             // Give filename you wish to download
-            anchorLink.download = 'report.xls';
+            anchorLink.download = 'preview.xls';
             anchorLink.style.display = 'none';
             document.body.appendChild(anchorLink);
             anchorLink.click();
