@@ -120,7 +120,16 @@
       <div class="sep-space"></div>
     <% } // endif %>
 
-    <% if (showFor) { %>
+    <% if (showFor && showFor === 'team') { %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-label text-right">For</div>
+        </div>
+        <div class="col-md-4 forContainer"></div>
+        <div class="col-md-4 forTeamFilterContainer"></div>
+      </div>
+      <div class="sep-space"></div>
+    <% } else if (showFor){ %>
       <div class="row">
         <div class="col-md-3">
           <div class="form-label text-right">For</div>
@@ -128,7 +137,7 @@
         <div class="col-md-9 forContainer"></div>
       </div>
       <div class="sep-space"></div>
-    <% } // endif %>
+    <% }// endif %>
 
     <% if (showDateRange) { %>
       <div class="row">

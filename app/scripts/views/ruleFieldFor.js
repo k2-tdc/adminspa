@@ -51,7 +51,7 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'select',
     className: 'form-control',
     events: {
-      'change': 'selectGradeHandler'
+      'change': 'selectForHandler'
     },
     initialize: function(props) {
       console.debug('[ views/rule.js ] initialize: RuleFieldForSelect');
@@ -71,7 +71,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    selectGradeHandler: function(ev) {
+    selectForHandler: function(ev) {
       if (this.onSelected) {
         var targetId = $(ev.target).find('option:selected').val();
         this.onSelected(_.find(this.collection.toJSON(), function(selectedItem) {
@@ -105,6 +105,72 @@ Hktdc.Views = Hktdc.Views || {};
           this.model.toJSON().UserID ||
           this.model.toJSON().Code
         )
+      };
+    },
+
+    events: {},
+
+    initialize: function() {
+      this.render();
+    },
+
+    render: function() {
+      this.$el.html(this.template({ data: this.model.toJSON() }));
+    }
+
+  });
+
+  Hktdc.Views.RuleFieldForTeamFilterSelect = Backbone.View.extend({
+    tagName: 'select',
+    className: 'form-control',
+    events: {
+      'change': 'selectForHandler'
+    },
+    initialize: function(props) {
+      console.debug('[ views/rule.js ] initialize: RuleFieldForTeamFilterSelect');
+      _.bindAll(this, 'renderItem');
+      _.extend(this, props);
+      if (!this.collection.get(0)) {
+        this.collection.unshift({ Description: '--- Select ---', FilterID: '0' });
+      }
+      // this.listenTo(this.collection, 'change', this.render);
+      // this.render();
+    },
+
+    render: function() {
+      // console.log(this.collection.toJSON());
+      var self = this;
+      this.collection.each(this.renderItem);
+      self.$el.prop('disabled', self.disable);
+      setTimeout(function() {
+        self.$el.find('option[value="' + self.selectedFor + '"]').prop('selected', true);
+      });
+    },
+
+    selectForHandler: function(ev) {
+      if (this.onSelected) {
+        var targetId = $(ev.target).find('option:selected').val();
+        this.onSelected(_.find(this.collection.toJSON(), function(selectedItem) {
+          return String(selectedItem.FilterID) === String(targetId);
+        }));
+      }
+    },
+
+    renderItem: function(model) {
+      var itemView = new Hktdc.Views.RuleFieldForTeamFilterOption({
+        model: model
+      });
+      this.$el.append(itemView.el);
+    }
+
+  });
+
+  Hktdc.Views.RuleFieldForTeamFilterOption = Backbone.View.extend({
+    template: JST['app/scripts/templates/forOption.ejs'],
+    tagName: 'option',
+    attributes: function() {
+      return {
+        value: String(this.model.toJSON().FilterID)
       };
     },
 

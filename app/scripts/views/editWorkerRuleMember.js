@@ -126,12 +126,20 @@ Hktdc.Views = Hktdc.Views || {};
             return self.loadUsers();
           } else if (type === 'group') {
             return self.loadGroup();
-          } else {
-            return self.loadTeam();
+          } else if (type === 'team') {
+            return Q.all([
+              self.loadTeam(),
+              self.loadTeamFilter()
+            ]);
           }
         })
           .then(function(typeCollection) {
-            return self.renderFor(type, typeCollection);
+            if (type === 'team') {
+              self.renderFor(type, typeCollection[0]);
+              self.renderForTeamFilter(typeCollection[1]);
+            } else {
+              self.renderFor(type, typeCollection);
+            }
           }).catch(function(e) {
             console.error(e);
           });
@@ -335,6 +343,29 @@ Hktdc.Views = Hktdc.Views || {};
               teamCollection: teamCollection
             });
             deferred.resolve(teamCollection);
+          },
+          error: function(err) {
+            deferred.reject(err);
+          }
+        });
+      }
+      return deferred.promise;
+    },
+
+    loadTeamFilter: function() {
+      var deferred = Q.defer();
+      var self = this;
+      if (self.model.toJSON().teamFilterCollection) {
+        deferred.resolve(self.model.toJSON().teamFilterCollection);
+      } else {
+        var teamFilterCollection = new Hktdc.Collections.TeamFilter();
+        teamFilterCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            self.model.set({
+              teamFilterCollection: teamFilterCollection
+            });
+            deferred.resolve(teamFilterCollection);
           },
           error: function(err) {
             deferred.reject(err);
@@ -631,13 +662,13 @@ Hktdc.Views = Hktdc.Views || {};
       }
     },
 
-    renderRemove: function(type, setCollection) {
+    renderRemove: function(type, removeCollection) {
       var self = this;
       var gradeView;
       try {
         if (type === 'grade') {
           gradeView = new Hktdc.Views.RuleFieldRemoveGrade({
-            collection: setCollection,
+            collection: removeCollection,
             selectedGradeFrom: self.model.toJSON().Grade1 || 0,
             selectedGradeTo: self.model.toJSON().Grade2 || 0,
             onSelectedFrom: function(grade) {
@@ -653,7 +684,7 @@ Hktdc.Views = Hktdc.Views || {};
           });
         } else {
           gradeView = new Hktdc.Views.RuleFieldRemoveCommon({
-            collection: setCollection,
+            collection: removeCollection,
             type: type,
             selected: function() {
               if (type === 'user') {
@@ -690,12 +721,12 @@ Hktdc.Views = Hktdc.Views || {};
       }
     },
 
-    renderFor: function(type, setCollection) {
+    renderFor: function(type, forCollection) {
       var self = this;
       var forView;
       try {
         forView = new Hktdc.Views.RuleFieldFor({
-          collection: setCollection,
+          collection: forCollection,
           type: type,
           selectedFor: function() {
             if (type === 'user') {
@@ -732,6 +763,25 @@ Hktdc.Views = Hktdc.Views || {};
 
         forView.render();
         $('.forContainer', self.el).html(forView.el);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    renderForTeamFilter: function(teamCollection) {
+      var self = this;
+      try {
+        var teamFilterSelectView = new Hktdc.Views.RuleFieldForTeamFilterSelect({
+          collection: teamCollection,
+          selectedPerUser: self.model.toJSON().Per || 0,
+          onSelected: function(user) {
+            self.model.set({
+              TeamFilter: user.UserID
+            });
+          }
+        });
+        teamFilterSelectView.render();
+        $('.forTeamFilterContainer', self.el).html(teamFilterSelectView.el);
       } catch (e) {
         console.error(e);
       }
@@ -809,55 +859,58 @@ Hktdc.Views = Hktdc.Views || {};
     saveButtonHandler: function() {
       console.log('raw Model: ', this.model.toJSON());
       var self = this;
-      var saveRuleMemberModel = Hktdc.Models.SaveWorkerRuleMember();
+      var saveRuleMemberModel = new Hktdc.Models.SaveWorkerRuleMember();
       var rawData = this.model.toJSON();
       var data = {
         WorkerRuleId: rawData.WorkerRuleId,
-        WorkerSettingId: rawData.WorkerSettingId,
+        WorkerSettingId: rawData.WorkerSettingId || '',
         Rule: rawData.Rule,
         Nature: rawData.Nature,
         Score: rawData.Score,
-        UserId: rawData.UserId,
-        UserId1: rawData.UserId1,
-        UserId2: rawData.UserId2,
-        LevelNo: rawData.LevelNo,
-        GroupID: rawData.GroupID,
-        GroupID1: rawData.GroupID1,
-        Grade1: rawData.Grade1,
-        Grade2: rawData.Grade2,
-        Team: rawData.Team,
-        TeamFilter: rawData.TeamFilter,
-        Priority: rawData.Priority,
-        Grade3: rawData.Grade3,
-        Grade4: rawData.Grade4,
-        Department: rawData.Department,
+        UserId: rawData.UserId || '',
+        UserId1: rawData.UserId1 || '',
+        UserId2: rawData.UserId2 || '',
+        LevelNo: rawData.LevelNo || '',
+        GroupID: rawData.GroupID || '',
+        GroupID1: rawData.GroupID1 || '',
+        Grade1: rawData.Grade1 || '',
+        Grade2: rawData.Grade2 || '',
+        Team: rawData.Team || '',
+        TeamFilter: rawData.TeamFilter || '',
+        Priority: rawData.Priority || '',
+        Grade3: rawData.Grade3 || '',
+        Grade4: rawData.Grade4 || '',
+        Department: rawData.Department || '',
         DateFrom: rawData.DateFrom,
         DateTo: rawData.DateTo,
-        Criteria: rawData.Criteria,
+        Criteria: rawData.Criteria || '',
         Remark: rawData.Remark
       };
       saveRuleMemberModel.set(data);
       console.log('saveModel: ', saveRuleMemberModel.toJSON());
-      saveRuleMemberModel.save(null, {
-        type: rawData.saveType,
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'saved',
-            type: 'confirmation',
-            title: 'Confirmation'
-          });
 
-          Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
-        },
-        error: function(err) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'error on saving user role'
-          });
-        }
-      });
+      if (saveRuleMemberModel.isValid()) {
+        saveRuleMemberModel.save(null, {
+          type: rawData.saveType,
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'saved',
+              type: 'confirmation',
+              title: 'Confirmation'
+            });
+
+            Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
+          },
+          error: function(err) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: err,
+              type: 'error',
+              title: 'error on saving user role'
+            });
+          }
+        });
+      }
     }
 
   });
