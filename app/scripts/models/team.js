@@ -1,13 +1,13 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
 
 Hktdc.Models = Hktdc.Models || {};
 
 (function() {
   'use strict';
 
-  Hktdc.Models.Rule = Backbone.Model.extend({
-    
-    idAttribute: 'TemplateID',
+  Hktdc.Models.Team = Backbone.Model.extend({
+
+    idAttribute: 'Code',
 
     initialize: function() {},
 
@@ -19,5 +19,4 @@ Hktdc.Models = Hktdc.Models || {};
       return response;
     }
   });
-
 })();

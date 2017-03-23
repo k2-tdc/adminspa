@@ -7,11 +7,26 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.WorkerRuleMember = Backbone.Model.extend({
 
-    url: '',
-
     initialize: function() {},
 
-    defaults: {},
+    defaults: {
+      showNature: false,
+      showScore: false,
+      showPer: false,
+      showSet: false,
+      showRemove: false,
+      showAs: false,
+      showOf: false,
+      showFor: false,
+      showDateRange: false,
+      showCheckbox: false,
+      showRemark: false,
+      showReference: false,
+
+      ruleCollection: null,
+
+      Rule: '',
+    },
 
     validate: function(attrs, options) {},
 

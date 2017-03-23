@@ -4,14 +4,14 @@ Hktdc.Views = Hktdc.Views || {};
 
 (function() {
   'use strict';
-  Hktdc.Views.RuleSelect = Backbone.View.extend({
+  Hktdc.Views.RuleFieldNatureSelect = Backbone.View.extend({
     tagName: 'select',
     className: 'form-control',
     events: {
       'change': 'selectRuleHandler'
     },
     initialize: function(props) {
-      console.debug('[ views/rule.js ] initialize: RuleSelect');
+      console.debug('[ views/rule.js ] initialize: RuleFieldNatureSelect');
       _.bindAll(this, 'renderRuleItem');
       _.extend(this, props);
       this.listenTo(this.collection, 'change', this.render);
@@ -21,13 +21,11 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       // console.log(this.collection.toJSON());
       var self = this;
-      if (!this.collection.get(0)) {
-        this.collection.unshift({Description: '-- Select --', TemplateID: 0});
-      }
+      this.collection.unshift({Description: '-- Select --', TemplateID: 0});
       this.collection.each(this.renderRuleItem);
       self.$el.prop('disabled', self.disable);
       setTimeout(function() {
-        self.$el.find('option[value="' + self.selectedRule + '"]').prop('selected', true);
+        self.$el.find('option[value="' + self.selectedNature + '"]').prop('selected', true);
       });
     },
 

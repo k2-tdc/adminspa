@@ -5,11 +5,8 @@ Hktdc.Models = Hktdc.Models || {};
 (function() {
   'use strict';
 
-  Hktdc.Models.Rule = Backbone.Model.extend({
-    
-    idAttribute: 'TemplateID',
-
-    initialize: function() {},
+  Hktdc.Models.Grading = Backbone.Model.extend({
+    idAttribute: 'Grade',
 
     defaults: {},
 

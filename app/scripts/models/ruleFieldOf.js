@@ -2,16 +2,17 @@
 
 Hktdc.Models = Hktdc.Models || {};
 
-(function() {
+(function () {
   'use strict';
 
-  Hktdc.Models.User = Backbone.Model.extend({
+  Hktdc.Models.RuleFieldOf = Backbone.Model.extend({
 
-    idAttribute: 'UserID',
+    url: '',
+
+    initialize: function() {
+    },
 
     defaults: {
-      EmployeeID: '',
-      FullName: ''
     },
 
     validate: function(attrs, options) {

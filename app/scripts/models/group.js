@@ -5,9 +5,9 @@ Hktdc.Models = Hktdc.Models || {};
 (function() {
   'use strict';
 
-  Hktdc.Models.Rule = Backbone.Model.extend({
-    
-    idAttribute: 'TemplateID',
+  Hktdc.Models.Group = Backbone.Model.extend({
+
+    idAttribute: 'GroupID',
 
     initialize: function() {},
 

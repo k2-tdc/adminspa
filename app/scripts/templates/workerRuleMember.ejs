@@ -45,35 +45,178 @@
     </div>
     <div class="sep-space"></div>
 
-    <div class="row">
-      <div class="col-md-3">
-        <div class="form-label text-right">Summary</div>
+    <% if (showNature) { %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-label text-right">Nature</div>
+        </div>
+        <div class="col-md-9 natureContainer"></div>
       </div>
-      <div class="col-md-9">
-        <textarea name="Summary" class="form-control formTextField" rows="8" cols="80"><%= Summary %></textarea>
-      </div>
-    </div>
-    <div class="sep-space"></div>
+      <div class="sep-space"></div>
+    <% } // endif %>
 
+    <% if (showScore) { %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-label text-right">Score</div>
+        </div>
+        <div class="col-md-9">
+          <input type="number" class="form-control formTextField" name="Score" value="<%= Score %>">
+        </div>
+      </div>
+      <div class="sep-space"></div>
+    <% } // endif %>
+
+    <% if (showPer) { %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-label text-right">Per</div>
+        </div>
+        <div class="col-md-9 perContainer"></div>
+      </div>
+      <div class="sep-space"></div>
+    <% } // endif %>
+
+    <% if (showSet) { %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-label text-right">Set</div>
+        </div>
+        <div class="col-md-9 setContainer"></div>
+      </div>
+      <div class="sep-space"></div>
+    <% } // endif %>
+
+    <% if (showRemove) { %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-label text-right">Remove</div>
+        </div>
+        <div class="col-md-9 removeContainer"></div>
+      </div>
+      <div class="sep-space"></div>
+    <% } // endif %>
+
+    <% if (showAs) { %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-label text-right">As</div>
+        </div>
+        <div class="col-md-9 asContainer"></div>
+      </div>
+      <div class="sep-space"></div>
+    <% } // endif %>
+
+    <% if (showOf) { %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-label text-right">Of</div>
+        </div>
+        <div class="col-md-3 ofFromContainer"></div>
+        <div class="col-md-1">To</div>
+        <div class="col-md-3 ofToContainer"></div>
+        <div class="col-md-1">User</div>
+      </div>
+      <div class="sep-space"></div>
+    <% } // endif %>
+
+    <% if (showFor) { %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-label text-right">For</div>
+        </div>
+        <div class="col-md-9 forContainer"></div>
+      </div>
+      <div class="sep-space"></div>
+    <% } // endif %>
+
+    <% if (showDateRange) { %>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-label text-right">from</div>
+        </div>
+        <div class="col-md-4 fromDatePicker"></div>
+        <div class="col-md-1"><span class="form-label">to</span></div>
+        <div class="col-md-4 toDatePicker"></div>
+      </div>
+      <div class="sep-space"></div>
+    <% } // endif %>
+
+    <% if (showCheckbox) { %>
+      <div>
+        <div class="form-label">
+          Additional Criteria for applicant's grade:
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-label"></div>
+          </div>
+          <div class="col-md-9">
+            <div>
+              <label>
+                <input type="checkbox" name="">
+                Applicant grade is lower than that of approver
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div>
+        <div class="form-label">
+          Additional Criteria for applicant's hierachy:
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-label"></div>
+          </div>
+          <div class="col-md-9">
+            <div>
+              <label>
+                <input type="checkbox" name="">
+                Applicant department is same as approver
+              </label>
+            </div>
+            <div>
+              <label>
+                <input type="checkbox" name="">
+                Applicant department is subordinate of approver
+              </label>
+            </div>
+            <div>
+              <label>
+                <input type="checkbox" name="">
+                Applicant office type (HO/BO/Consultant) is same as approver
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } // endif %>
+
+    <% if (showRemark) { %>
     <div class="row">
       <div class="col-md-3">
         <div class="form-label text-right">Remark</div>
       </div>
-      <div class="col-md-9">
-        <textarea name="Remark" class="form-control formTextField" rows="8" cols="80"><%= Remark %></textarea>
+      <div class="col-md-9 remarkContainer">
+        <textarea name="Remark" class="form-control" rows="10"><%= Remark %></textarea>
       </div>
     </div>
     <div class="sep-space"></div>
+    <% } // endif %>
 
+    <% if (showReference) { %>
     <div class="row">
       <div class="col-md-3">
-        <div class="form-label text-right"><span class="red">*</span> Score</div>
+        <div class="form-label text-right">Reference</div>
       </div>
-      <div class="col-md-9">
-        <input type="number" class="form-control formTextField" name="Score" value="<%= Score %>">
-      </div>
+      <div class="col-md-9 referenceContainer"></div>
     </div>
     <div class="sep-space"></div>
+    <% } // endif %>
+
 
     <div class="form-group buttons-container">
       <div class="text-center available-buttons">
