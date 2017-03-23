@@ -774,9 +774,9 @@ Hktdc.Views = Hktdc.Views || {};
         var teamFilterSelectView = new Hktdc.Views.RuleFieldForTeamFilterSelect({
           collection: teamCollection,
           selectedPerUser: self.model.toJSON().Per || 0,
-          onSelected: function(user) {
+          onSelected: function(selected) {
             self.model.set({
-              TeamFilter: user.UserID
+              TeamFilter: selected.FilterID
             });
           }
         });
