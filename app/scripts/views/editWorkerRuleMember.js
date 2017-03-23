@@ -563,7 +563,7 @@ Hktdc.Views = Hktdc.Views || {};
           selectedPriority: self.model.toJSON().Priority || 0,
           onSelected: function(selectedItem) {
             self.model.set({
-              Priority: selectedItem.PriorityID
+              Priority: parseInt(selectedItem.PriorityID) || 0
             });
           }
         });
@@ -866,8 +866,38 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     saveButtonHandler: function() {
+      var self = this;
+      this.saveRuleSetting()
+        .then(function() {
+          return this.sendAttachment(
+            insertServiceResponse.FormID,
+            this.requestFormModel.toJSON().selectedAttachmentCollection
+          );
+        })
+        .then(function() {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'saved',
+            type: 'confirmation',
+            title: 'Confirmation'
+          });
+
+          Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
+
+        })
+        .catch(function(err) {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: err,
+            type: 'error',
+            title: 'error on saving user role'
+          });
+
+        });
+    },
+
+    saveRuleSetting: function() {
       console.log('raw Model: ', this.model.toJSON());
       var self = this;
+      var deferred = Q.defer();
       var saveRuleMemberModel = new Hktdc.Models.SaveWorkerRuleMember();
       var rawData = this.model.toJSON();
       var data = {
@@ -886,7 +916,7 @@ Hktdc.Views = Hktdc.Views || {};
         Grade2: rawData.Grade2 || '',
         Team: rawData.Team || '',
         TeamFilter: rawData.TeamFilter || '',
-        Priority: rawData.Priority || '',
+        Priority: rawData.Priority || 0,
         Grade3: rawData.Grade3 || '',
         Grade4: rawData.Grade4 || '',
         Department: rawData.Department || '',
@@ -903,23 +933,56 @@ Hktdc.Views = Hktdc.Views || {};
           type: rawData.saveType,
           beforeSend: utils.setAuthHeader,
           success: function() {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'saved',
-              type: 'confirmation',
-              title: 'Confirmation'
-            });
-
-            Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
+            deferred.resolve();
           },
           error: function(err) {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              message: err,
-              type: 'error',
-              title: 'error on saving user role'
-            });
+            deferred.reject(err);
           }
         });
       }
+
+      return deferred.promise;
+    },
+
+    sendAttachment: function(refId, attachmentCollection) {
+      var deferred = Q.defer();
+      var files = _.reject(attachmentCollection.toJSON(), function(attachment) {
+        return attachment.AttachmentGUID;
+      });
+      if (files.length <= 0) {
+        deferred.resolve();
+        return;
+      }
+      var ajaxOptions = {
+        type: 'POST',
+        processData: false,
+        cache: false,
+        contentType: false
+      };
+      var data = new FormData();
+      var sendAttachmentModel = new Hktdc.Models.SendAttachment();
+      var filename = _.map(files, function(file) {
+        return (file.file) && file.file.name;
+      });
+
+      sendAttachmentModel.url = sendAttachmentModel.url(refId);
+
+      _.each(files, function(file, i) {
+        data.append('file' + i, file.file);
+      });
+
+      ajaxOptions.data = data;
+
+      sendAttachmentModel.save(null, $.extend({}, ajaxOptions, {
+        beforeSend: utils.setAuthHeader,
+        success: function(model, response) {
+          deferred.resolve();
+        },
+        error: function(e) {
+          deferred.reject('Submit File Error' + JSON.stringify(e, null, 2));
+        }
+      }));
+      return deferred.promise;
     }
 
   });
