@@ -13,6 +13,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {
       'click .saveBtn': 'saveButtonHandler',
+      'click .deleteBtn': 'deleteRuleButtonHandler',
       'click .removeMemeberBtn': 'removeMemberButtonHandler',
       'click .searchBtn': 'searchButtonHandler',
       'click .addMemeberBtn': 'addMemberButtonHandler',
@@ -330,6 +331,49 @@ Hktdc.Views = Hktdc.Views || {};
           }
         });
       }
+    },
+
+    deleteRuleButtonHandler: function() {
+      var self = this;
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'Confirmation',
+        message: 'Are you sure to delete?',
+        onConfirm: function() {
+          // console.log(self.model.toJSON().selectedWorker);
+          var delWorkerRuleModel = new Hktdc.Models.DeleteWorkerRule();
+          delWorkerRuleModel.url = delWorkerRuleModel.url(self.model.toJSON().WorkerRuleId);
+          delWorkerRuleModel.save(null, {
+            type: 'DELETE',
+            beforeSend: utils.setAuthHeader,
+            success: function(model, response) {
+              if (String(response.Success) === '1') {
+                Hktdc.Dispatcher.trigger('closeConfirm');
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: 'Deleted',
+                  type: 'confirmation',
+                  title: 'Confirmation'
+                });
+              } else {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: response.Msg || 'Error on delete',
+                  type: 'error',
+                  title: 'Error'
+                });
+              }
+
+              Backbone.history.navigate('userrole', {trigger: true});
+            },
+            error: function(model, err) {
+              // console.log(err);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: err.responseText || 'Error on saving user role',
+                type: 'error',
+                title: 'Error'
+              });
+            }
+          });
+        }
+      });
     },
 
     searchButtonHandler: function() {

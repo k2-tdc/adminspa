@@ -9,18 +9,28 @@
       <div class="col-sm-3">
         <div class="form-label text-right"><span class="red">*</span> Process</div>
       </div>
-      <div class="col-md-9 processContainer">
-        <!-- status Select list here -->
-      </div>
+      <% if (showRules) { %>
+        <div class="col-md-9"><span><%= ProcessDisplayName %></span></div>
+      <% } else { %>
+        <div class="col-md-9 processContainer">
+          <!-- status Select list here -->
+        </div>
+      <% } %>
+
     </div>
 
     <div class="row">
       <div class="col-md-3">
         <div class="form-label text-right"><span class="red">*</span> Code</div>
       </div>
-      <div class="col-md-9">
-        <input type="text" class="form-control formTextField" name="Code" value="<%= Code %>">
-      </div>
+      <% if (showRules) { %>
+        <div class="col-md-9"><span><%= Code %></span></div>
+      <% } else { %>
+        <div class="col-md-9">
+          <input type="text" class="form-control formTextField" name="Code" value="<%= Code %>">
+        </div>
+      <% } %>
+
     </div>
     <div class="sep-space"></div>
 
@@ -78,7 +88,7 @@
     <div class="form-group buttons-container">
       <div class="text-center available-buttons">
         <% if (showRules) { %>
-          <input type="button" class="btn btn-primary batchDeleteBtn" value="Delete" />
+          <input type="button" class="btn btn-primary deleteBtn" value="Delete" />
         <% } %>
         <input type="button" class="btn btn-primary saveBtn" value="Save" />
       </div>

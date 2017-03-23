@@ -13,7 +13,6 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {
       'click .createBtn': 'goToCreatePage',
-      'click .batchDeleteBtn': 'deleteButtonHandler',
       'click .searchBtn': 'doSearch'
     },
 
@@ -128,12 +127,6 @@ Hktdc.Views = Hktdc.Views || {};
           // }
         },
         columns: [{
-          data: 'id',
-          render: function(data) {
-            return '<input type="checkbox" class="selectWorker"/>';
-          },
-          orderable: false
-        }, {
           data: 'code'
         }, {
           data: 'worker'
@@ -144,48 +137,6 @@ Hktdc.Views = Hktdc.Views || {};
         }]
       });
 
-      $('#workerTable tbody', this.el).on('click', '.deleteBtn', function(ev) {
-        ev.stopPropagation();
-        var rowData = self.templateDataTable.row($(this).parents('tr')).data();
-        var targetId = rowData.id;
-        Hktdc.Dispatcher.trigger('openConfirm', {
-          title: 'confirmation',
-          message: 'Are you sure to Delete?',
-          onConfirm: function() {
-            self.deleteTemplate(targetId)
-              .then(function(response) {
-                Hktdc.Dispatcher.trigger('closeConfirm');
-                if (String(response.success) === '1') {
-                  Hktdc.Dispatcher.trigger('openAlert', {
-                    type: 'success',
-                    title: 'confirmation',
-                    message: 'Deleted record: ' + rowData.process + ' - ' + rowData.step
-                  });
-
-                  self.templateDataTable.ajax.reload();
-                  // Hktdc.Dispatcher.trigger('reloadMenu');
-                } else {
-                  Hktdc.Dispatcher.trigger('openAlert', {
-                    type: 'error',
-                    title: 'error',
-                    message: response.Msg
-                  });
-                }
-              })
-              .catch(function(err) {
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  type: 'error',
-                  title: 'error',
-                  message: 'delete failed'
-                });
-                console.error(err);
-              });
-          }
-        });
-
-        // console.log('rowData', rowData);
-      });
-
       $('#workerTable tbody', this.el).on('click', 'tr', function(ev) {
         var rowData = self.templateDataTable.row(this).data();
         Backbone.history.navigate('worker-rule/' + rowData.id, {
@@ -193,57 +144,8 @@ Hktdc.Views = Hktdc.Views || {};
         });
       });
 
-      $('#workerTable thead', this.el).on('change', '.checkAll', function(ev) {
-        var $checkAllCheckbox = $(this);
-        var isCheckAll = $checkAllCheckbox.prop('checked');
-        $('#workerTable tbody tr', self.el).each(function() {
-          var $checkbox = $(this).find('td:first-child').find('.selectWorker');
-          $checkbox.prop('checked', isCheckAll);
-          var rowData = self.templateDataTable.row($(this)).data();
-
-          var originalMember = self.model.toJSON().selectedWorker;
-          var newMember;
-
-          if (isCheckAll) {
-            newMember = _.union(originalMember, [rowData.id]);
-          } else {
-            newMember = _.reject(originalMember, function(memberGUID) {
-              return rowData.id === memberGUID;
-            });
-          }
-          self.model.set({
-            selectedWorker: newMember
-          });
-          // $checkbox.trigger('change');
-        });
-      });
-
       $('#workerTable tbody', this.el).on('click', 'td:first-child', function(ev) {
         ev.stopPropagation();
-      });
-
-      $('#workerTable tbody', this.el).on('change', '.selectWorker', function(ev) {
-        ev.stopPropagation();
-        var rowData = self.templateDataTable.row($(this).parents('tr')).data();
-        var originalMember = self.model.toJSON().selectedWorker;
-        var newMember;
-        // console.log(originalMember);
-        if ($(this).prop('checked')) {
-          newMember = _.union(originalMember, [rowData.id]);
-        } else {
-          newMember = _.reject(originalMember, function(memberGUID) {
-            return rowData.id === memberGUID;
-          });
-        }
-        var allChecked = (
-          $('#workerTable tbody tr', self.el).length ===
-          $('#workerTable tbody .selectWorker:checked', self.el).length
-        );
-
-        $('#workerTable thead .checkAll', self.el).prop('checked', allChecked);
-        self.model.set({
-          selectedWorker: newMember
-        });
       });
     },
 
@@ -272,9 +174,9 @@ Hktdc.Views = Hktdc.Views || {};
         message: 'Are you sure to delete?',
         onConfirm: function() {
           // console.log(self.model.toJSON().selectedWorker);
-          var saveUserRoleModel = new Hktdc.Models.SaveWorker();
+          var saveUserRoleModel = new Hktdc.Models.SaveWorkerRule();
           saveUserRoleModel.clear();
-          saveUserRoleModel.url = saveUserRoleModel.url(this.model.toJSON().UserRoleGUID);
+          saveUserRoleModel.url = saveUserRoleModel.url(this.model.toJSON().WorkerRuleId);
           saveUserRoleModel.save(null, {
             beforeSend: utils.setAuthHeader,
             type: 'POST',
