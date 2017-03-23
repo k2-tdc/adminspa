@@ -636,6 +636,8 @@ Hktdc.Routers = Hktdc.Routers || {};
                       ProcessDisplayName: workerRule.ProcessDisplayName,
                       Code: workerRule.Code,
                       Worker: workerRule.Worker
+                      // DateFrom: moment(workerRuleMemberModel.toJSON().DateFrom).format(''),
+                      // DateTo: moment(workerRuleMemberModel.toJSON().DateTo).format(''),
                     });
                     workerRuleMemberView = new Hktdc.Views.EditWorkerRuleMember({
                       model: workerRuleMemberModel

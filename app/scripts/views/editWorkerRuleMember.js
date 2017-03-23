@@ -12,6 +12,7 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'click .saveBtn': 'saveButtonHandler',
       'click .previewBtn': 'previewButtonHandler',
+      'click .deleteBtn': 'deleteButtonHandler',
       'blur .formTextField': 'updateFormModel'
     },
 
@@ -507,7 +508,27 @@ Hktdc.Views = Hktdc.Views || {};
         showDateRange: ruleModules.dateRange,
         showCheckbox: ruleModules.checkbox,
         showRemark: ruleModules.remark,
-        showReference: ruleModules.reference
+        showReference: ruleModules.reference,
+        Nature: '',
+        Score: '',
+        UserId: '',
+        UserId1: '',
+        UserId2: '',
+        LevelNo: '',
+        GroupID: '',
+        GroupID1: '',
+        Grade1: '',
+        Grade2: '',
+        Team: '',
+        TeamFilter: '',
+        Priority: '',
+        Grade3: '',
+        Grade4: '',
+        Department: '',
+        DateFrom: '',
+        DateTo: '',
+        Criteria: '',
+        Remark: ''
       });
       // console.log(this.model.toJSON());
       this.render();
@@ -967,6 +988,38 @@ Hktdc.Views = Hktdc.Views || {};
         }
       };
       xhr.send(formData);
+    },
+
+    deleteButtonHandler: function() {
+      var self = this;
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'Confirmation',
+        message: 'Are you sure to delete?',
+        onConfirm: function() {
+          var delMemberModel = new Hktdc.Models.DeleteWorkerRuleMember();
+          delMemberModel.url = delMemberModel.url(self.model.toJSON().WorkerSettingId);
+          delMemberModel.save(null, {
+            type: 'DELETE',
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              Hktdc.Dispatcher.trigger('closeConfirm');
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'Deleted',
+                type: 'confirmation',
+                title: 'Confirmation'
+              });
+              Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
+            },
+            error: function(err) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: err,
+                type: 'error',
+                title: 'error on saving user role'
+              });
+            }
+          });
+        }
+      });
     },
 
     saveRuleSetting: function() {
