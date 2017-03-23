@@ -10,7 +10,6 @@ Hktdc.Models = Hktdc.Models || {};
     idAttribute: 'NatureID',
 
     defaults: {
-      NatureID: '',
       Description: '',
       DisplayOrder: '',
       Enabled: '',

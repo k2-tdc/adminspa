@@ -21,7 +21,9 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       // console.log(this.collection.toJSON());
       var self = this;
-      this.collection.unshift({Description: '-- Select --', TemplateID: 0});
+      if (!this.collection.get(0)) {
+        this.collection.unshift({ Description: '-- Select --', NatureID: '' });
+      }
       this.collection.each(this.renderRuleItem);
       self.$el.prop('disabled', self.disable);
       setTimeout(function() {
@@ -33,7 +35,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (this.onSelected) {
         var ruleId = $(ev.target).find('option:selected').val();
         this.onSelected(_.find(this.collection.toJSON(), function(rule) {
-          return String(rule.TemplateID) === String(ruleId);
+          return String(rule.NatureID) === String(ruleId);
         }));
       }
     },
@@ -52,7 +54,7 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'option',
     attributes: function() {
       return {
-        value: String(this.model.toJSON().TemplateID)
+        value: String(this.model.toJSON().NatureID)
       };
     },
 

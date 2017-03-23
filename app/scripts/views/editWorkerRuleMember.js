@@ -807,7 +807,57 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     saveButtonHandler: function() {
-      console.log(this.model.toJSON());
+      console.log('raw Model: ', this.model.toJSON());
+      var self = this;
+      var saveRuleMemberModel = Hktdc.Models.SaveWorkerRuleMember();
+      var rawData = this.model.toJSON();
+      var data = {
+        WorkerRuleId: rawData.WorkerRuleId,
+        WorkerSettingId: rawData.WorkerSettingId,
+        Rule: rawData.Rule,
+        Nature: rawData.Nature,
+        Score: rawData.Score,
+        UserId: rawData.UserId,
+        UserId1: rawData.UserId1,
+        UserId2: rawData.UserId2,
+        LevelNo: rawData.LevelNo,
+        GroupID: rawData.GroupID,
+        GroupID1: rawData.GroupID1,
+        Grade1: rawData.Grade1,
+        Grade2: rawData.Grade2,
+        Team: rawData.Team,
+        TeamFilter: rawData.TeamFilter,
+        Priority: rawData.Priority,
+        Grade3: rawData.Grade3,
+        Grade4: rawData.Grade4,
+        Department: rawData.Department,
+        DateFrom: rawData.DateFrom,
+        DateTo: rawData.DateTo,
+        Criteria: rawData.Criteria,
+        Remark: rawData.Remark
+      };
+      saveRuleMemberModel.set(data);
+      console.log('saveModel: ', saveRuleMemberModel.toJSON());
+      saveRuleMemberModel.save(null, {
+        type: rawData.saveType,
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'saved',
+            type: 'confirmation',
+            title: 'Confirmation'
+          });
+
+          Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
+        },
+        error: function(err) {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: err,
+            type: 'error',
+            title: 'error on saving user role'
+          });
+        }
+      });
     }
 
   });

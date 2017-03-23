@@ -20,8 +20,10 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       var self = this;
+      console.log(this.collection.get(0).toJSON());
       if (!this.collection.get(0)) {
-        this.collection.unshift({Description: '-- Select --', PriorityID: 0});
+        console.log('inininni');
+        this.collection.unshift({ Description: '-- Select --', PriorityID: '0' });
       }
       this.collection.each(this.renderItem);
       // self.$el.prop('disabled', self.disable);

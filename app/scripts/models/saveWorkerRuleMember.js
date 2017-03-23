@@ -7,11 +7,37 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.SaveWorkerRuleMember = Backbone.Model.extend({
 
-    url: '',
+    url: function(code) {
+      return Hktdc.Config.apiURL + '/worker-rule/criteria/' + code;
+    },
 
     initialize: function() {},
 
-    defaults: {},
+    defaults: {
+      WorkerRuleId: '',
+      WorkerSettingId: '',
+      Rule: '',
+      Nature: '',
+      Score: '',
+      UserId: '',
+      UserId1: '',
+      UserId2: '',
+      LevelNo: '',
+      GroupID: '',
+      GroupID1: '',
+      Grade1: '',
+      Grade2: '',
+      Team: '',
+      TeamFilter: '',
+      Priority: '',
+      Grade3: '',
+      Grade4: '',
+      Department: '',
+      DateFrom: '',
+      DateTo: '',
+      Criteria: '',
+      Remark: ''
+    },
 
     validate: function(attrs, options) {},
 

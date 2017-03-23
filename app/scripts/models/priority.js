@@ -2,23 +2,19 @@
 
 Hktdc.Models = Hktdc.Models || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Models.Priority = Backbone.Model.extend({
+    idAttribute: 'PriorityID',
 
-    url: '',
+    initialize: function() {},
 
-    initialize: function() {
-    },
+    defaults: {},
 
-    defaults: {
-    },
+    validate: function(attrs, options) {},
 
-    validate: function(attrs, options) {
-    },
-
-    parse: function(response, options)  {
+    parse: function(response, options) {
       return response;
     }
   });
