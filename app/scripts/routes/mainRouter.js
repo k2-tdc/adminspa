@@ -600,13 +600,20 @@ Hktdc.Routers = Hktdc.Routers || {};
             });
             return deferred.promise;
           };
-          var onSuccess = function() {
-            workerRuleMemberView.render();
+          var onSuccess = function(renderByRule) {
+            console.log('renderByRule: ',renderByRule);
+            if (renderByRule) {
+              setTimeout(function() {
+                workerRuleMemberView.renderField(renderByRule);
+              });
+            } else {
+              workerRuleMemberView.render();
+            }
             $('#mainContent').empty().html(workerRuleMemberView.el);
             var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
             var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
               collection: subheaderMenuListCollection,
-              currentPageName: 'WORKER RULE MEMBER'
+              currentPageName: 'WORKER RULE SETTING'
             });
             subheaderMenuListView.render();
 
@@ -614,28 +621,34 @@ Hktdc.Routers = Hktdc.Routers || {};
           };
           // var renderUserRoleMember = function(userRole) {
 
-          // edit
-          if (memberId) {
-            workerRuleMemberModel = new Hktdc.Models.SaveWorkerRuleMember({
-              saveType: 'PUT'
-            });
-            workerRuleMemberModel.url = workerRuleMemberModel.url(memberId);
-            workerRuleMemberModel.fetch({
-              beforeSend: utils.setAuthHeader,
-              success: function() {
-                workerRuleMemberView = new Hktdc.Views.EditWorkerRuleMember({
-                  model: workerRuleMemberModel
+          getWorkerRule()
+            .then(function(workerRule) {
+              // edit
+              if (memberId) {
+                workerRuleMemberModel = new Hktdc.Models.WorkerRuleMember();
+                workerRuleMemberModel.url = workerRuleMemberModel.url(memberId);
+                workerRuleMemberModel.fetch({
+                  beforeSend: utils.setAuthHeader,
+                  success: function() {
+                    console.log(workerRuleMemberModel.toJSON().DateFrom);
+                    console.log(moment(workerRuleMemberModel.toJSON().DateFrom).format('DD MMM YYYY'));
+                    workerRuleMemberModel.set({
+                      saveType: 'PUT',
+                      ProcessDisplayName: workerRule.ProcessDisplayName,
+                      Code: workerRule.Code
+                    });
+                    workerRuleMemberView = new Hktdc.Views.EditWorkerRuleMember({
+                      model: workerRuleMemberModel
+                    });
+                    // console.log(workerRuleMemberModel.toJSON().Rule);
+                    onSuccess(workerRuleMemberModel.toJSON().Rule);
+                  },
+                  error: function(err) {
+                    console.error(err);
+                  }
                 });
-                onSuccess();
-              },
-              error: function(err) {
-                console.error(err);
-              }
-            });
-          // create
-          } else {
-            getWorkerRule()
-              .then(function(workerRule) {
+              // create
+              } else {
                 _.extend(workerRule, { saveType: 'POST' });
                 workerRule.Remark = '';
                 workerRule.Score = '';
@@ -645,11 +658,11 @@ Hktdc.Routers = Hktdc.Routers || {};
                 });
 
                 onSuccess();
-              })
-              .catch(function(err) {
-                console.log(err);
-              });
-          }
+              }
+            })
+            .catch(function(err) {
+              console.log(err);
+            });
         });
       } catch (e) {
         console.error(e);

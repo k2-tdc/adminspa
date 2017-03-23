@@ -7,6 +7,10 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.WorkerRuleMember = Backbone.Model.extend({
 
+    url: function(ruleId) {
+      return Hktdc.Config.apiURL + '/worker-rule/rule/' + ruleId;
+    },
+
     initialize: function() {},
 
     defaults: {
@@ -25,7 +29,7 @@ Hktdc.Models = Hktdc.Models || {};
 
       ruleCollection: null,
 
-      Rule: '',
+      Rule: ''
     },
 
     validate: function(attrs, options) {},

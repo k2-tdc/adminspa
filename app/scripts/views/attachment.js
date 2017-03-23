@@ -23,7 +23,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     clickDownloadFile: function() {
-      if (this.requestFormModel.toJSON().mode === 'new') {
+      if (this.requestFormModel.toJSON().saveType === 'POST') {
         return false;
       }
       var filename = this.model.toJSON().FileName;

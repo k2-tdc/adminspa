@@ -21,7 +21,6 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       var self = this;
-      var type;
 
       self.$el.html(self.template(self.model.toJSON()));
 
@@ -79,55 +78,55 @@ Hktdc.Views = Hktdc.Views || {};
       }
 
       if (self.model.toJSON().showSet) {
-        type = self.model.toJSON().showSet;
+        var setType = self.model.toJSON().showSet;
         Q.fcall(function() {
-          if (type === 'user') {
+          if (setType === 'user') {
             return self.loadUsers();
-          } else if (type === 'grade') {
+          } else if (setType === 'grade') {
             return self.loadGrading();
-          } else if (type === 'group') {
+          } else if (setType === 'group') {
             return self.loadGroup();
           } else {
             return self.loadLevel();
           }
         })
           .then(function(typeCollection) {
-            return self.renderSet(type, typeCollection);
+            return self.renderSet(setType, typeCollection);
           }).catch(function(e) {
             console.error(e);
           });
       }
 
       if (self.model.toJSON().showRemove) {
-        type = self.model.toJSON().showRemove;
+        var removeType = self.model.toJSON().showRemove;
         Q.fcall(function() {
-          if (type === 'user') {
+          if (removeType === 'user') {
             return self.loadUsers();
-          } else if (type === 'grade') {
+          } else if (removeType === 'grade') {
             return self.loadGrading();
-          } else if (type === 'group') {
+          } else if (removeType === 'group') {
             return self.loadGroup();
           } else {
             return self.loadLevel();
           }
         })
           .then(function(typeCollection) {
-            return self.renderRemove(type, typeCollection);
+            return self.renderRemove(removeType, typeCollection);
           }).catch(function(e) {
             console.error(e);
           });
       }
 
       if (self.model.toJSON().showFor) {
-        type = self.model.toJSON().showFor;
+        var forType = self.model.toJSON().showFor;
         Q.fcall(function() {
-          if (type === 'department') {
+          if (forType === 'department') {
             return self.loadDepartment();
-          } else if (type === 'user') {
+          } else if (forType === 'user') {
             return self.loadUsers();
-          } else if (type === 'group') {
+          } else if (forType === 'group') {
             return self.loadGroup();
-          } else if (type === 'team') {
+          } else if (forType === 'team') {
             return Q.all([
               self.loadTeam(),
               self.loadTeamFilter()
@@ -135,11 +134,11 @@ Hktdc.Views = Hktdc.Views || {};
           }
         })
           .then(function(typeCollection) {
-            if (type === 'team') {
-              self.renderFor(type, typeCollection[0]);
+            if (forType === 'team') {
+              self.renderFor(forType, typeCollection[0]);
               self.renderForTeamFilter(typeCollection[1]);
             } else {
-              self.renderFor(type, typeCollection);
+              self.renderFor(forType, typeCollection);
             }
           }).catch(function(e) {
             console.error(e);
@@ -153,7 +152,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (self.model.toJSON().showReference) {
         self.loadFileTypeRules()
           .then(function(uploadRule) {
-            self.renderAttachment(uploadRule);
+            self.renderAttachment(uploadRule, self.model.toJSON().Reference);
           });
       }
     },
@@ -498,7 +497,6 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(targetId);
       var ruleModules = module[String(targetId)];
 
-      // console.log(ruleModules);
       this.model.set({
         showNature: ruleModules.nature,
         showScore: ruleModules.score,
@@ -513,7 +511,7 @@ Hktdc.Views = Hktdc.Views || {};
         showRemark: ruleModules.remark,
         showReference: ruleModules.reference
       });
-
+      console.log(this.model.toJSON());
       this.render();
     },
 
@@ -868,10 +866,11 @@ Hktdc.Views = Hktdc.Views || {};
     saveButtonHandler: function() {
       var self = this;
       this.saveRuleSetting()
-        .then(function() {
-          return this.sendAttachment(
-            insertServiceResponse.FormID,
-            this.requestFormModel.toJSON().selectedAttachmentCollection
+        .then(function(response) {
+          var ruleSettingId = response.Msg;
+          return self.sendAttachment(
+            ruleSettingId,
+            self.model.toJSON().selectedAttachmentCollection
           );
         })
         .then(function() {
@@ -881,8 +880,7 @@ Hktdc.Views = Hktdc.Views || {};
             title: 'Confirmation'
           });
 
-          Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
-
+          Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, { trigger: true });
         })
         .catch(function(err) {
           Hktdc.Dispatcher.trigger('openAlert', {
@@ -890,7 +888,6 @@ Hktdc.Views = Hktdc.Views || {};
             type: 'error',
             title: 'error on saving user role'
           });
-
         });
     },
 
