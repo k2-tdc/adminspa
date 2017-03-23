@@ -13,6 +13,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {
       'click .saveBtn': 'saveButtonHandler',
+      'click .removeMemeberBtn': 'removeMemberButtonHandler',
+      'click .addMemeberBtn': 'addMemberButtonHandler',
       'blur .formTextField': 'updateFormModel'
     },
 
@@ -24,8 +26,13 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       var self = this;
       self.$el.html(self.template(self.model.toJSON()));
-      self.loadProcess()
-        .then(function(processCollection) {
+      Q.all([
+        self.loadProcess(),
+        self.loadUsers()
+      ])
+        .then(function(results) {
+          var processCollection = results[0];
+          var userCollections = results[1];
           console.debug('[ emailTemplate.js ] - load all the remote resources');
           self.model.set({
             processCollection: processCollection
@@ -33,6 +40,7 @@ Hktdc.Views = Hktdc.Views || {};
             silent: true
           });
           self.renderProcessSelect();
+          self.renderUserSelect(userCollections);
         })
         .catch(function(err) {
           console.error(err);
@@ -66,6 +74,26 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
+    loadUsers: function() {
+      var deferred = Q.defer();
+      var self = this;
+      if (self.model.toJSON().fullUserCollection) {
+        deferred.resolve(self.model.toJSON().fullUserCollection);
+      } else {
+        var fullUserCollection = new Hktdc.Collections.FullUser();
+        fullUserCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(fullUserCollection);
+          },
+          error: function(err) {
+            deferred.reject(err);
+          }
+        });
+      }
+      return deferred.promise;
+    },
+
     renderProcessSelect: function() {
       var self = this;
       var processSelectView = new Hktdc.Views.ProcessSelect({
@@ -81,52 +109,30 @@ Hktdc.Views = Hktdc.Views || {};
       $('.processContainer', self.el).html(processSelectView.el);
     },
 
-    saveButtonHandler: function() {
-      var rawData = this.model.toJSON();
-      var saveData = {
-        ProcessId: rawData.ProcessId,
-        Code: rawData.Code,
-        Worker: rawData.Worker,
-        WorkerType: rawData.WorkerType,
-        Summary: rawData.Summary,
-        Remark: rawData.Remark,
-        Score: rawData.Score
-      };
-      var saveWorkerRuleModel = new Hktdc.Models.SaveWorkerRule();
-      saveWorkerRuleModel.set(saveData);
-      saveWorkerRuleModel.on('invalid', function(model, err) {
-        console.log('invalid');
-        Hktdc.Dispatcher.trigger('openAlert', {
-          message: err,
-          type: 'error',
-          title: 'Error'
-        });
+    renderUserSelect: function(userCollection) {
+      var self = this;
+      var workerSelectView = new Hktdc.Views.UserSelect({
+        collection: userCollection,
+        selectedUser: self.model.toJSON().worker,
+        onSelected: function(user) {
+          self.model.set({
+            worker: user.UserID
+          });
+        }
       });
-
-      if (saveWorkerRuleModel.isValid()) {
-        saveWorkerRuleModel.url = saveWorkerRuleModel.url(this.model.toJSON().UserRoleGUID);
-        saveWorkerRuleModel.save({}, {
-          beforeSend: utils.setAuthHeader,
-          type: this.model.toJSON().saveType,
-          success: function() {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'saved',
-              type: 'confirmation',
-              title: 'Confirmation'
-            });
-            Backbone.history.navigate('worker-rule', {
-              trigger: true
-            });
-          },
-          error: function(err) {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              message: err,
-              type: 'error',
-              title: 'error on saving user role'
-            });
-          }
-        });
-      }
+      workerSelectView.render();
+      var userSelectView = new Hktdc.Views.UserSelect({
+        collection: userCollection,
+        selectedUser: self.model.toJSON().user,
+        onSelected: function(user) {
+          self.model.set({
+            user: user.UserID
+          });
+        }
+      });
+      userSelectView.render();
+      $('.userSelectContainer', self.el).html(userSelectView.el);
+      $('.workerSelectContainer', self.el).html(workerSelectView.el);
     },
 
     renderDataTable: function() {
@@ -242,6 +248,60 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
+    saveButtonHandler: function() {
+      var rawData = this.model.toJSON();
+      var saveData = {
+        ProcessId: rawData.ProcessId,
+        Code: rawData.Code,
+        Worker: rawData.Worker,
+        WorkerType: rawData.WorkerType,
+        Summary: rawData.Summary,
+        Remark: rawData.Remark,
+        Score: rawData.Score
+      };
+      var saveWorkerRuleModel = new Hktdc.Models.SaveWorkerRule();
+      saveWorkerRuleModel.set(saveData);
+      saveWorkerRuleModel.on('invalid', function(model, err) {
+        console.log('invalid');
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: err,
+          type: 'error',
+          title: 'Error'
+        });
+      });
+
+      if (saveWorkerRuleModel.isValid()) {
+        saveWorkerRuleModel.url = saveWorkerRuleModel.url(this.model.toJSON().UserRoleGUID);
+        saveWorkerRuleModel.save({}, {
+          beforeSend: utils.setAuthHeader,
+          type: this.model.toJSON().saveType,
+          success: function() {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'saved',
+              type: 'confirmation',
+              title: 'Confirmation'
+            });
+            Backbone.history.navigate('worker-rule', {
+              trigger: true
+            });
+          },
+          error: function(err) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: err,
+              type: 'error',
+              title: 'error on saving user role'
+            });
+          }
+        });
+      }
+    },
+
+    addMemberButtonHandler: function() {
+      Backbone.history.navigate('worker-rule/' + this.model.toJSON().WorkerRuleId + '/member/new', {
+        trigger: true
+      });
+    },
+
     updateFormModel: function(ev) {
       var updateObject = {};
       var $target = $(ev.target);
@@ -249,5 +309,55 @@ Hktdc.Views = Hktdc.Views || {};
       updateObject[targetField] = $target.val();
       this.model.set(updateObject);
     },
+
+    removeMemberButtonHandler: function() {
+      var self = this;
+      var removeSingleMember = function(guid) {
+        var deferred = Q.defer();
+        var saveUserRoleMemberModel = new Hktdc.Models.SaveUserRoleMember();
+        saveUserRoleMemberModel.clear();
+        saveUserRoleMemberModel.url = saveUserRoleMemberModel.url(guid);
+        saveUserRoleMemberModel.save(null, {
+          type: 'DELETE',
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve();
+          },
+          error: function(err) {
+            deferred.reject(err);
+          }
+        });
+        return deferred.promise;
+      };
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'Confirmation',
+        message: 'Are you sure to remove this member?',
+        onConfirm: function() {
+          Q.all(_.map(self.model.toJSON().selectedMember, function(memberGUID) {
+            return removeSingleMember(memberGUID);
+          }))
+          .then(function() {
+            Hktdc.Dispatcher.trigger('closeConfirm');
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'deleted',
+              type: 'confirmation',
+              title: 'confirmation'
+            });
+            Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, true);
+            Backbone.history.loadUrl('userrole/' + self.model.toJSON().UserRoleGUID, {
+              trigger: true
+            });
+          })
+          .fail(function(err) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: err,
+              type: 'error',
+              title: 'error on deleting user role'
+            });
+          });
+        }
+      });
+    }
+
   });
 })();

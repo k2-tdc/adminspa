@@ -29,6 +29,7 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(e) {
           console.error(e);
         });
+
       if (self.model.toJSON().showNature) {
         self.loadNature()
           .then(function(natureCollection) {
@@ -42,6 +43,15 @@ Hktdc.Views = Hktdc.Views || {};
         self.loadUsers()
           .then(function(userCollection) {
             return self.renderPer(userCollection);
+          }).catch(function(e) {
+            console.error(e);
+          });
+      }
+
+      if (self.model.toJSON().showAs) {
+        self.loadPriority()
+          .then(function(priorityCollection) {
+            return self.renderAs(priorityCollection);
           }).catch(function(e) {
             console.error(e);
           });
@@ -117,8 +127,14 @@ Hktdc.Views = Hktdc.Views || {};
       }
 
       if (self.model.toJSON().showDateRange) {
-        console.log('daterange');
         this.renderDatePicker();
+      }
+
+      if (self.model.toJSON().showReference) {
+        self.loadFileTypeRules()
+          .then(function(uploadRule) {
+            self.renderAttachment(uploadRule);
+          });
       }
     },
 
@@ -317,6 +333,45 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
+    loadFileTypeRules: function() {
+      var deferred = Q.defer();
+      var fileRuleModel = new Hktdc.Models.FileRule();
+      fileRuleModel.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          deferred.resolve(fileRuleModel);
+        },
+        error: function(err) {
+          deferred.reject(err);
+        }
+      });
+      return deferred.promise;
+    },
+
+    loadPriority: function() {
+      var deferred = Q.defer();
+      var self = this;
+      if (self.model.toJSON().priorityCollection) {
+        deferred.resolve(self.model.toJSON().priorityCollection);
+      } else {
+        var priorityCollection = new Hktdc.Collections.Priority();
+        priorityCollection.url = priorityCollection.url(self.model.toJSON().Code);
+        priorityCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            self.model.set({
+              priorityCollection: priorityCollection
+            });
+            deferred.resolve(priorityCollection);
+          },
+          error: function(err) {
+            deferred.reject(err);
+          }
+        });
+      }
+      return deferred.promise;
+    },
+
     renderRuleSelect: function(ruleCollection) {
       var self = this;
       try {
@@ -427,6 +482,25 @@ Hktdc.Views = Hktdc.Views || {};
         });
         natureSelectView.render();
         $('.perContainer', self.el).html(natureSelectView.el);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    renderAs: function(priorityCollection) {
+      var self = this;
+      try {
+        var natureSelectView = new Hktdc.Views.RuleFieldAsSelect({
+          collection: priorityCollection,
+          selectedPriority: self.model.toJSON().As || 0,
+          onSelected: function(user) {
+            self.model.set({
+              Per: user.UserID
+            });
+          }
+        });
+        natureSelectView.render();
+        $('.asContainer', self.el).html(natureSelectView.el);
       } catch (e) {
         console.error(e);
       }
@@ -658,6 +732,25 @@ Hktdc.Views = Hktdc.Views || {};
       $('.fromDatePicker', self.el).html(fromDateView.el);
       $('.toDatePicker', self.el).html(toDateView.el);
     },
+
+    renderAttachment: function(rulesModel, attachmentList) {
+      this.model.set({
+        selectedAttachmentCollection: new Hktdc.Collections.Attachment([])
+      });
+      try {
+        var attachmentCollections = new Hktdc.Collections.Attachment(attachmentList);
+        var attachmentListView = new Hktdc.Views.AttachmentList({
+          collection: attachmentCollections,
+          requestFormModel: this.model,
+          rules: rulesModel.toJSON()
+        });
+        attachmentListView.render();
+        // console.log(attachmentListView.el);
+        $('.attachmentContainer').html(attachmentListView.el);
+      } catch (e) {
+        console.error(e);
+      }
+    }
 
   });
 })();

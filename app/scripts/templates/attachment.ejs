@@ -1,0 +1,10 @@
+<% if (insertMode) { %>
+  <span class="spnfilename filedownload w100p"><%= file.name || file.FileName %></span>
+  <span class="glyphicon glyphicon-remove deletefile"></span>
+<% } else { %>
+  <td align="left" class="filedownload" formid="<%=file.FormID%>" GUID="<%=file.AttachmentGUID%>">
+    <%=file.FileName%>
+  </td>
+  <td align="left"><%=file.UploadedByFullName%></td>
+  <td align="left"><%=file.UploadedDate.replace("T"," ")%></td>
+<% } %>
