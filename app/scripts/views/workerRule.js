@@ -285,6 +285,9 @@ Hktdc.Views = Hktdc.Views || {};
         Remark: rawData.Remark,
         Score: rawData.Score
       };
+      if (this.model.toJSON().saveType === 'PUT') {
+        saveData.WorkerRuleId = this.model.toJSON().WorkerRuleId;
+      }
       var saveWorkerRuleModel = new Hktdc.Models.SaveWorkerRule();
       saveWorkerRuleModel.set(saveData);
       saveWorkerRuleModel.on('invalid', function(model, err) {
