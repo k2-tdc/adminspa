@@ -630,8 +630,8 @@ Hktdc.Routers = Hktdc.Routers || {};
                 workerRuleMemberModel.fetch({
                   beforeSend: utils.setAuthHeader,
                   success: function() {
-                    console.log(workerRuleMemberModel.toJSON().DateFrom);
-                    console.log(moment(workerRuleMemberModel.toJSON().DateFrom).format('DD MMM YYYY'));
+                    // console.log(workerRuleMemberModel.toJSON().DateFrom);
+                    // console.log(moment(workerRuleMemberModel.toJSON().DateFrom).format('DD MMM YYYY'));
                     workerRuleMemberModel.set({
                       saveType: 'PUT',
                       ProcessDisplayName: workerRule.ProcessDisplayName,

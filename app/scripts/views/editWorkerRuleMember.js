@@ -462,7 +462,7 @@ Hktdc.Views = Hktdc.Views || {};
     renderField: function(targetId) {
       var module = {
         '1':  {nature: true, score: true, per: true, set: 'user',   remove: false,    as: 'selectable', of: false, for: 'user',       dateRange: true, checkbox: true, remark: true, reference: true },
-        '2':  {nature: true, score: true, per: true, set: 'user',   remove: false,    as: 'selectable', of: false, for: 'user',       dateRange: true, checkbox: true, remark: true, reference: true },
+        '2':  {nature: true, score: true, per: true, set: 'group',   remove: false,   as: 'selectable', of: false, for: 'user',       dateRange: true, checkbox: true, remark: true, reference: true },
         '3':  {nature: true, score: true, per: true, set: 'grade',  remove: false,    as: 'selectable', of: false, for: 'user',       dateRange: true, checkbox: true, remark: true, reference: true },
         '4':  {nature: true, score: true, per: true, set: 'level',  remove: false,    as: 'selectable', of: false, for: 'user',       dateRange: true, checkbox: true, remark: true, reference: true },
         '5':  {nature: true, score: true, per: true, set: false,    remove: 'user',   as: 'fixed',      of: false, for: 'user',       dateRange: true, checkbox: true, remark: true, reference: true },
@@ -902,7 +902,7 @@ Hktdc.Views = Hktdc.Views || {};
         WorkerSettingId: rawData.WorkerSettingId || '',
         Rule: rawData.Rule,
         Nature: rawData.Nature,
-        Score: rawData.Score,
+        Score: parseInt(rawData.Score),
         UserId: rawData.UserId || '',
         UserId1: rawData.UserId1 || '',
         UserId2: rawData.UserId2 || '',
@@ -913,7 +913,7 @@ Hktdc.Views = Hktdc.Views || {};
         Grade2: rawData.Grade2 || '',
         Team: rawData.Team || '',
         TeamFilter: rawData.TeamFilter || '',
-        Priority: rawData.Priority || 0,
+        Priority: parseInt(rawData.Priority) || 0,
         Grade3: rawData.Grade3 || '',
         Grade4: rawData.Grade4 || '',
         Department: rawData.Department || '',
@@ -929,8 +929,8 @@ Hktdc.Views = Hktdc.Views || {};
         saveRuleMemberModel.save(null, {
           type: rawData.saveType,
           beforeSend: utils.setAuthHeader,
-          success: function() {
-            deferred.resolve();
+          success: function(model, response) {
+            deferred.resolve(response);
           },
           error: function(err) {
             deferred.reject(err);
