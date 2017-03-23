@@ -791,12 +791,12 @@ Hktdc.Views = Hktdc.Views || {};
       var fromDateView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
           value: (self.model.toJSON().DateFrom)
-            ? self.model.toJSON().DateFrom
+            ? moment(self.model.toJSON().DateFrom).format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
           self.model.set({
-            DateFrom: val
+            DateFrom: moment(val, 'MM/DD/YYYY').format('YYYYMMDD')
           });
         }
       });
@@ -804,12 +804,12 @@ Hktdc.Views = Hktdc.Views || {};
       var toDateView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
           value: (self.model.toJSON().DateTo)
-            ? self.model.toJSON().DateTo
+            ? moment(self.model.toJSON().DateTo).format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
           self.model.set({
-            DateTo: val
+            DateTo: moment(val, 'MM/DD/YYYY').format('YYYYMMDD')
           });
         }
       });
@@ -914,8 +914,8 @@ Hktdc.Views = Hktdc.Views || {};
         Grade3: rawData.Grade3 || '',
         Grade4: rawData.Grade4 || '',
         Department: rawData.Department || '',
-        DateFrom: rawData.DateFrom || '',
-        DateTo: rawData.DateTo || '',
+        DateFrom: moment(rawData.DateFrom, 'YYYYMMDD').format('YYYY-MM-DD') || '',
+        DateTo: moment(rawData.DateTo, 'YYYYMMDD').format('YYYY-MM-DD') || '',
         Criteria: rawData.Criteria || ''
       };
       formData.append('model', JSON.stringify(modelData));
