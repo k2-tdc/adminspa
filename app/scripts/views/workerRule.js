@@ -210,7 +210,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       $('#memberTable tbody', this.el).on('click', 'tr', function(ev) {
         var rowData = self.workerRuleDataTable.row(this).data();
-        Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId + '/member/' + rowData.WorkerRuleSettingId, {
+        Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId + '/member/' + rowData.id, {
           trigger: true
         });
       });
@@ -232,10 +232,10 @@ Hktdc.Views = Hktdc.Views || {};
           var newMember;
 
           if (isCheckAll) {
-            newMember = _.union(originalMember, [rowData.UserRoleMemberGUID]);
+            newMember = _.union(originalMember, [rowData.id]);
           } else {
             newMember = _.reject(originalMember, function(memberGUID) {
-              return rowData.UserRoleMemberGUID === memberGUID;
+              return rowData.id === memberGUID;
             });
           }
           self.model.set({
@@ -251,10 +251,10 @@ Hktdc.Views = Hktdc.Views || {};
         var originalMember = self.model.toJSON().selectedMember;
         var newMember;
         if ($(this).prop('checked')) {
-          newMember = _.union(originalMember, [rowData.UserRoleMemberGUID]);
+          newMember = _.union(originalMember, [rowData.id]);
         } else {
           newMember = _.reject(originalMember, function(memberGUID) {
-            return rowData.UserRoleMemberGUID === memberGUID;
+            return rowData.id === memberGUID;
           });
         }
         var allChecked = (
