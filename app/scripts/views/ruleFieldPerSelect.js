@@ -26,7 +26,7 @@ Hktdc.Views = Hktdc.Views || {};
       this.collection.each(this.renderItem);
       // self.$el.prop('disabled', self.disable);
       setTimeout(function() {
-        self.$el.find('option[value="' + self.selectedPer + '"]').prop('selected', true);
+        self.$el.find('option[value="' + self.selectedPerUser + '"]').prop('selected', true);
       });
     },
 

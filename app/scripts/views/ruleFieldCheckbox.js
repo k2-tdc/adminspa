@@ -21,7 +21,13 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-      this.$el.html(this.template({ criteria: this.criteria }));
+      var self = this;
+      self.$el.html(self.template({ criteria: self.criteria }));
+      setTimeout(function() {
+        _.each(self.selectedCriteria, function(criteria) {
+          $('.criteria[value="' + criteria + '"]', self.el).prop('checked', true);
+        });
+      });
     },
 
     onChangeCriteriaCheckbox: function() {

@@ -17,7 +17,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
-      console.log(this.model.toJSON());
+      // console.log(this.model.toJSON());
     },
 
     render: function() {
@@ -211,11 +211,8 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var self = this;
       if (self.model.toJSON().fullUserCollection) {
-        console.log('from exitsts');
-        console.log(self.model.toJSON().fullUserCollection.toJSON()[0]);
         deferred.resolve(self.model.toJSON().fullUserCollection);
       } else {
-        console.log('from remote');
         var fullUserCollection = new Hktdc.Collections.FullUser();
         // console.log(self.model.toJSON());
         fullUserCollection.fetch({
@@ -512,7 +509,7 @@ Hktdc.Views = Hktdc.Views || {};
         showRemark: ruleModules.remark,
         showReference: ruleModules.reference
       });
-      console.log(this.model.toJSON());
+      // console.log(this.model.toJSON());
       this.render();
     },
 
@@ -789,10 +786,12 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderDatePicker: function() {
       var self = this;
+      // console.log(self.model.toJSON().DateFrom);
+      // console.log(moment(self.model.toJSON().DateFrom).format('DD MMM YYYY'));
       var fromDateView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
           value: (self.model.toJSON().DateFrom)
-            ? moment(self.model.toJSON().DateFrom).format('DD MMM YYYY')
+            ? self.model.toJSON().DateFrom
             : null
         }),
         onSelect: function(val) {
@@ -805,7 +804,7 @@ Hktdc.Views = Hktdc.Views || {};
       var toDateView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
           value: (self.model.toJSON().DateTo)
-            ? moment(self.model.toJSON().DateTo).format('DD MMM YYYY')
+            ? self.model.toJSON().DateTo
             : null
         }),
         onSelect: function(val) {
@@ -814,7 +813,6 @@ Hktdc.Views = Hktdc.Views || {};
           });
         }
       });
-      console.log(fromDateView.el);
       $('.fromDatePicker', self.el).html(fromDateView.el);
       $('.toDatePicker', self.el).html(toDateView.el);
     },
@@ -827,6 +825,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       var checkboxView = new Hktdc.Views.RuleFieldCheckbox({
         criteria: groupedCriteria,
+        selectedCriteria: self.model.toJSON().Criteria,
         onChange: function(newCriterias) {
           self.model.set({
             Criteria: newCriterias
@@ -897,6 +896,7 @@ Hktdc.Views = Hktdc.Views || {};
       var url = Hktdc.Config.apiURL + '/worker-rule/preview';
       var xhr = new XMLHttpRequest();
       var rawData = this.model.toJSON();
+      var formData = new FormData();
       var modelData = {
         RuleCode: rawData.RuleCode || '',
         Rule: rawData.Rule || '',
@@ -917,7 +917,9 @@ Hktdc.Views = Hktdc.Views || {};
         DateFrom: rawData.DateFrom || '',
         DateTo: rawData.DateTo || '',
         Criteria: rawData.Criteria || ''
-      }
+      };
+      formData.append('model', modelData);
+
       xhr.addEventListener('loadstart', function() {
         NProgress.start();
       });
@@ -964,7 +966,7 @@ Hktdc.Views = Hktdc.Views || {};
           }
         }
       };
-      xhr.send(JSON.stringify({model: modelData}));
+      xhr.send(formData);
     },
 
     saveRuleSetting: function() {

@@ -35,7 +35,7 @@ Hktdc.Views = Hktdc.Views || {};
       try {
         var gradeFromSelectView = new Hktdc.Views.RuleFieldForSelect({
           collection: self.collection,
-          selectedFor: self.selected,
+          selectedFor: self.selectedFor,
           onSelected: self.onSelected
         });
         gradeFromSelectView.render();
@@ -62,7 +62,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-      // console.log(this.collection.toJSON());
+      console.log(this.selectedFor);
       var self = this;
       this.collection.each(this.renderItem);
       self.$el.prop('disabled', self.disable);

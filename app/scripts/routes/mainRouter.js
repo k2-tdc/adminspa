@@ -601,7 +601,6 @@ Hktdc.Routers = Hktdc.Routers || {};
             return deferred.promise;
           };
           var onSuccess = function(renderByRule) {
-            console.log('renderByRule: ',renderByRule);
             if (renderByRule) {
               setTimeout(function() {
                 workerRuleMemberView.renderField(renderByRule);
@@ -635,7 +634,8 @@ Hktdc.Routers = Hktdc.Routers || {};
                     workerRuleMemberModel.set({
                       saveType: 'PUT',
                       ProcessDisplayName: workerRule.ProcessDisplayName,
-                      Code: workerRule.Code
+                      Code: workerRule.Code,
+                      Worker: workerRule.Worker
                     });
                     workerRuleMemberView = new Hktdc.Views.EditWorkerRuleMember({
                       model: workerRuleMemberModel

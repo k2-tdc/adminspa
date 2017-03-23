@@ -33,9 +33,11 @@ Hktdc.Views = Hktdc.Views || {};
         startDate: self.startDate,
         format: {
           toDisplay: function(date, format, language) {
+            console.log(moment(date).format('DD MMM YYYY'));
             return moment(date).format('DD MMM YYYY');
           },
           toValue: function(date, format, language) {
+            console.log(moment(date).format('YYYYMMDD'));
             return moment(date).format('YYYYMMDD');
           }
         }
