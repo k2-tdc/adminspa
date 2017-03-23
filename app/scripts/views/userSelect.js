@@ -8,7 +8,7 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'select',
     className: 'form-control',
     events: {
-      'change': 'selectGradeHandler'
+      'change': 'selectUserHandler'
     },
     initialize: function(props) {
       console.debug('[ views/rule.js ] initialize: UserSelect');
@@ -19,8 +19,10 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-      console.log(this.collection.toJSON());
       var self = this;
+      if (!this.collection.get(0)) {
+        this.collection.unshift({FullName: '-- Select --', UserID: 0});
+      }
       this.collection.each(this.renderItem);
       self.$el.prop('disabled', self.disable);
       setTimeout(function() {
@@ -28,11 +30,11 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    selectGradeHandler: function(ev) {
+    selectUserHandler: function(ev) {
       if (this.onSelected) {
-        var gradeId = $(ev.target).find('option:selected').val();
-        this.onSelected(_.find(this.collection.toJSON(), function(grade) {
-          return String(grade.Grade) === String(gradeId);
+        var userId = $(ev.target).find('option:selected').val();
+        this.onSelected(_.find(this.collection.toJSON(), function(user) {
+          return String(user.UserID) === String(userId);
         }));
       }
     },

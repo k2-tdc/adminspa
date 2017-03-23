@@ -57,6 +57,15 @@ Hktdc.Views = Hktdc.Views || {};
           });
       }
 
+      if (self.model.toJSON().showCheckbox) {
+        self.loadCriteria()
+          .then(function(priorityCollection) {
+            return self.renderCheckbox(priorityCollection);
+          }).catch(function(e) {
+            console.error(e);
+          });
+      }
+
       if (self.model.toJSON().showOf) {
         self.loadGrading()
           .then(function(gradingCollection) {
@@ -345,6 +354,30 @@ Hktdc.Views = Hktdc.Views || {};
           deferred.reject(err);
         }
       });
+      return deferred.promise;
+    },
+
+    loadCriteria: function() {
+      var deferred = Q.defer();
+      var self = this;
+      if (self.model.toJSON().criteriaCollection) {
+        deferred.resolve(self.model.toJSON().criteriaCollection);
+      } else {
+        var criteriaCollection = new Hktdc.Collections.Priority();
+        criteriaCollection.url = criteriaCollection.url(self.model.toJSON().Code);
+        criteriaCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            self.model.set({
+              criteriaCollection: criteriaCollection
+            });
+            deferred.resolve(criteriaCollection);
+          },
+          error: function(err) {
+            deferred.reject(err);
+          }
+        });
+      }
       return deferred.promise;
     },
 
@@ -731,6 +764,11 @@ Hktdc.Views = Hktdc.Views || {};
       console.log(fromDateView.el);
       $('.fromDatePicker', self.el).html(fromDateView.el);
       $('.toDatePicker', self.el).html(toDateView.el);
+    },
+
+    renderCheckbox: function(criteriaCollection) {
+      var checkboxView = new Hktdc.Views.RuleFieldCheckbox();
+
     },
 
     renderAttachment: function(rulesModel, attachmentList) {

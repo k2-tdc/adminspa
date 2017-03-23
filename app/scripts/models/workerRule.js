@@ -26,7 +26,11 @@ Hktdc.Models = Hktdc.Models || {};
       Score: '',
 
       showRules: false,
-      saveType: ''
+      saveType: '',
+
+      // for search
+      WorkerId: '',
+      UserId: '',
 
     },
 

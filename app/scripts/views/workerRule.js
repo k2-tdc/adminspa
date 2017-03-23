@@ -14,6 +14,7 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'click .saveBtn': 'saveButtonHandler',
       'click .removeMemeberBtn': 'removeMemberButtonHandler',
+      'click .searchBtn': 'searchButtonHandler',
       'click .addMemeberBtn': 'addMemberButtonHandler',
       'blur .formTextField': 'updateFormModel'
     },
@@ -116,7 +117,7 @@ Hktdc.Views = Hktdc.Views || {};
         selectedUser: self.model.toJSON().worker,
         onSelected: function(user) {
           self.model.set({
-            worker: user.UserID
+            WorkerId: user.UserID
           });
         }
       });
@@ -126,7 +127,7 @@ Hktdc.Views = Hktdc.Views || {};
         selectedUser: self.model.toJSON().user,
         onSelected: function(user) {
           self.model.set({
-            user: user.UserID
+            UserId: user.UserID
           });
         }
       });
@@ -137,14 +138,33 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderDataTable: function() {
       var self = this;
-      self.userRoleDataTable = $('#memberTable', self.el).DataTable({
+      self.workerRuleDataTable = $('#memberTable', self.el).DataTable({
         bRetrieve: true,
         searching: false,
         processing: true,
         oLanguage: {
           sProcessing: '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>'
         },
-        data: self.model.toJSON().Rules,
+        ajax: {
+          url: self.getAjaxURL(),
+          beforeSend: utils.setAuthHeader,
+          dataSrc: function(data) {
+            var modData = _.map(data, function(row) {
+              return {
+                // lastActionDate: row.SubmittedOn,
+                id: row.WorkerRuleSettingId,
+                modifiedOn: row.ModifiedOn,
+                modifiedBy: row.ModifiedBy,
+                summary: row.Summary,
+                score: row.Score,
+                startDate: row.StartDate,
+                endDate: row.EndDate
+              };
+            });
+            return modData;
+            // return { data: modData, recordsTotal: modData.length };
+          }
+        },
         order: [
           [1, 'asc']
         ],
@@ -160,35 +180,35 @@ Hktdc.Views = Hktdc.Views || {};
         },
         columns: [
           {
-            data: 'WorkerRuleSettingId',
+            data: 'id',
             render: function(data) {
               return '<input type="checkbox" class="selectUser"/>';
             },
             orderable: false
           },
           {
-            data: 'ModifiedOn'
+            data: 'modifiedOn'
           },
           {
-            data: 'ModifiedBy'
+            data: 'modifiedBy'
           },
           {
-            data: 'Summary'
+            data: 'summary'
           },
           {
-            data: 'Score'
+            data: 'score'
           },
           {
-            data: 'StartDate'
+            data: 'startDate'
           },
           {
-            data: 'EndDate'
+            data: 'endDate'
           }
         ]
       });
 
       $('#memberTable tbody', this.el).on('click', 'tr', function(ev) {
-        var rowData = self.userRoleDataTable.row(this).data();
+        var rowData = self.workerRuleDataTable.row(this).data();
         Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId + '/member/' + rowData.WorkerRuleSettingId, {
           trigger: true
         });
@@ -205,7 +225,7 @@ Hktdc.Views = Hktdc.Views || {};
         $('#memberTable tbody tr', self.el).each(function() {
           var $checkbox = $(this).find('td:first-child').find('.selectUser');
           $checkbox.prop('checked', isCheckAll);
-          var rowData = self.userRoleDataTable.row($(this)).data();
+          var rowData = self.workerRuleDataTable.row($(this)).data();
 
           var originalMember = self.model.toJSON().selectedMember;
           var newMember;
@@ -226,7 +246,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       $('#memberTable tbody', this.el).on('change', '.selectUser', function(ev) {
         ev.stopPropagation();
-        var rowData = self.userRoleDataTable.row($(this).parents('tr')).data();
+        var rowData = self.workerRuleDataTable.row($(this).parents('tr')).data();
         var originalMember = self.model.toJSON().selectedMember;
         var newMember;
         if ($(this).prop('checked')) {
@@ -246,6 +266,12 @@ Hktdc.Views = Hktdc.Views || {};
           selectedMember: newMember
         });
       });
+    },
+
+    getAjaxURL: function() {
+      var queryParams = _.pick(this.model.toJSON(), 'UserId', 'WorkerId');
+      var queryString = utils.getQueryString(queryParams, true);
+      return Hktdc.Config.apiURL + '/worker-rule/' + this.model.toJSON().WorkerRuleId + '/rule/' + queryString;
     },
 
     saveButtonHandler: function() {
@@ -294,6 +320,15 @@ Hktdc.Views = Hktdc.Views || {};
           }
         });
       }
+    },
+
+    searchButtonHandler: function() {
+      console.log(this.model.toJSON());
+      var queryParams = _.pick(this.model.toJSON(), 'UserId', 'WorkerId');
+      var currentBase = Backbone.history.getHash().split('?')[0];
+      var queryString = utils.getQueryString(queryParams, true);
+      Backbone.history.navigate(currentBase + queryString);
+      this.workerRuleDataTable.ajax.url(this.getAjaxURL()).load();
     },
 
     addMemberButtonHandler: function() {
