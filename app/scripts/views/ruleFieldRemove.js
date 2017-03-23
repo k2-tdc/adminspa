@@ -104,9 +104,14 @@ Hktdc.Views = Hktdc.Views || {};
 
     selectGradeHandler: function(ev) {
       if (this.onSelected) {
-        var gradeId = $(ev.target).find('option:selected').val();
-        this.onSelected(_.find(this.collection.toJSON(), function(grade) {
-          return String(grade.Grade) === String(gradeId);
+        var targetId = $(ev.target).find('option:selected').val();
+        this.onSelected(_.find(this.collection.toJSON(), function(collectionItem) {
+          return (
+            String(collectionItem.Grade) === String(targetId) ||
+            String(collectionItem.GroupID) === String(targetId) ||
+            String(collectionItem.UserID) === String(targetId) ||
+            String(collectionItem.LevelNo) === String(targetId)
+          );
         }));
       }
     },

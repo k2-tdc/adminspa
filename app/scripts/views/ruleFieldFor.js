@@ -73,9 +73,14 @@ Hktdc.Views = Hktdc.Views || {};
 
     selectGradeHandler: function(ev) {
       if (this.onSelected) {
-        var gradeId = $(ev.target).find('option:selected').val();
-        this.onSelected(_.find(this.collection.toJSON(), function(grade) {
-          return String(grade.Grade) === String(gradeId);
+        var targetId = $(ev.target).find('option:selected').val();
+        this.onSelected(_.find(this.collection.toJSON(), function(selectedItem) {
+          return (
+            String(selectedItem.DepartmentCode) === String(targetId) ||
+            String(selectedItem.GroupID) === String(targetId) ||
+            String(selectedItem.UserID) === String(targetId) ||
+            String(selectedItem.Code) === String(targetId)
+          );
         }));
       }
     },

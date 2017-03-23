@@ -19,14 +19,10 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-      console.log(this.collection.toJSON().length);
       var self = this;
-      console.log(this.collection.toJSON()[0]);
       if (!this.collection.get(0)) {
-        console.log('crash');
         this.collection.unshift({FullName: '-- Select --', UserID: 0});
       }
-      console.log(this.collection.toJSON()[0]);
       this.collection.each(this.renderItem);
       // self.$el.prop('disabled', self.disable);
       setTimeout(function() {

@@ -64,13 +64,13 @@ Hktdc.Views = Hktdc.Views || {};
       this.$el.html(this.template());
       var self = this;
       try {
-        var gradeFromSelectView = new Hktdc.Views.RuleFieldSetSelect({
+        var commonSelectView = new Hktdc.Views.RuleFieldSetSelect({
           collection: self.collection,
           selectedSet: self.selected,
           onSelected: self.onSelected
         });
-        gradeFromSelectView.render();
-        $('.commonContainer', self.el).html(gradeFromSelectView.el);
+        commonSelectView.render();
+        $('.commonContainer', self.el).html(commonSelectView.el);
       } catch (e) {
         console.error(e);
       }
@@ -82,7 +82,7 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'select',
     className: 'form-control',
     events: {
-      'change': 'selectGradeHandler'
+      'change': 'selectHandler'
     },
     initialize: function(props) {
       console.debug('[ views/rule.js ] initialize: RuleFieldSetSelect');
@@ -102,11 +102,16 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    selectGradeHandler: function(ev) {
+    selectHandler: function(ev) {
       if (this.onSelected) {
-        var gradeId = $(ev.target).find('option:selected').val();
-        this.onSelected(_.find(this.collection.toJSON(), function(grade) {
-          return String(grade.Grade) === String(gradeId);
+        var targetId = $(ev.target).find('option:selected').val();
+        this.onSelected(_.find(this.collection.toJSON(), function(collectionItem) {
+          return (
+            String(collectionItem.Grade) === String(targetId) ||
+            String(collectionItem.GroupID) === String(targetId) ||
+            String(collectionItem.UserID) === String(targetId) ||
+            String(collectionItem.LevelNo) === String(targetId)
+          );
         }));
       }
     },
