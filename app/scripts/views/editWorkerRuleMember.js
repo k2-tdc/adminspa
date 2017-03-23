@@ -918,7 +918,7 @@ Hktdc.Views = Hktdc.Views || {};
         DateTo: rawData.DateTo || '',
         Criteria: rawData.Criteria || ''
       };
-      formData.append('model', modelData);
+      formData.append('model', JSON.stringify(modelData));
 
       xhr.addEventListener('loadstart', function() {
         NProgress.start();
