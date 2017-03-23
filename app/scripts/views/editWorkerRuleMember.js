@@ -9,7 +9,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     template: JST['app/scripts/templates/workerRuleMember.ejs'],
 
-    events: {},
+    events: {
+      'click .saveBtn': 'saveButtonHandler'
+    },
 
     initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
@@ -802,6 +804,10 @@ Hktdc.Views = Hktdc.Views || {};
       } catch (e) {
         console.error(e);
       }
+    },
+
+    saveButtonHandler: function() {
+      console.log(this.model.toJSON());
     }
 
   });

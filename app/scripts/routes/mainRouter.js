@@ -638,6 +638,7 @@ Hktdc.Routers = Hktdc.Routers || {};
               .then(function(workerRule) {
                 _.extend(workerRule, { saveType: 'POST' });
                 workerRule.Remark = '';
+                workerRule.Score = '';
                 workerRuleMemberModel = new Hktdc.Models.WorkerRuleMember(workerRule);
                 workerRuleMemberView = new Hktdc.Views.EditWorkerRuleMember({
                   model: workerRuleMemberModel
