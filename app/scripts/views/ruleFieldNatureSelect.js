@@ -41,7 +41,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderRuleItem: function(model) {
-      var ruleItemView = new Hktdc.Views.RuleOption({
+      var ruleItemView = new Hktdc.Views.RuleFieldNatureOption({
         model: model
       });
       this.$el.append(ruleItemView.el);
@@ -49,8 +49,8 @@ Hktdc.Views = Hktdc.Views || {};
 
   });
 
-  Hktdc.Views.RuleOption = Backbone.View.extend({
-    template: JST['app/scripts/templates/ruleOption.ejs'],
+  Hktdc.Views.RuleFieldNatureOption = Backbone.View.extend({
+    template: JST['app/scripts/templates/natureOption.ejs'],
     tagName: 'option',
     attributes: function() {
       return {
