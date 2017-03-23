@@ -231,13 +231,14 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     deleteButtonHandler: function() {
+      var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
         message: 'Are you sure to delete?',
         onConfirm: function() {
           var saveUserRoleModel = new Hktdc.Models.SaveUserRole();
           saveUserRoleModel.clear();
-          saveUserRoleModel.url = saveUserRoleModel.url(this.model.toJSON().UserRoleGUID);
+          saveUserRoleModel.url = saveUserRoleModel.url(self.model.toJSON().UserRoleGUID);
           saveUserRoleModel.save(null, {
             beforeSend: utils.setAuthHeader,
             type: 'DELETE',

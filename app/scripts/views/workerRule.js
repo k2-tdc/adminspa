@@ -288,7 +288,6 @@ Hktdc.Views = Hktdc.Views || {};
       var saveWorkerRuleModel = new Hktdc.Models.SaveWorkerRule();
       saveWorkerRuleModel.set(saveData);
       saveWorkerRuleModel.on('invalid', function(model, err) {
-        console.log('invalid');
         Hktdc.Dispatcher.trigger('openAlert', {
           message: err,
           type: 'error',
@@ -301,15 +300,23 @@ Hktdc.Views = Hktdc.Views || {};
         saveWorkerRuleModel.save({}, {
           beforeSend: utils.setAuthHeader,
           type: this.model.toJSON().saveType,
-          success: function() {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'saved',
-              type: 'confirmation',
-              title: 'Confirmation'
-            });
-            Backbone.history.navigate('worker-rule', {
-              trigger: true
-            });
+          success: function(model, response) {
+            if (String(response.Success) === '1') {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'saved',
+                type: 'confirmation',
+                title: 'Confirmation'
+              });
+              Backbone.history.navigate('worker-rule', {
+                trigger: true
+              });
+            } else {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: response.Msg || 'Error on saving.',
+                type: 'error',
+                title: 'Error'
+              });
+            }
           },
           error: function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
