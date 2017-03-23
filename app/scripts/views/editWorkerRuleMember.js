@@ -10,7 +10,8 @@ Hktdc.Views = Hktdc.Views || {};
     template: JST['app/scripts/templates/workerRuleMember.ejs'],
 
     events: {
-      'click .saveBtn': 'saveButtonHandler'
+      'click .saveBtn': 'saveButtonHandler',
+      'blur .formTextField': 'updateFormModel'
     },
 
     initialize: function() {
@@ -560,9 +561,9 @@ Hktdc.Views = Hktdc.Views || {};
         var natureSelectView = new Hktdc.Views.RuleFieldAsSelect({
           collection: priorityCollection,
           selectedPriority: self.model.toJSON().Priority || 0,
-          onSelected: function(user) {
+          onSelected: function(selectedItem) {
             self.model.set({
-              Priority: user.UserID
+              Priority: selectedItem.PriorityID
             });
           }
         });
@@ -854,6 +855,14 @@ Hktdc.Views = Hktdc.Views || {};
       } catch (e) {
         console.error(e);
       }
+    },
+
+    updateFormModel: function(ev) {
+      var updateObject = {};
+      var $target = $(ev.target);
+      var targetField = $target.attr('name');
+      updateObject[targetField] = $target.val();
+      this.model.set(updateObject);
     },
 
     saveButtonHandler: function() {
