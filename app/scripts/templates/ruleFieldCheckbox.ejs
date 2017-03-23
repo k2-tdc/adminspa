@@ -1,0 +1,19 @@
+<% criteria.forEach(function(criteriaGroup) { %>
+  <div class="form-label" style="text-align: left; padding-left: 20px">
+    <%= criteriaGroup.key %>
+  </div>
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-10">
+      <% criteriaGroup.criteria.forEach(function(criteria) { %>
+      <div>
+        <label>
+          <input type="checkbox" class="criteria" value="<%= criteria.CriteriaID %>">
+          <%= criteria.Criteria %>
+        </label>
+      </div>
+      <% }) // endfor %>
+    </div>
+  </div>
+
+<% }) // endfor %>

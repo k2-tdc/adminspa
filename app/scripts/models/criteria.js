@@ -2,23 +2,13 @@
 
 Hktdc.Models = Hktdc.Models || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Models.Criteria = Backbone.Model.extend({
+    idAttribute: 'CriteriaID',
 
-    url: '',
-
-    initialize: function() {
-    },
-
-    defaults: {
-    },
-
-    validate: function(attrs, options) {
-    },
-
-    parse: function(response, options)  {
+    parse: function(response, options) {
       return response;
     }
   });

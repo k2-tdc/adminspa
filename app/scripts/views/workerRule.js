@@ -353,6 +353,8 @@ Hktdc.Views = Hktdc.Views || {};
                   type: 'confirmation',
                   title: 'Confirmation'
                 });
+
+                Backbone.history.navigate('worker-rule', {trigger: true});
               } else {
                 Hktdc.Dispatcher.trigger('openAlert', {
                   message: response.Msg || 'Error on delete',
@@ -360,8 +362,6 @@ Hktdc.Views = Hktdc.Views || {};
                   title: 'Error'
                 });
               }
-
-              Backbone.history.navigate('userrole', {trigger: true});
             },
             error: function(model, err) {
               // console.log(err);

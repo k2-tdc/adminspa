@@ -59,8 +59,8 @@ Hktdc.Views = Hktdc.Views || {};
 
       if (self.model.toJSON().showCheckbox) {
         self.loadCriteria()
-          .then(function(priorityCollection) {
-            return self.renderCheckbox(priorityCollection);
+          .then(function(criteriaCollection) {
+            return self.renderCheckbox(criteriaCollection);
           }).catch(function(e) {
             console.error(e);
           });
@@ -363,10 +363,11 @@ Hktdc.Views = Hktdc.Views || {};
       if (self.model.toJSON().criteriaCollection) {
         deferred.resolve(self.model.toJSON().criteriaCollection);
       } else {
-        var criteriaCollection = new Hktdc.Collections.Priority();
+        var criteriaCollection = new Hktdc.Collections.Criteria();
         criteriaCollection.url = criteriaCollection.url(self.model.toJSON().Code);
         criteriaCollection.fetch({
           beforeSend: utils.setAuthHeader,
+
           success: function() {
             self.model.set({
               criteriaCollection: criteriaCollection
@@ -766,9 +767,22 @@ Hktdc.Views = Hktdc.Views || {};
       $('.toDatePicker', self.el).html(toDateView.el);
     },
 
-    renderCheckbox: function(criteriaCollection) {
-      var checkboxView = new Hktdc.Views.RuleFieldCheckbox();
+    renderCheckbox: function(criteria) {
+      var self = this;
+      var groupedCriteria = _.map(_.groupBy(criteria.toJSON(), 'CriteriaGroup'), function(val, key) {
+        return {key: key, criteria: val};
+      });
 
+      var checkboxView = new Hktdc.Views.RuleFieldCheckbox({
+        criteria: groupedCriteria,
+        onChange: function(newCriterias) {
+          self.model.set({
+            Criteria: newCriterias
+          });
+        }
+      });
+      checkboxView.render();
+      $('.checkboxContainer', self.el).html(checkboxView.el);
     },
 
     renderAttachment: function(rulesModel, attachmentList) {
