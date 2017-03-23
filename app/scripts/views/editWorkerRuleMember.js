@@ -540,10 +540,10 @@ Hktdc.Views = Hktdc.Views || {};
       try {
         var natureSelectView = new Hktdc.Views.RuleFieldPerSelect({
           collection: perCollection,
-          selectedPerUser: self.model.toJSON().Per || 0,
+          selectedPerUser: self.model.toJSON().UserId || 0,
           onSelected: function(user) {
             self.model.set({
-              Per: user.UserID
+              UserId: user.UserID
             });
           }
         });
@@ -559,10 +559,10 @@ Hktdc.Views = Hktdc.Views || {};
       try {
         var natureSelectView = new Hktdc.Views.RuleFieldAsSelect({
           collection: priorityCollection,
-          selectedPriority: self.model.toJSON().As || 0,
+          selectedPriority: self.model.toJSON().Priority || 0,
           onSelected: function(user) {
             self.model.set({
-              Per: user.UserID
+              Priority: user.UserID
             });
           }
         });
@@ -578,7 +578,7 @@ Hktdc.Views = Hktdc.Views || {};
       try {
         var ofFromSelectView = new Hktdc.Views.RuleFieldOfSelect({
           collection: ofCollection,
-          selectedPerUser: self.model.toJSON().Per || 0,
+          selectedPerUser: self.model.toJSON().Grade3 || 0,
           onSelected: function(grade) {
             self.model.set({
               Grade3: grade.Grade
@@ -587,7 +587,7 @@ Hktdc.Views = Hktdc.Views || {};
         });
         var ofToSelectView = new Hktdc.Views.RuleFieldOfSelect({
           collection: ofCollection,
-          selectedPerUser: self.model.toJSON().Per || 0,
+          selectedPerUser: self.model.toJSON().Grade4 || 0,
           onSelected: function(grade) {
             self.model.set({
               Grade4: grade.Grade
@@ -773,7 +773,7 @@ Hktdc.Views = Hktdc.Views || {};
       try {
         var teamFilterSelectView = new Hktdc.Views.RuleFieldForTeamFilterSelect({
           collection: teamCollection,
-          selectedPerUser: self.model.toJSON().Per || 0,
+          selectedPerUser: self.model.toJSON().TeamFilter || 0,
           onSelected: function(selected) {
             self.model.set({
               TeamFilter: selected.FilterID
