@@ -11,6 +11,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {
       'click .saveBtn': 'saveButtonHandler',
+      'click .previewBtn': 'previewButtonHandler',
       'blur .formTextField': 'updateFormModel'
     },
 
@@ -889,6 +890,81 @@ Hktdc.Views = Hktdc.Views || {};
             title: 'error on saving user role'
           });
         });
+    },
+
+    previewButtonHandler: function() {
+      var queryParams = _.omit(this.model.toJSON(), 'departmentCollection', 'applicantCollection');
+      var url = Hktdc.Config.apiURL + '/worker-rule/preview';
+      var xhr = new XMLHttpRequest();
+      var rawData = this.model.toJSON();
+      var modelData = {
+        RuleCode: rawData.RuleCode || '',
+        Rule: rawData.Rule || '',
+        Score: parseInt(rawData.Score),
+        UserId1: rawData.UserId1 || '',
+        UserId2: rawData.UserId2 || '',
+        LevelNo: rawData.LevelNo || '',
+        GroupID: rawData.GroupID || '',
+        GroupID1: rawData.GroupID1 || '',
+        Grade1: rawData.Grade1 || '',
+        Grade2: rawData.Grade2 || '',
+        Team: rawData.Team || '',
+        TeamFilter: rawData.TeamFilter || '',
+        Priority: parseInt(rawData.Priority) || 0,
+        Grade3: rawData.Grade3 || '',
+        Grade4: rawData.Grade4 || '',
+        Department: rawData.Department || '',
+        DateFrom: rawData.DateFrom || '',
+        DateTo: rawData.DateTo || '',
+        Criteria: rawData.Criteria || ''
+      }
+      xhr.addEventListener('loadstart', function() {
+        NProgress.start();
+      });
+      xhr.addEventListener('loadend', function() {
+        NProgress.done();
+      });
+
+      xhr.open('POST', url, true);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + Hktdc.Config.accessToken);
+      xhr.responseType = 'blob';
+      xhr.onreadystatechange = function() {
+        var anchorLink;
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          if (typeof window.navigator.msSaveBlob !== 'undefined') {
+            var blob;
+            try {
+              blob = new Blob([xhr.response], {
+                type: 'application/octet-stream'
+              });
+            } catch (e) {
+              // Old browser, need to use blob builder
+              window.BlobBuilder = window.BlobBuilder ||
+                                   window.WebKitBlobBuilder ||
+                                   window.MozBlobBuilder ||
+                                   window.MSBlobBuilder;
+              if (window.BlobBuilder) {
+                var bb = new BlobBuilder();
+                bb.append(xhr.response);
+                blob = bb.getBlob('application/octet-stream');
+              }
+            }
+            if (blob) {
+              window.navigator.msSaveBlob(blob, 'report.xls');
+            }
+          } else {
+            // Trick for making downloadable link
+            anchorLink = document.createElement('a');
+            anchorLink.href = window.URL.createObjectURL(xhr.response);
+            // Give filename you wish to download
+            anchorLink.download = 'report.xls';
+            anchorLink.style.display = 'none';
+            document.body.appendChild(anchorLink);
+            anchorLink.click();
+          }
+        }
+      };
+      xhr.send(JSON.stringify({model: modelData}));
     },
 
     saveRuleSetting: function() {

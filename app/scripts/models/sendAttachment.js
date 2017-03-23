@@ -9,7 +9,7 @@ Hktdc.Models = Hktdc.Models || {};
     idAttribute: 'name',
     url: function(refId) {
       // return Hktdc.Config.apiURL + '/SubmitFile?refid=' + refId + '&filename=' + filename;
-      return Hktdc.Config.apiURL + '/attachments?refid=' + refId + '&process=ADMIN&AttachmentType=CHSW';
+      return Hktdc.Config.apiURL + '/attachments?refid=' + refId + '&process=ADMIN&AttachmentType=ProcessWorkerRuleReference';
     }
   });
 })();
