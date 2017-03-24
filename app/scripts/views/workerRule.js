@@ -154,12 +154,12 @@ Hktdc.Views = Hktdc.Views || {};
               return {
                 // lastActionDate: row.SubmittedOn,
                 id: row.WorkerRuleSettingId,
-                modifiedOn: row.ModifiedOn,
+                modifiedOn: (row.ModifiedOn) ? moment(row.ModifiedOn, 'YYYY-MM-DD').format('DD MMM YYYY') : '',
                 modifiedBy: row.ModifiedBy,
                 summary: row.Summary,
                 score: row.Score,
-                startDate: row.StartDate,
-                endDate: row.EndDate
+                startDate: (row.StartDate) ? moment(row.StartDate, 'YYYY-MM-DD').format('DD MMM YYYY') : '',
+                endDate: (row.EndDate) ? moment(row.EndDate, 'YYYY-MM-DD').format('DD MMM YYYY') : ''
               };
             });
             return modData;
