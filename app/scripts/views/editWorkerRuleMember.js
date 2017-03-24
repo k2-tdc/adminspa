@@ -148,6 +148,11 @@ Hktdc.Views = Hktdc.Views || {};
       }
 
       if (self.model.toJSON().showDateRange) {
+        self.model.set({
+          DateFrom: moment(self.model.toJSON().DateFrom).format('YYYY-MM-DD'),
+          DateTo: moment(self.model.toJSON().DateTo).format('YYYY-MM-DD')
+        });
+
         this.renderDatePicker();
       }
 
@@ -767,7 +772,7 @@ Hktdc.Views = Hktdc.Views || {};
               });
             } else if (type === 'team') {
               self.model.set({
-                Team: selectedData.Team
+                Team: selectedData.Code
               });
             } else if (type === 'group') {
               self.model.set({
@@ -793,7 +798,7 @@ Hktdc.Views = Hktdc.Views || {};
       try {
         var teamFilterSelectView = new Hktdc.Views.RuleFieldForTeamFilterSelect({
           collection: teamCollection,
-          selectedPerUser: self.model.toJSON().TeamFilter || 0,
+          selectedFor: self.model.toJSON().TeamFilter || 0,
           onSelected: function(selected) {
             self.model.set({
               TeamFilter: selected.FilterID
