@@ -446,7 +446,28 @@ Hktdc.Views = Hktdc.Views || {};
           selectedRule: self.model.toJSON().Rule,
           onSelected: function(rule) {
             self.model.set({
-              Rule: rule.TemplateID
+              Rule: rule.TemplateID,
+              Nature: '',
+              Score: '',
+              UserId: '',
+              UserId1: '',
+              UserId2: '',
+              LevelNo: '',
+              GroupID: '',
+              GroupID1: '',
+              Grade1: '',
+              Grade2: '',
+              Team: '',
+              TeamFilter: '',
+              Priority: '',
+              Grade3: '',
+              Grade4: '',
+              Department: '',
+              DateFrom: '',
+              DateTo: '',
+              Criteria: '',
+              Remark: ''
+
             });
             self.renderField(rule.TemplateID);
           }
@@ -509,26 +530,6 @@ Hktdc.Views = Hktdc.Views || {};
         showCheckbox: ruleModules.checkbox,
         showRemark: ruleModules.remark,
         showReference: ruleModules.reference,
-        Nature: '',
-        Score: '',
-        UserId: '',
-        UserId1: '',
-        UserId2: '',
-        LevelNo: '',
-        GroupID: '',
-        GroupID1: '',
-        Grade1: '',
-        Grade2: '',
-        Team: '',
-        TeamFilter: '',
-        Priority: '',
-        Grade3: '',
-        Grade4: '',
-        Department: '',
-        DateFrom: '',
-        DateTo: '',
-        Criteria: '',
-        Remark: ''
       });
       // console.log(this.model.toJSON());
       this.render();
@@ -536,6 +537,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderNature: function(natureCollection) {
       var self = this;
+      console.log(self.model.toJSON());
       try {
         var natureSelectView = new Hktdc.Views.RuleFieldNatureSelect({
           collection: natureCollection,
