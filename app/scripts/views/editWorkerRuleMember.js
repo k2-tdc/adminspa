@@ -1066,9 +1066,17 @@ Hktdc.Views = Hktdc.Views || {};
         Remark: rawData.Remark
       };
       saveRuleMemberModel.set(data);
-      console.log('saveModel: ', saveRuleMemberModel.toJSON());
+
+      saveRuleMemberModel.on('invalid', function(model, err) {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: err,
+          type: 'error',
+          title: 'Error'
+        });
+      });
 
       if (saveRuleMemberModel.isValid()) {
+        console.log('saveModel: ', saveRuleMemberModel.toJSON());
         saveRuleMemberModel.save(null, {
           type: rawData.saveType,
           beforeSend: utils.setAuthHeader,
