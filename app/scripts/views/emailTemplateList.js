@@ -198,54 +198,7 @@ Hktdc.Views = Hktdc.Views || {};
           data: 'step'
         }, {
           data: 'subject'
-        }, {
-          data: 'delete',
-          render: function(data) {
-            return '<button type="button" class="form-control deleteBtn"><i class="glyphicon glyphicon-remove"></i></button>';
-          }
         }]
-      });
-
-      $('#templateTable tbody', this.el).on('click', '.deleteBtn', function(ev) {
-        ev.stopPropagation();
-        var rowData = self.templateDataTable.row($(this).parents('tr')).data();
-        var targetId = rowData.id;
-        Hktdc.Dispatcher.trigger('openConfirm', {
-          title: 'confirmation',
-          message: 'Are you sure to Delete?',
-          onConfirm: function() {
-            self.deleteTemplate(targetId)
-              .then(function(response) {
-                Hktdc.Dispatcher.trigger('closeConfirm');
-                if (String(response.success) === '1') {
-                  Hktdc.Dispatcher.trigger('openAlert', {
-                    type: 'success',
-                    title: 'confirmation',
-                    message: 'Deleted record: ' + rowData.process + ' - ' + rowData.step
-                  });
-
-                  self.templateDataTable.ajax.reload();
-                  // Hktdc.Dispatcher.trigger('reloadMenu');
-                } else {
-                  Hktdc.Dispatcher.trigger('openAlert', {
-                    type: 'error',
-                    title: 'error',
-                    message: response.Msg
-                  });
-                }
-              })
-              .catch(function(err) {
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  type: 'error',
-                  title: 'error',
-                  message: 'delete failed'
-                });
-                console.error(err);
-              });
-          }
-        });
-
-        // console.log('rowData', rowData);
       });
 
       $('#templateTable tbody', this.el).on('click', 'tr', function(ev) {
@@ -400,10 +353,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     doSearch: function() {
-      // console.log(this.model.toJSON());
-      var queryParams = _.omit(this.model.toJSON(), 'stepCollection', 'processCollection', 'mode');
-      // console.log(queryParams);
-      // console.log(Backbone.history.getHash().split('?')[0]);
+      var queryParams = _.pick(this.model.toJSON(), 'processId', 'activity-group');
       var currentBase = Backbone.history.getHash().split('?')[0];
       var queryString = utils.getQueryString(queryParams, true);
       Backbone.history.navigate(currentBase + queryString);
@@ -411,7 +361,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getAjaxURL: function() {
-      var queryParams = _.omit(this.model.toJSON(), 'stepCollection', 'processCollection', 'mode', 'processId');
+      var queryParams = _.pick(this.model.toJSON(), 'process', 'activity-group');
       var queryString = utils.getQueryString(queryParams, true);
       return Hktdc.Config.apiURL + '/email-templates' + queryString;
     },
