@@ -77,52 +77,52 @@ Hktdc.Models = Hktdc.Models || {};
       var rule = rules[attrs.Rule];
       var errors = [];
       if (rule) {
-        if (!attrs.Nature && rule.Nature) {
+        if ((!attrs.Nature || attrs.Nature == 0) && rule.Nature) {
           errors.push('"Nature" must be filled.');
         }
         if (!attrs.Score && rule.Score) {
           errors.push('"Score" must be filled.');
         }
-        if (!attrs.UserId && rule.UserId) {
+        if ((!attrs.UserId || attrs.UserId == 0) && rule.UserId) {
           errors.push('"Per" must be filled.');
         }
-        if (!attrs.UserId1 && rule.UserId1) {
+        if ((!attrs.UserId1 || attrs.UserId1 == 0) && rule.UserId1) {
           errors.push('"Set" / "Remove" must be filled.');
         }
-        if (!attrs.UserId2 && rule.UserId2) {
+        if ((!attrs.UserId2 || attrs.UserId2 == 0) && rule.UserId2) {
           errors.push('"For" must be filled.');
         }
-        if (!attrs.LevelNo && rule.LevelNo) {
+        if ((!attrs.LevelNo || attrs.LevelNo == 0) && rule.LevelNo) {
           errors.push('"Set" / "Remove" must be filled.');
         }
-        if (!attrs.GroupID && rule.GroupID) {
+        if ((!attrs.GroupID || attrs.GroupID == 0) && rule.GroupID) {
           errors.push('"Set" / "Remove" must be filled.');
         }
-        if (!attrs.GroupID1 && rule.GroupID1) {
+        if ((!attrs.GroupID1 || attrs.GroupID1 == 0) && rule.GroupID1) {
           errors.push('"For" must be filled.');
         }
-        if (!attrs.Grade1 && rule.Grade1) {
+        if ((!attrs.Grade1 || attrs.Grade1 == 0) && rule.Grade1) {
           errors.push('"Set" must be filled.');
         }
-        if (!attrs.Grade2 && rule.Grade2) {
+        if ((!attrs.Grade2 || attrs.Grade2 == 0) && rule.Grade2) {
           errors.push('"Set" must be filled.');
         }
-        if (!attrs.Team && rule.Team) {
+        if ((!attrs.Team || attrs.Team == 0) && rule.Team) {
           errors.push('"For" must be filled.');
         }
-        if (!attrs.TeamFilter && rule.TeamFilter) {
+        if ((!attrs.TeamFilter || attrs.TeamFilter == 0) && rule.TeamFilter) {
           errors.push('"For" must be filled.');
         }
         if (isNaN(attrs.Priority) && rule.Priority) {
           errors.push('"As" must be filled.');
         }
-        if (!attrs.Grade3 && rule.Grade3) {
+        if ((!attrs.Grade3 || attrs.Grade3 == 0) && rule.Grade3) {
           errors.push('"Of" must be filled.');
         }
-        if (!attrs.Grade4 && rule.Grade4) {
+        if ((!attrs.Grade4 || attrs.Grade4 == 0) && rule.Grade4) {
           errors.push('"Of" must be filled.');
         }
-        if (!attrs.Department && rule.Department) {
+        if ((!attrs.Department || attrs.Department == 0) && rule.Department) {
           errors.push('"For" must be filled.');
         }
         if (errors.length) {

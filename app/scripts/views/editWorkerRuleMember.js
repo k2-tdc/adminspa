@@ -906,10 +906,11 @@ Hktdc.Views = Hktdc.Views || {};
           Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, { trigger: true });
         })
         .catch(function(err) {
+          console.log(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
+            message: 'Error on saving user role',
             type: 'error',
-            title: 'error on saving user role'
+            title: 'Error'
           });
         });
     },
