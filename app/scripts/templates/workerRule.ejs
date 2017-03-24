@@ -10,7 +10,7 @@
         <div class="form-label text-right"><span class="red">*</span> Process</div>
       </div>
       <% if (showRules) { %>
-        <div class="col-md-9"><span><%= ProcessDisplayName %></span></div>
+        <div class="col-md-9"><span class="form-data"><%= ProcessDisplayName %></span></div>
       <% } else { %>
         <div class="col-md-9 processContainer">
           <!-- status Select list here -->
@@ -24,7 +24,7 @@
         <div class="form-label text-right"><span class="red">*</span> Code</div>
       </div>
       <% if (showRules) { %>
-        <div class="col-md-9"><span><%= Code %></span></div>
+        <div class="col-md-9"><span class="form-data"><%= Code %></span></div>
       <% } else { %>
         <div class="col-md-9">
           <input type="text" class="form-control formTextField" name="Code" value="<%= Code %>">
