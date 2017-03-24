@@ -598,7 +598,7 @@ Hktdc.Views = Hktdc.Views || {};
       try {
         var ofFromSelectView = new Hktdc.Views.RuleFieldOfSelect({
           collection: ofCollection,
-          selectedPerUser: self.model.toJSON().Grade3 || 0,
+          selectedGrade: self.model.toJSON().Grade3 || 0,
           onSelected: function(grade) {
             self.model.set({
               Grade3: grade.Grade
@@ -607,7 +607,7 @@ Hktdc.Views = Hktdc.Views || {};
         });
         var ofToSelectView = new Hktdc.Views.RuleFieldOfSelect({
           collection: ofCollection,
-          selectedPerUser: self.model.toJSON().Grade4 || 0,
+          selectedGrade: self.model.toJSON().Grade4 || 0,
           onSelected: function(grade) {
             self.model.set({
               Grade4: grade.Grade
@@ -919,6 +919,8 @@ Hktdc.Views = Hktdc.Views || {};
       var url = Hktdc.Config.apiURL + '/worker-rule/preview';
       var xhr = new XMLHttpRequest();
       var rawData = this.model.toJSON();
+      // console.log(rawData.DateFrom);
+      // console.log(rawData.DateTo);
       var formData = new FormData();
       var modelData = {
         RuleCode: rawData.RuleCode || '',
@@ -937,8 +939,12 @@ Hktdc.Views = Hktdc.Views || {};
         Grade3: rawData.Grade3 || '',
         Grade4: rawData.Grade4 || '',
         Department: rawData.Department || '',
-        DateFrom: moment(rawData.DateFrom, 'YYYYMMDD').format('YYYY-MM-DD') || '',
-        DateTo: moment(rawData.DateTo, 'YYYYMMDD').format('YYYY-MM-DD') || '',
+        DateFrom: moment(rawData.DateFrom, 'YYYYMMDD').isValid()
+          ? moment(rawData.DateFrom, 'YYYYMMDD').format('YYYY-MM-DD')
+          : '',
+        DateTo: moment(rawData.DateTo, 'YYYYMMDD').isValid()
+          ? moment(rawData.DateTo, 'YYYYMMDD').format('YYYY-MM-DD')
+          : '',
         Criteria: rawData.Criteria || ''
       };
       formData.append('model', JSON.stringify(modelData));

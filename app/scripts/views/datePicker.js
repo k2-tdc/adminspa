@@ -41,11 +41,12 @@ Hktdc.Views = Hktdc.Views || {};
         }
       })
         .on('changeDate', function(ev) {
-          // var $input = ($(ev.target).is('input')) ? $(ev.target) : $(ev.target).find('input');
-          var val = moment($(this).datepicker('getDate')).format('MM/DD/YYYY');
-          // console.log(val);
+          var datePickerValue = $(this).datepicker('getDate');
+          var parseVal = (moment(datePickerValue).isValid())
+            ? moment(datePickerValue).format('MM/DD/YYYY')
+            : '';
           if (self.onSelect) {
-            self.onSelect(val);
+            self.onSelect(parseVal);
           }
         })
         .on('show', function(ev) {
@@ -68,11 +69,12 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     updateDateModelByEvent: function(ev) {
-      // console.log(ev);
-      var val = moment($('.date', this.el).datepicker('getDate')).format('MM/DD/YYYY');
-      if (this.onBlur) {
-        // console.log('crash');
-        this.onBlur(val);
+      var datePickerValue = $('.date', this.el).datepicker('getDate');
+      var parseVal = (moment(datePickerValue).isValid())
+        ? moment(datePickerValue).format('MM/DD/YYYY')
+        : '';
+      if (this.onSelect) {
+        this.onSelect(parseVal);
       }
     }
 
