@@ -81,8 +81,11 @@ window.utils = {
 
   setAuthHeader: function(xhr) {
     if (Hktdc.Config.needAuthHeader) {
-      // console.log('needAuthHeader: ', true);
-      xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get('ACCESS-TOKEN'));
+      if (Cookies.get('ACCESS-TOKEN')) {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get('ACCESS-TOKEN'));
+      } else {
+        window.location.href = window.Hktdc.Config.OAuthLoginUrl;
+      }
     }
   },
   // Asynchronously load templates located in separate .html files

@@ -441,6 +441,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.doSearch();
           })
           .fail(function(err) {
+            Hktdc.Dispatcher.trigger('closeConfirm');
             Hktdc.Dispatcher.trigger('openAlert', {
               message: err,
               type: 'error',
