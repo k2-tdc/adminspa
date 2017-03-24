@@ -148,11 +148,6 @@ Hktdc.Views = Hktdc.Views || {};
       }
 
       if (self.model.toJSON().showDateRange) {
-        self.model.set({
-          DateFrom: moment(self.model.toJSON().DateFrom).format('YYYY-MM-DD'),
-          DateTo: moment(self.model.toJSON().DateTo).format('YYYY-MM-DD')
-        });
-
         this.renderDatePicker();
       }
 
@@ -824,7 +819,7 @@ Hktdc.Views = Hktdc.Views || {};
         }),
         onSelect: function(val) {
           self.model.set({
-            DateFrom: moment(val, 'MM/DD/YYYY').format('YYYYMMDD')
+            DateFrom: val
           });
         }
       });
@@ -837,7 +832,7 @@ Hktdc.Views = Hktdc.Views || {};
         }),
         onSelect: function(val) {
           self.model.set({
-            DateTo: moment(val, 'MM/DD/YYYY').format('YYYYMMDD')
+            DateTo: val
           });
         }
       });
@@ -944,11 +939,11 @@ Hktdc.Views = Hktdc.Views || {};
         Grade3: rawData.Grade3 || '',
         Grade4: rawData.Grade4 || '',
         Department: rawData.Department || '',
-        DateFrom: moment(rawData.DateFrom, 'YYYYMMDD').isValid()
-          ? moment(rawData.DateFrom, 'YYYYMMDD').format('YYYY-MM-DD')
+        DateFrom: moment(rawData.DateFrom, 'YYYY-MM-DD').isValid()
+          ? rawData.DateFrom
           : '',
-        DateTo: moment(rawData.DateTo, 'YYYYMMDD').isValid()
-          ? moment(rawData.DateTo, 'YYYYMMDD').format('YYYY-MM-DD')
+        DateTo: moment(rawData.DateTo, 'YYYY-MM-DD').isValid()
+          ? rawData.DateTo
           : '',
         Criteria: rawData.Criteria || ''
       };
@@ -1061,8 +1056,12 @@ Hktdc.Views = Hktdc.Views || {};
         Grade3: rawData.Grade3 || '',
         Grade4: rawData.Grade4 || '',
         Department: rawData.Department || '',
-        DateFrom: rawData.DateFrom,
-        DateTo: rawData.DateTo,
+        DateFrom: (rawData.DateFrom && moment(rawData.DateFrom, 'YYYY-MM-DD').isValid())
+          ? moment(rawData.DateFrom, 'YYYY-MM-DD').format('YYYYMMDD')
+          : '',
+        DateTo: (rawData.DateTo && moment(rawData.DateTo, 'YYYY-MM-DD').isValid())
+          ? moment(rawData.DateTo, 'YYYY-MM-DD').format('YYYYMMDD')
+          : '',
         Criteria: rawData.Criteria || '',
         Remark: rawData.Remark
       };
