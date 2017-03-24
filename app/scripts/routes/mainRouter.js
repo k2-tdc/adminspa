@@ -532,7 +532,6 @@ Hktdc.Routers = Hktdc.Routers || {};
 
     editWorkerRule: function(workerRuleId) {
       try {
-        console.log('alskdfaskdfasdjfl');
         Hktdc.Dispatcher.trigger('checkPagePermission', function() {
           $('#mainContent').addClass('compress');
 

@@ -15,7 +15,7 @@ Hktdc.Views = Hktdc.Views || {};
       'click .saveBtn': 'saveButtonHandler',
       'click .deleteBtn': 'deleteRuleButtonHandler',
       'click .removeMemeberBtn': 'removeMemberButtonHandler',
-      'click .searchBtn': 'searchButtonHandler',
+      'click .searchBtn': 'doSearch',
       'click .addMemeberBtn': 'addMemberButtonHandler',
       'blur .formTextField': 'updateFormModel'
     },
@@ -376,8 +376,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    searchButtonHandler: function() {
-      console.log(this.model.toJSON());
+    doSearch: function() {
       var queryParams = _.pick(this.model.toJSON(), 'UserId', 'WorkerId');
       var currentBase = Backbone.history.getHash().split('?')[0];
       var queryString = utils.getQueryString(queryParams, true);
@@ -401,12 +400,11 @@ Hktdc.Views = Hktdc.Views || {};
 
     removeMemberButtonHandler: function() {
       var self = this;
-      var removeSingleMember = function(guid) {
+      var removeSingleMember = function(settingId) {
         var deferred = Q.defer();
-        var saveUserRoleMemberModel = new Hktdc.Models.SaveUserRoleMember();
-        saveUserRoleMemberModel.clear();
-        saveUserRoleMemberModel.url = saveUserRoleMemberModel.url(guid);
-        saveUserRoleMemberModel.save(null, {
+        var delMemberModel = new Hktdc.Models.DeleteWorkerRuleMember();
+        delMemberModel.url = delMemberModel.url(settingId);
+        delMemberModel.save(null, {
           type: 'DELETE',
           beforeSend: utils.setAuthHeader,
           success: function() {
@@ -418,12 +416,20 @@ Hktdc.Views = Hktdc.Views || {};
         });
         return deferred.promise;
       };
+      if (!(self.model.toJSON().selectedMember && self.model.toJSON().selectedMember.length)) {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: 'Please select worker rule setting',
+          type: 'error',
+          title: 'warning'
+        });
+        return false;
+      }
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
-        message: 'Are you sure to remove this member?',
+        message: 'Are you sure to remove the members?',
         onConfirm: function() {
-          Q.all(_.map(self.model.toJSON().selectedMember, function(memberGUID) {
-            return removeSingleMember(memberGUID);
+          Q.all(_.map(self.model.toJSON().selectedMember, function(settingId) {
+            return removeSingleMember(settingId);
           }))
           .then(function() {
             Hktdc.Dispatcher.trigger('closeConfirm');
@@ -432,10 +438,7 @@ Hktdc.Views = Hktdc.Views || {};
               type: 'confirmation',
               title: 'confirmation'
             });
-            Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, true);
-            Backbone.history.loadUrl('userrole/' + self.model.toJSON().UserRoleGUID, {
-              trigger: true
-            });
+            self.doSearch();
           })
           .fail(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
