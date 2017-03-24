@@ -940,11 +940,11 @@ Hktdc.Views = Hktdc.Views || {};
         Grade4: rawData.Grade4 || '',
         Department: rawData.Department || '',
         DateFrom: moment(rawData.DateFrom, 'YYYY-MM-DD').isValid()
-          ? rawData.DateFrom
-          : moment(rawData.DateFrom).format('YYYY-MM-DD'),
+          ? moment(rawData.DateFrom).format('YYYY-MM-DD')
+          : '',
         DateTo: moment(rawData.DateTo, 'YYYY-MM-DD').isValid()
-          ? rawData.DateTo
-          : moment(rawData.DateFrom).format('YYYY-MM-DD'),
+          ? moment(rawData.DateTo).format('YYYY-MM-DD')
+          : '',
         Criteria: rawData.Criteria || ''
       };
       formData.append('model', JSON.stringify(modelData));
