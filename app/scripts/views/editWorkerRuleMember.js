@@ -941,10 +941,10 @@ Hktdc.Views = Hktdc.Views || {};
         Department: rawData.Department || '',
         DateFrom: moment(rawData.DateFrom, 'YYYY-MM-DD').isValid()
           ? rawData.DateFrom
-          : '',
+          : moment(rawData.DateFrom).format('YYYY-MM-DD'),
         DateTo: moment(rawData.DateTo, 'YYYY-MM-DD').isValid()
           ? rawData.DateTo
-          : '',
+          : moment(rawData.DateFrom).format('YYYY-MM-DD'),
         Criteria: rawData.Criteria || ''
       };
       formData.append('model', JSON.stringify(modelData));
