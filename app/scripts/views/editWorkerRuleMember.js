@@ -923,7 +923,7 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(rawData.DateTo);
       var formData = new FormData();
       var modelData = {
-        RuleCode: rawData.RuleCode || '',
+        RuleCode: rawData.Code || '',
         Rule: rawData.Rule || '',
         Score: parseInt(rawData.Score),
         UserId1: rawData.UserId1 || '',
