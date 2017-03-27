@@ -31,6 +31,7 @@ Hktdc.Views = Hktdc.Views || {};
       $('.date', self.el).datepicker({
         autoclose: true,
         startDate: self.startDate,
+        forceParse: false,
         format: {
           toDisplay: function(date, format, language) {
             return moment(date).format('DD MMM YYYY');
@@ -69,7 +70,10 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     updateDateModelByEvent: function(ev) {
-      var datePickerValue = $('.date', this.el).datepicker('getDate');
+      // not use below as the date will reture null
+      // var datePickerValue = $('.date', this.el).datepicker('getDate');
+      
+      var datePickerValue = $('.date', this.el).val();
       var parseVal = (moment(datePickerValue).isValid())
         ? moment(datePickerValue).format('YYYY-MM-DD')
         : '';
