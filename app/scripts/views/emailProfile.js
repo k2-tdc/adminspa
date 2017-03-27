@@ -46,7 +46,12 @@ Hktdc.Views = Hktdc.Views || {};
       this.$el.html(this.template(this.model.toJSON()));
       Q.all([
         self.loadProcess(),
-        self.loadProfileUser()
+        Q.fcall(function() {
+          if (self.model.toJSON().showProfile) {
+            return self.loadProfileUser();
+          }
+          return [];
+        })
       ])
         .then(function(results) {
           var processCollection = results[0];
