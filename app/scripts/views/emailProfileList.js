@@ -43,9 +43,15 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       this.$el.html(this.template(this.model.toJSON()));
 
-      self.loadProfileUser()
-        .then(function(profileUserCollection) {
+      Q.fcall(function() {
+        if (self.model.toJSON().showSearch) {
           console.debug('[ emailProfile.js ] - load all the remote resources');
+          return self.loadProfileUser();
+        }
+        // put empty into profile users
+        return [];
+      })
+        .then(function(profileUserCollection) {
           self.model.set({
             profileUserCollection: profileUserCollection
           }, {
@@ -231,8 +237,7 @@ Hktdc.Views = Hktdc.Views || {};
     renderProfileUserSelect: function() {
       var self = this;
       var ProfileUserView;
-      // console.log('Hktdc.Config.isAdmin', Hktdc.Config.isAdmin);
-      if (Hktdc.Config.isAdmin) {
+      if (self.model.toJSON().showSearch) {
         ProfileUserView = new Hktdc.Views.ProfileUserSelect({
           collection: self.model.toJSON().profileUserCollection,
           selectedProfileUser: self.model.toJSON().profile,
