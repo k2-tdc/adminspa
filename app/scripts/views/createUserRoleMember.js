@@ -105,7 +105,9 @@ Hktdc.Views = Hktdc.Views || {};
         }),
         onSelect: function(val) {
           self.model.set({
-            ExpiryDate: val
+            ExpiryDate: (moment(val, 'YYYY-MM-DD').isValid())
+              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+              : ''
           });
         }
       });

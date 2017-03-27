@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, _ */
+/* global Hktdc, Backbone, JST, Q, utils, $, _, moment */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -819,7 +819,9 @@ Hktdc.Views = Hktdc.Views || {};
         }),
         onSelect: function(val) {
           self.model.set({
-            DateFrom: val
+            DateFrom: (moment(val, 'YYYY-MM-DD').isValid())
+              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+              : ''
           });
         }
       });
@@ -832,7 +834,9 @@ Hktdc.Views = Hktdc.Views || {};
         }),
         onSelect: function(val) {
           self.model.set({
-            DateTo: val
+            DateTo: (moment(val, 'YYYY-MM-DD').isValid())
+              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+              : ''
           });
         }
       });
