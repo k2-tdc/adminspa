@@ -297,7 +297,6 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     goToCreatePage: function() {
-      console.log('crash');
       Backbone.history.navigate('emailprofile/new', {
         trigger: true
       });

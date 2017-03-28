@@ -8,25 +8,33 @@ Hktdc.Routers = Hktdc.Routers || {};
   Hktdc.Routers.Main = Backbone.Router.extend({
     routes: {
       '': 'emailProfileList',
+
       'emailtemplate': 'emailTemplateList',
       'emailtemplate/new': 'editEmailTemplate',
       'emailtemplate/:templateId': 'editEmailTemplate',
+
       'emailprofile': 'emailProfileList',
       'emailprofile/new': 'editEmailProfile',
       'emailprofile/:templateId': 'editEmailProfile',
+
       'userrole': 'userRoleList',
       'userrole/new': 'editUserRole',
       'userrole/:roleId': 'editUserRole',
       'userrole/:roleId/member/new': 'editUserRoleMember',
       'userrole/:roleId/member/:memberId': 'editUserRoleMember',
+
       'permission': 'rolePermissionList',
       'permission/new': 'editRolePermission',
       'permission/:permissionIds': 'editRolePermission',
+
       'worker-rule': 'workerRoleList',
       'worker-rule/new': 'editWorkerRule',
       'worker-rule/:workerRuleId': 'editWorkerRule',
       'worker-rule/:workerRuleId/member/new': 'editWorkerRuleMember',
       'worker-rule/:workerRuleId/member/:memberId': 'editWorkerRuleMember',
+
+      'delegation': 'delegationList',
+      'delegation/:delegationId': 'editDelegationDetail',
 
       'logout': 'logout'
     },
@@ -668,6 +676,36 @@ Hktdc.Routers = Hktdc.Routers || {};
       } catch (e) {
         console.error(e);
       }
+    },
+
+    delegationList: function() {
+      try {
+        Hktdc.Dispatcher.trigger('checkPagePermission', function() {
+          var delegationListModel = new Hktdc.Models.DelegationList({});
+          delegationListModel.set({
+            showSearch: Hktdc.Config.isAdmin
+          });
+          var delegationListView = new Hktdc.Views.DelegationList({
+            model: delegationListModel
+          });
+          delegationListView.render();
+          $('#mainContent').empty().html(delegationListView.el);
+
+          var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+          var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+            collection: subheaderMenuListCollection,
+            currentPageName: 'DELEGATION'
+          });
+          subheaderMenuListView.render();
+          $('.subheader-menu-container').html(subheaderMenuListView.el);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    editDelegationDetail: function() {
+
     },
 
     logout: function() {

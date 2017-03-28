@@ -139,6 +139,7 @@ Hktdc.Views = Hktdc.Views || {};
         USERROLE: 'USERROLE',
         PERMISSION: 'PERMISSION',
         ROLEMEMBER: 'ROLEMEMBER',
+        DELEGATION: 'DELEGATION',
         'WORKER-RULE': 'WORKER-RULE'
       };
 
