@@ -1,18 +1,16 @@
-/* global Hktdc, Backbone */
+/*global Hktdc, Backbone*/
 
 Hktdc.Models = Hktdc.Models || {};
 
 (function() {
   'use strict';
 
-  Hktdc.Models.DelegationList = Backbone.Model.extend({
+  Hktdc.Models.DelegationAction = Backbone.Model.extend({
+    idAttribute: 'Key',
 
     initialize: function() {},
 
-    defaults: {
-      userId: '',
-      userCollection: null
-    },
+    defaults: {},
 
     validate: function(attrs, options) {},
 
@@ -20,4 +18,5 @@ Hktdc.Models = Hktdc.Models || {};
       return response;
     }
   });
+
 })();

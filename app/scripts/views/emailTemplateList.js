@@ -99,49 +99,6 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
-    renderDatePicker: function() {
-      var self = this;
-      $('.datepicker-toggle-btn', self.el).mousedown(function(ev) {
-        ev.stopPropagation();
-        // $(this).prev().data('open');
-        // console.log($(ev.target));
-        var $target = $(ev.target).parents('.input-group').find('.date');
-        var open = $target.data('open');
-        // console.log(open);
-        if (open) {
-          $target.datepicker('hide');
-        } else {
-          $target.datepicker('show');
-        }
-      });
-      $('.date', self.el)
-        .datepicker({
-          autoclose: true,
-          format: {
-            toDisplay: function(date, format, language) {
-              return moment(date).format('DD MMM YYYY');
-            },
-            toValue: function(date, format, language) {
-              return moment(date).format('MM/DD/YYYY');
-            }
-          }
-        })
-        .on('changeDate', function(ev) {
-          var $input = ($(ev.target).is('input')) ? $(ev.target) : $(ev.target).find('input');
-          var fieldName = $input.attr('name');
-          var val = moment($(this).datepicker('getDate')).format('MM/DD/YYYY');
-          // console.log(fieldName);
-          // console.log(val);
-          self.updateModel(fieldName, val);
-        })
-        .on('show', function(ev) {
-          $(ev.target).data('open', true);
-        })
-        .on('hide', function(ev) {
-          $(ev.target).data('open', false);
-        });
-    },
-
     renderDataTable: function() {
       var self = this;
       self.templateDataTable = $('#templateTable', self.el).DataTable({

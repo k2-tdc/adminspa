@@ -34,6 +34,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       'worker-rule/:workerRuleId/member/:memberId': 'editWorkerRuleMember',
 
       'delegation': 'delegationList',
+      'delegation/new': 'editDelegationDetail',
       'delegation/:delegationId': 'editDelegationDetail',
 
       'logout': 'logout'
@@ -704,8 +705,49 @@ Hktdc.Routers = Hktdc.Routers || {};
       }
     },
 
-    editDelegationDetail: function() {
+    editDelegationDetail: function(delegationId) {
+      try {
+        Hktdc.Dispatcher.trigger('checkPagePermission', function() {
+          $('#mainContent').addClass('compress');
 
+          var delegationModel = new Hktdc.Models.Delegation({
+            showUser: Hktdc.Config.isAdmin,
+            showDelete: !!delegationId,
+            saveType: (delegationId) ? 'PUT' : 'POST'
+          });
+          var onSuccess = function() {
+            var delegationView = new Hktdc.Views.Delegation({
+              model: delegationModel
+            });
+            delegationView.render();
+            $('#mainContent').empty().html(delegationView.el);
+            var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+            var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+              collection: subheaderMenuListCollection,
+              currentPageName: 'DELEGATION'
+            });
+            subheaderMenuListView.render();
+            $('.subheader-menu-container').html(subheaderMenuListView.el);
+          };
+
+          if (delegationId) {
+            delegationModel.url = delegationModel.url(delegationId);
+            delegationModel.fetch({
+              beforeSend: utils.setAuthHeader,
+              success: function() {
+                onSuccess();
+              },
+              error: function(model, err) {
+                throw err;
+              }
+            });
+          } else {
+            onSuccess();
+          }
+        });
+      } catch (e) {
+        console.error(e);
+      }
     },
 
     logout: function() {

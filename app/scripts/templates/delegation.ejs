@@ -1,0 +1,119 @@
+<div class="panel panel-default">
+  <div class="panel-title panel-heading subheader-menu-container headingOne">
+    <!-- subheader menu here -->
+  </div>
+
+  <div class="email-template-container block-padding" style="padding-top:14px; padding-bottom:14px; ">
+
+    <% if (showUser) { %>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-label text-right">User</div>
+        </div>
+        <div class="col-md-8 userContainer"></div>
+      </div>
+      <div class="sep-space"></div>
+
+    <% } %>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-label text-right">Workflow</div>
+      </div>
+      <div class="col-md-8 workflowContainer"></div>
+    </div>
+    <div class="sep-space"></div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-label text-right">Task</div>
+      </div>
+      <div class="col-md-8 stepContainer">
+        <select class="form-control">
+          <option value="">-- Select --</option>
+        </select>
+      </div>
+    </div>
+    <div class="sep-space"></div>
+
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-label text-right">Applicant Department</div>
+      </div>
+      <div class="col-md-8 departmentContainer"></div>
+    </div>
+    <div class="sep-space"></div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-label text-right">Delegate To</div>
+      </div>
+      <div class="col-md-8 delegationUserContainer">
+        <select class="form-control">
+          <option value="">-- Select --</option>
+        </select>
+      </div>
+    </div>
+    <div class="sep-space"></div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-label text-right">From</div>
+      </div>
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-8 fromDatePicker"></div>
+          <div class="col-md-4">
+            <input type="time" name="StartTime" step="300" class="form-control formTextField" value="<%= StartTime %>">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sep-space"></div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-label text-right">To</div>
+      </div>
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-8 toDatePicker"></div>
+          <div class="col-md-4">
+            <input type="time" name="EndTime" step="300" class="form-control formTextField" value="<%= EndTime%>">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sep-space"></div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-label text-right">Action</div>
+      </div>
+      <div class="col-md-8 actionContainer"></div>
+    </div>
+    <div class="sep-space"></div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-label text-right">Remark</div>
+      </div>
+      <div class="col-md-8">
+        <textarea name="Remark" class="form-control formTextField" cols="30" rows="6"><%= Remark %></textarea>
+      </div>
+    </div>
+    <div class="sep-space"></div>
+
+    <div class="buttons-container">
+      <div class="available-buttons">
+        <% if (showDelete) { %>
+          <button type="button" class="btn btn-primary delBtn">Delete</button>
+        <% } %>
+        <button type="button" class="btn btn-primary saveBtn">Save</button>
+      </div>
+    </div>
+    <!-- </div> -->
+
+  </div>
+</div>
