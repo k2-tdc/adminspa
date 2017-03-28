@@ -237,7 +237,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (Hktdc.Config.isAdmin) {
         userView = new Hktdc.Views.UserSelect({
           collection: self.model.toJSON().userCollection,
-          selectedDelegationUser: self.model.toJSON().UserID,
+          selectedUser: self.model.toJSON().UserID,
           onSelected: function(selectedUser) {
             var userId = selectedUser.UserID;
             self.model.set({
