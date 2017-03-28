@@ -64,28 +64,10 @@ window.Hktdc = {
     var utils = window.utils;
     var Hktdc = window.Hktdc;
     Hktdc.Config.environment = env;
-    Backbone.emulateHTTP = true;
-    Backbone.emulateJSON = true;
     try {
       var self = this;
-      utils.setURL(env);
-      NProgress.configure({
-        parent: '#page',
-        showSpinner: false
-      });
-
-      // if (true) {
+      this.globalConfig(env);
       if (env === 'uat' || env === 'chsw') {
-        // TODO: prevent user make request when getting token
-        $(document).ajaxStart(function(event) {
-          // console.log(event);
-          NProgress.start();
-        });
-        $(document).ajaxComplete(function() {
-          NProgress.done();
-          // NProgress.remove();
-        });
-
         /* check auth */
         utils.getAccessToken(function(accessToken) {
           console.debug('[ main.js ] - setting up application...');
@@ -115,7 +97,8 @@ window.Hktdc = {
                 console.log('refreshed the access token: ', accessToken);
               }, function(error) {
                 /* else */
-                console.log('OAuth Error', error);
+                console.error('OAuth Error', error);
+                alert('Error on refreshing the access token. Redirect to login page.');
                 window.location.href = window.Hktdc.Config.OAuthLoginUrl;
               });
             }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
@@ -124,7 +107,8 @@ window.Hktdc = {
           });
         }, function(error) {
           /* else */
-          console.log('OAuth Error', error);
+          console.error('OAuth Error', error);
+          alert('Error on getting the access token on init. Redirect to login page.');
           window.location.href = window.Hktdc.Config.OAuthLoginUrl;
         });
       } else {
@@ -238,7 +222,6 @@ window.Hktdc = {
   loadMenu: function() {
     var deferred = Q.defer();
     var menuModel = new Hktdc.Models.Menu();
-    console.log(menuModel.url());
     menuModel.fetch({
       beforeSend: utils.setAuthHeader,
       success: function(menuModel) {
@@ -246,8 +229,7 @@ window.Hktdc = {
         // onSuccess(menuModel);
         deferred.resolve(menuModel);
       },
-      error: function(model, error, c) {
-        console.log(c);
+      error: function(model, error) {
         console.error('error on rendering menu');
         deferred.reject(error);
       }
@@ -297,7 +279,35 @@ window.Hktdc = {
         lockConfirmBtn: isLock
       });
     });
+  },
+
+  globalConfig: function(env) {
+    utils.setURL(env);
+    Backbone.emulateHTTP = true;
+    Backbone.emulateJSON = true;
+    NProgress.configure({
+      parent: '#page',
+      showSpinner: false
+    });
+    $.fn.dataTable.moment('DD MMM YYYY');
+    $(document).ajaxStart(function(event) {
+      NProgress.start();
+    });
+    $(document).ajaxComplete(function() {
+      NProgress.done();
+      // NProgress.remove();
+    });
+    $(document).ajaxError(function(xhr, status, err) {
+      if (/4\d{2}$/.test(status.status)) {
+        console.log('xhr: ', xhr);
+        console.log('status: ', status);
+        console.log('err: ', err);
+        alert('server return 4xx error, redirect to login page.');
+        window.location.href = window.Hktdc.Config.OAuthLoginUrl;
+      }
+    });
   }
+
 };
 
 $(document).ready(function() {
