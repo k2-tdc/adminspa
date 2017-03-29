@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -7,8 +7,8 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.Sharing = Backbone.Model.extend({
 
-    url: function(delegationId) {
-      var path = delegationId ? '/' + delegationId : '';
+    url: function(sharingId) {
+      var path = sharingId ? '/' + sharingId : '';
       return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/sharing-list' + path;
     },
 
@@ -26,7 +26,7 @@ Hktdc.Models = Hktdc.Models || {};
       StartTime: '17:30',
       EndTime: '17:30',
       // custom
-      Action: '',
+      Permission: '',
       Remark: ''
     },
 

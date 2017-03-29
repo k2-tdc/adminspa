@@ -52,8 +52,8 @@ Hktdc.Models = Hktdc.Models || {};
       // } else if (moment(attrs.EndDate, 'YYYY-MM-DD HH:mm').unix() < moment().unix()) {
       //   errors.push('End Date must be later than today.');
       }
-      if (!attrs.Action) {
-        errors.push('Action is required.');
+      if (!attrs.Permission) {
+        errors.push('Permission is required.');
       }
       if (errors.length) {
         return errors.join('<br/>');
