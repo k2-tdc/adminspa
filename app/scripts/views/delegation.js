@@ -411,8 +411,8 @@ Hktdc.Views = Hktdc.Views || {};
       var rawData = this.model.toJSON();
       var data = {
         UserID: (rawData.showUser) ? rawData.UserID : Hktdc.Config.userID,
-        ProcessID: rawData.ProcessID,
-        TaskID: rawData.TaskID,
+        ProcessID: rawData.ProcessID || 0,
+        TaskID: rawData.TaskID || 0,
         Dept: rawData.Dept,
         DelegateUserID: rawData.DelegateUserID,
         StartDate: rawData.StartDate + ' ' + rawData.StartTime,

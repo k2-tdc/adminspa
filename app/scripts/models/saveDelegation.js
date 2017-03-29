@@ -33,7 +33,7 @@ Hktdc.Models = Hktdc.Models || {};
       if (!attrs.UserID) {
         errors.push('User is required.');
       }
-      if (!attrs.TaskID && attrs.ProcessID === 0) {
+      if (!attrs.TaskID && attrs.ProcessID !== 0) {
         errors.push('Task is required.');
       }
       if (!attrs.Dept) {
