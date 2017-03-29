@@ -48,7 +48,7 @@ Hktdc.Views = Hktdc.Views || {};
       }
 
       self.model.on('change:stepCollection', function(model, stepCol) {
-        self.renderTaskSelect(!stepCol.length);
+        self.renderTaskSelect(String(model.toJSON().ProcessID) === '0');
       });
       self.model.on('change:delegationUserCollection', function() {
         self.renderDelegationUserSelect();
