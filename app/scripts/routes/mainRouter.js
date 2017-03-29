@@ -37,6 +37,10 @@ Hktdc.Routers = Hktdc.Routers || {};
       'delegation/new': 'editDelegationDetail',
       'delegation/:delegationId': 'editDelegationDetail',
 
+      'sharing': 'sharingList',
+      'sharing/new': 'editSharingDetail',
+      'sharing/:sharingId': 'editSharingDetail',
+
       'logout': 'logout'
     },
 
@@ -736,6 +740,83 @@ Hktdc.Routers = Hktdc.Routers || {};
               beforeSend: utils.setAuthHeader,
               success: function(model) {
                 delegationModel.set({
+                  StartDate: moment(model.toJSON().StartDate).format('YYYY-MM-DD'),
+                  StartTime: moment(model.toJSON().StartDate).format('HH:mm'),
+                  EndDate: moment(model.toJSON().EndDate).format('YYYY-MM-DD'),
+                  EndTime: moment(model.toJSON().EndDate).format('HH:mm')
+                });
+                onSuccess();
+              },
+              error: function(model, err) {
+                throw err;
+              }
+            });
+          } else {
+            onSuccess();
+          }
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    sharingList: function() {
+      try {
+        Hktdc.Dispatcher.trigger('checkPagePermission', function() {
+          var sharingListModel = new Hktdc.Models.SharingList({});
+          sharingListModel.set({
+            showSearch: Hktdc.Config.isAdmin
+          });
+          var sharingListView = new Hktdc.Views.SharingList({
+            model: sharingListModel
+          });
+          sharingListView.render();
+          $('#mainContent').empty().html(sharingListView.el);
+
+          var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+          var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+            collection: subheaderMenuListCollection,
+            currentPageName: 'SHARING'
+          });
+          subheaderMenuListView.render();
+          $('.subheader-menu-container').html(subheaderMenuListView.el);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    editSharingDetail: function(delegationId) {
+      try {
+        Hktdc.Dispatcher.trigger('checkPagePermission', function() {
+          $('#mainContent').addClass('compress');
+
+          var sharingModel = new Hktdc.Models.Sharing({
+            showUser: Hktdc.Config.isAdmin,
+            showDelete: !!delegationId,
+            saveType: (delegationId) ? 'PUT' : 'POST'
+          });
+          var onSuccess = function() {
+            var delegationView = new Hktdc.Views.Sharing({
+              model: sharingModel
+            });
+            delegationView.render();
+            $('#mainContent').empty().html(delegationView.el);
+            var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+            var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+              collection: subheaderMenuListCollection,
+              currentPageName: 'DELEGATION'
+            });
+            subheaderMenuListView.render();
+            $('.subheader-menu-container').html(subheaderMenuListView.el);
+          };
+
+          if (delegationId) {
+            sharingModel.url = sharingModel.url(delegationId);
+            sharingModel.fetch({
+              beforeSend: utils.setAuthHeader,
+              success: function(model) {
+                sharingModel.set({
                   StartDate: moment(model.toJSON().StartDate).format('YYYY-MM-DD'),
                   StartTime: moment(model.toJSON().StartDate).format('HH:mm'),
                   EndDate: moment(model.toJSON().EndDate).format('YYYY-MM-DD'),

@@ -5,11 +5,8 @@ Hktdc.Models = Hktdc.Models || {};
 (function() {
   'use strict';
 
-  Hktdc.Models.DeleteDelegation = Backbone.Model.extend({
-
-    url: function(id) {
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/delegation-list/' + id;
-    },
+  Hktdc.Models.SharingPermission = Backbone.Model.extend({
+    idAttribute: 'Key',
 
     initialize: function() {},
 
