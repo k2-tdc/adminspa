@@ -105,7 +105,7 @@ Hktdc.Views = Hktdc.Views || {};
               return {
                 id: item.DelegationID,
                 user: item.User,
-                workflowTask: item.Workflow + (item.Task) ? ' / ' + item.Task : '',
+                workflowTask: item.Workflow + ((item.Task) ? ' / ' + item.Task : ''),
                 department: item.Department,
                 sharingPermission: item.DelegateTo + ' / ' + item.Action,
                 date: moment(item.StartDate).format('DD MMM YYYY') + ' -<br />' + moment(item.EndDate).format('DD MMM YYYY'),

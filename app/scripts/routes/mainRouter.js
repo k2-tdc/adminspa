@@ -688,7 +688,8 @@ Hktdc.Routers = Hktdc.Routers || {};
         Hktdc.Dispatcher.trigger('checkPagePermission', function() {
           var delegationListModel = new Hktdc.Models.DelegationList({});
           delegationListModel.set({
-            showSearch: Hktdc.Config.isAdmin
+            showSearch: Hktdc.Config.isAdmin,
+            UserId: utils.getParameterByName('UserId')
           });
           var delegationListView = new Hktdc.Views.DelegationList({
             model: delegationListModel
@@ -765,7 +766,8 @@ Hktdc.Routers = Hktdc.Routers || {};
         Hktdc.Dispatcher.trigger('checkPagePermission', function() {
           var sharingListModel = new Hktdc.Models.SharingList({});
           sharingListModel.set({
-            showSearch: Hktdc.Config.isAdmin
+            showSearch: Hktdc.Config.isAdmin,
+            UserId: utils.getParameterByName('UserId')
           });
           var sharingListView = new Hktdc.Views.SharingList({
             model: sharingListModel
