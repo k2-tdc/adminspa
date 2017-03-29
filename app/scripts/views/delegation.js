@@ -21,7 +21,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       if (this.model.toJSON().ProcessID) {
         setTimeout(function() {
-          self.loadStep()
+          self.loadTask()
             .then(function(stepCollection) {
               self.model.set({
                 stepCollection: stepCollection
@@ -157,10 +157,10 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
-    loadStep: function() {
+    loadTask: function() {
       var deferred = Q.defer();
       var stpeCollection = new Hktdc.Collections.Step();
-      stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessName, encodeURI('Email Delegation'));
+      stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessName, encodeURI('Delegation'));
       stpeCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
@@ -202,7 +202,7 @@ Hktdc.Views = Hktdc.Views || {};
             ProcessID: process.ProcessID,
             ProcessName: process.ProcessName
           });
-          self.loadStep()
+          self.loadTask()
             .then(function(stepCollection) {
               self.model.set({
                 StepID: null,
