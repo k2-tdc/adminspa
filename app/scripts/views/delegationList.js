@@ -13,6 +13,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {
       'click .searchBtn': 'doSearch',
+      'click .deleteBtn': 'removeButtonHandler',
       'click .createBtn': 'goToCreatePage'
     },
 
@@ -163,18 +164,18 @@ Hktdc.Views = Hktdc.Views || {};
           $checkbox.prop('checked', isCheckAll);
           var rowData = self.delegationDataTable.row($(this)).data();
 
-          var originalMember = self.model.toJSON().selectedTemplate;
-          var newMember;
+          var originalDelegation = self.model.toJSON().selectedDelegation;
+          var newDelegation;
 
           if (isCheckAll) {
-            newMember = _.union(originalMember, [rowData.id]);
+            newDelegation = _.union(originalDelegation, [rowData.id]);
           } else {
-            newMember = _.reject(originalMember, function(memberGUID) {
-              return rowData.id === memberGUID;
+            newDelegation = _.reject(originalDelegation, function(delegationId) {
+              return rowData.id === delegationId;
             });
           }
           self.model.set({
-            selectedTemplate: newMember
+            selectedDelegation: newDelegation
           });
           // $checkbox.trigger('change');
         });
@@ -187,14 +188,14 @@ Hktdc.Views = Hktdc.Views || {};
       $('#delegationTable tbody', self.el).on('change', '.selectDelegation', function(ev) {
         ev.stopPropagation();
         var rowData = self.delegationDataTable.row($(this).parents('tr')).data();
-        var originalMember = self.model.toJSON().selectedTemplate;
-        var newMember;
-        // console.log(originalMember);
+        var originalDelegation = self.model.toJSON().selectedDelegation;
+        var newDelegation;
+        // console.log(originalDelegation);
         if ($(this).prop('checked')) {
-          newMember = _.union(originalMember, [rowData.id]);
+          newDelegation = _.union(originalDelegation, [rowData.id]);
         } else {
-          newMember = _.reject(originalMember, function(memberGUID) {
-            return rowData.id === memberGUID;
+          newDelegation = _.reject(originalDelegation, function(delegationId) {
+            return rowData.id === delegationId;
           });
         }
         var allChecked = (
@@ -204,7 +205,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         $('#delegationTable thead .checkAll', self.el).prop('checked', allChecked);
         self.model.set({
-          selectedTemplate: newMember
+          selectedDelegation: newDelegation
         });
       });
     },
@@ -258,6 +259,56 @@ Hktdc.Views = Hktdc.Views || {};
       var queryParams = _.pick(this.model.toJSON(), 'UserId');
       var queryString = utils.getQueryString(queryParams, true);
       return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/delegation-list' + queryString;
+    },
+
+    removeButtonHandler: function() {
+      var self = this;
+      var removeSingleDelegation = function(id) {
+        var deferred = Q.defer();
+        var deleteDelegationModel = new Hktdc.Models.DeleteDelegation();
+        deleteDelegationModel.url = deleteDelegationModel.url(id);
+        deleteDelegationModel.save(null, {
+          type: 'DELETE',
+          beforeSend: utils.setAuthHeader,
+          success: function(model, response) {
+            if (String(response.Success) === '1') {
+              deferred.resolve();
+            } else {
+              deferred.reject(response.Msg);
+            }
+          },
+          error: function(err) {
+            deferred.reject(err);
+          }
+        });
+        return deferred.promise;
+      };
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'Confirmation',
+        message: 'Are you sure to remove this delegation?',
+        onConfirm: function() {
+          Q.all(_.map(self.model.toJSON().selectedDelegation, function(sharingId) {
+            return removeSingleDelegation(sharingId);
+          }))
+          .then(function() {
+            Hktdc.Dispatcher.trigger('closeConfirm');
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'deleted',
+              type: 'confirmation',
+              title: 'confirmation'
+            });
+            self.doSearch();
+          })
+          .fail(function(err) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: err,
+              type: 'error',
+              title: 'error on deleting delegation'
+            });
+          });
+        }
+      });
     }
+
   });
 })();

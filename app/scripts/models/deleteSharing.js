@@ -8,7 +8,7 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.DeleteSharing = Backbone.Model.extend({
 
     url: function(id) {
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/shring-list/' + id;
+      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/sharing-list/' + id;
     },
 
     initialize: function() {},

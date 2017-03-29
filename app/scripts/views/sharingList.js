@@ -13,6 +13,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {
       'click .searchBtn': 'doSearch',
+      'click .deleteBtn': 'removeButtonHandler',
       'click .createBtn': 'goToCreatePage'
     },
 
@@ -163,18 +164,18 @@ Hktdc.Views = Hktdc.Views || {};
           $checkbox.prop('checked', isCheckAll);
           var rowData = self.sharingDataTable.row($(this)).data();
 
-          var originalMember = self.model.toJSON().selectedTemplate;
-          var newMember;
+          var originalSharing = self.model.toJSON().selectedSharing;
+          var newSharing;
 
           if (isCheckAll) {
-            newMember = _.union(originalMember, [rowData.id]);
+            newSharing = _.union(originalSharing, [rowData.id]);
           } else {
-            newMember = _.reject(originalMember, function(memberGUID) {
-              return rowData.id === memberGUID;
+            newSharing = _.reject(originalSharing, function(sharingId) {
+              return rowData.id === sharingId;
             });
           }
           self.model.set({
-            selectedTemplate: newMember
+            selectedSharing: newSharing
           });
           // $checkbox.trigger('change');
         });
@@ -187,14 +188,14 @@ Hktdc.Views = Hktdc.Views || {};
       $('#sharingTable tbody', self.el).on('change', '.selectSharing', function(ev) {
         ev.stopPropagation();
         var rowData = self.sharingDataTable.row($(this).parents('tr')).data();
-        var originalMember = self.model.toJSON().selectedTemplate;
-        var newMember;
-        // console.log(originalMember);
+        var originalSharing = self.model.toJSON().selectedSharing;
+        var newSharing;
+        // console.log(originalSharing);
         if ($(this).prop('checked')) {
-          newMember = _.union(originalMember, [rowData.id]);
+          newSharing = _.union(originalSharing, [rowData.id]);
         } else {
-          newMember = _.reject(originalMember, function(memberGUID) {
-            return rowData.id === memberGUID;
+          newSharing = _.reject(originalSharing, function(sharingId) {
+            return rowData.id === sharingId;
           });
         }
         var allChecked = (
@@ -204,7 +205,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         $('#sharingTable thead .checkAll', self.el).prop('checked', allChecked);
         self.model.set({
-          selectedTemplate: newMember
+          selectedSharing: newSharing
         });
       });
     },
@@ -258,6 +259,56 @@ Hktdc.Views = Hktdc.Views || {};
       var queryParams = _.pick(this.model.toJSON(), 'UserId');
       var queryString = utils.getQueryString(queryParams, true);
       return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/sharing-list' + queryString;
+    },
+
+    removeButtonHandler: function() {
+      var self = this;
+      var removeSingleSharing = function(id) {
+        var deferred = Q.defer();
+        var deleteSharingModel = new Hktdc.Models.DeleteSharing();
+        deleteSharingModel.url = deleteSharingModel.url(id);
+        deleteSharingModel.save(null, {
+          type: 'DELETE',
+          beforeSend: utils.setAuthHeader,
+          success: function(model, response) {
+            if (String(response.Success) === '1') {
+              deferred.resolve();
+            } else {
+              deferred.reject(response.Msg);
+            }
+          },
+          error: function(err) {
+            deferred.reject(err);
+          }
+        });
+        return deferred.promise;
+      };
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'Confirmation',
+        message: 'Are you sure to remove this sharing?',
+        onConfirm: function() {
+          Q.all(_.map(self.model.toJSON().selectedSharing, function(sharingId) {
+            return removeSingleSharing(sharingId);
+          }))
+            .then(function() {
+              Hktdc.Dispatcher.trigger('closeConfirm');
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'deleted',
+                type: 'confirmation',
+                title: 'confirmation'
+              });
+              self.doSearch();
+            })
+            .fail(function(err) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: err,
+                type: 'error',
+                title: 'error on deleting sharing'
+              });
+            });
+        }
+      });
     }
+
   });
 })();
