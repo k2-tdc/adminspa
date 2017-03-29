@@ -20,6 +20,8 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     initialize: function() {
+      $('#mainContent').removeClass('compress');
+      
       this.model.on('change:selectedMember', function(model, value) {
         console.log(value);
       });

@@ -14,6 +14,9 @@ Hktdc.Models = Hktdc.Models || {};
     initialize: function() {},
 
     defaults: {
+      // update only
+      // DelegationID: '',
+
       UserID: '',
       ProcessID: '',
       TaskID: '',

@@ -422,7 +422,9 @@ Hktdc.Views = Hktdc.Views || {};
         Action: rawData.Action,
         Remark: rawData.Remark
       };
-
+      if (rawData.saveType === 'PUT') {
+        data.DelegationID = rawData.DelegationID;
+      }
       var saveDelegationModel = new Hktdc.Models.SaveDelegation();
       saveDelegationModel.set(data);
       saveDelegationModel.on('invalid', function(model, err) {

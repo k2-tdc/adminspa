@@ -17,6 +17,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     initialize: function() {
+      $('#mainContent').removeClass('compress');
       // this.listenTo(this.model, 'change', this.render);
       // var self = this;
     },

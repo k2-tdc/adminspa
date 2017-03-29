@@ -18,6 +18,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function() {
       console.debug('[ views/emailProfileList.js ] - Initialize');
+      $('#mainContent').removeClass('compress');
     },
 
     render: function() {
@@ -89,7 +90,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       self.delegationDataTable = $('#delegationTable', self.el).DataTable({
         bRetrieve: true,
-        order: [0, 'desc'],
+        order: [1, 'desc'],
         searching: false,
         profileUsering: true,
         oLanguage: {
@@ -132,7 +133,8 @@ Hktdc.Views = Hktdc.Views || {};
           data: 'id',
           render: function() {
             return '<input type="checkbox" class="selectDelegation"/>';
-          }
+          },
+          orderable: false
         }, {
           data: 'user'
         }, {
