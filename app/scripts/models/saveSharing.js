@@ -5,7 +5,7 @@ Hktdc.Models = Hktdc.Models || {};
 (function() {
   'use strict';
 
-  Hktdc.Models.SaveDelegation = Backbone.Model.extend({
+  Hktdc.Models.SaveSharing = Backbone.Model.extend({
 
     url: function() {
       return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/delegation-list';
@@ -33,8 +33,11 @@ Hktdc.Models = Hktdc.Models || {};
       if (!attrs.UserID) {
         errors.push('User is required.');
       }
-      if (!attrs.TaskID && attrs.ProcessID !== 0) {
+      if (attrs.TaskID == 0) {
         errors.push('Task is required.');
+      }
+      if (attrs.ProcessID == 0) {
+        errors.push('Workflow is required.');
       }
       if (!attrs.Dept) {
         errors.push('Department is required.');

@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -7,17 +7,10 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.Department = Backbone.Model.extend({
 
-    url: '',
-
-    initialize: function() {},
-
-    defaults: {},
-
-    validate: function(attrs, options) {},
+    idAttribute: 'DeptCode',
 
     parse: function(response, options) {
       return response;
     }
   });
-
 })();

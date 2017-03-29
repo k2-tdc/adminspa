@@ -38,7 +38,7 @@ Hktdc.Views = Hktdc.Views || {};
       }
 
       self.model.on('change:stepCollection', function(model, stepCol) {
-        self.renderTaskSelect(String(model.toJSON().ProcessID) === '0');
+        self.renderTaskSelect();
       });
     },
 
@@ -157,7 +157,7 @@ Hktdc.Views = Hktdc.Views || {};
     loadTask: function() {
       var deferred = Q.defer();
       var stpeCollection = new Hktdc.Collections.Step();
-      stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessName, encodeURI('Sharing'));
+      stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessName, encodeURI('Delegation'));
       stpeCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
@@ -190,11 +190,6 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderProcessSelect: function() {
       var self = this;
-      self.model.toJSON().processCollection.unshift({
-        ProcessID: 0,
-        ProcessDisplayName: '-- All Workflow --',
-        ProcessName: 'All'
-      });
       var processSelectView = new Hktdc.Views.ProcessSelect({
         collection: self.model.toJSON().processCollection,
         selectedProcess: self.model.toJSON().ProcessID,
@@ -223,12 +218,11 @@ Hktdc.Views = Hktdc.Views || {};
       $('.workflowContainer', self.el).html(processSelectView.el);
     },
 
-    renderTaskSelect: function(disabled) {
+    renderTaskSelect: function() {
       var self = this;
       var stepSelectView = new Hktdc.Views.StepSelect({
         collection: self.model.toJSON().stepCollection,
         selectedStep: self.model.toJSON().TaskID,
-        disabled: disabled,
         onSelected: function(taskId) {
           self.model.set({
             TaskID: taskId
@@ -299,6 +293,10 @@ Hktdc.Views = Hktdc.Views || {};
     renderDepartmentSelection: function(departmentCollection) {
       try {
         var self = this;
+        departmentCollection.unshift({
+          DeptName: '-- All Department --',
+          DeptCode: 'All'
+        });
         var departmentSelectView = new Hktdc.Views.DepartmentSelect({
           collection: departmentCollection,
           selectedDepartment: self.model.toJSON().Dept,
@@ -396,7 +394,7 @@ Hktdc.Views = Hktdc.Views || {};
         UserID: (rawData.showUser) ? rawData.UserID : Hktdc.Config.userID,
         ProcessID: rawData.ProcessID || 0,
         TaskID: rawData.TaskID || 0,
-        Dept: rawData.Dept,
+        Dept: rawData.Dept || 'All',
         DelegateUserID: rawData.DelegateUserID,
         StartDate: rawData.StartDate + ' ' + rawData.StartTime,
         EndDate: rawData.EndDate + ' ' + rawData.EndTime,
@@ -415,6 +413,7 @@ Hktdc.Views = Hktdc.Views || {};
           title: 'Error'
         });
       });
+      console.log(data);
       // console.log('is valid: ', saveSharingModel.isValid());
       if (saveSharingModel.isValid()) {
         saveSharingModel.save({}, {

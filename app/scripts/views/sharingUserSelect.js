@@ -47,7 +47,6 @@ Hktdc.Views = Hktdc.Views || {};
       });
       this.$el.append(sharingUserItemView.el);
       setTimeout(function() {
-        console.log('>>>>>', self.selectedSharingUser);
         self.$el.find('option[value="' + self.selectedSharingUser + '"]').prop('selected', true);
       });
     }
