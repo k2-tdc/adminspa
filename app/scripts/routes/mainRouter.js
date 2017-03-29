@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils, $, Q, _ */
+/* global Hktdc, Backbone, utils, $, Q, _, moment */
 
 Hktdc.Routers = Hktdc.Routers || {};
 
@@ -734,7 +734,13 @@ Hktdc.Routers = Hktdc.Routers || {};
             delegationModel.url = delegationModel.url(delegationId);
             delegationModel.fetch({
               beforeSend: utils.setAuthHeader,
-              success: function() {
+              success: function(model) {
+                delegationModel.set({
+                  StartDate: moment(model.toJSON().StartDate).format('YYYY-MM-DD'),
+                  StartTime: moment(model.toJSON().StartDate).format('HH:mm'),
+                  EndDate: moment(model.toJSON().EndDate).format('YYYY-MM-DD'),
+                  EndTime: moment(model.toJSON().EndDate).format('HH:mm')
+                });
                 onSuccess();
               },
               error: function(model, err) {

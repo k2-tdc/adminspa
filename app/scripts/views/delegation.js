@@ -18,7 +18,8 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     initialize: function() {
-      if (this.model.toJSON().ProcessName) {
+      var self = this;
+      if (this.model.toJSON().ProcessID) {
         setTimeout(function() {
           self.loadStep()
             .then(function(stepCollection) {
@@ -28,9 +29,9 @@ Hktdc.Views = Hktdc.Views || {};
             });
         });
       }
-      if (this.model.toJSON().Department) {
+      if (this.model.toJSON().Dept) {
         setTimeout(function() {
-          self.loadDelegationUser()
+          self.loadDelegationUser(self.model.toJSON().Dept)
             .then(function(delegationUserCollection) {
               self.model.set({
                 delegationUserCollection: delegationUserCollection
@@ -319,7 +320,7 @@ Hktdc.Views = Hktdc.Views || {};
         var self = this;
         var actionSelectView = new Hktdc.Views.DelegationActionSelect({
           collection: actionCollection,
-          selectedDepartment: self.model.toJSON().Action,
+          selectedDelegationAction: self.model.toJSON().Action,
           onSelect: function(departmentId) {
             self.model.set({
               Action: departmentId
@@ -338,7 +339,7 @@ Hktdc.Views = Hktdc.Views || {};
       var DelegationUserView;
       if (Hktdc.Config.isAdmin) {
         DelegationUserView = new Hktdc.Views.DelegationUserSelect({
-          collection: self.model.toJSON().userCollection,
+          collection: self.model.toJSON().delegationUserCollection,
           selectedDelegationUser: self.model.toJSON().DelegateUserID,
           onSelected: function(delegationUserId) {
             self.model.set({
