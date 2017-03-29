@@ -50,6 +50,9 @@ Hktdc.Views = Hktdc.Views || {};
       self.model.on('change:stepCollection', function(model, stepCol) {
         self.renderTaskSelect();
       });
+      self.model.on('change:sharingUserCollection', function() {
+        self.renderSharingUserSelect();
+      });
     },
 
     render: function() {

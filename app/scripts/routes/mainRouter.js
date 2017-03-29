@@ -831,6 +831,9 @@ Hktdc.Routers = Hktdc.Routers || {};
               }
             });
           } else {
+            sharingModel.set({
+              Dept: 'All'
+            });
             onSuccess();
           }
         });
