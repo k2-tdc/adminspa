@@ -74,10 +74,10 @@ Hktdc.Views = Hktdc.Views || {};
       }
       var userView = new Hktdc.Views.UserSelect({
         collection: self.model.toJSON().userCollection,
-        selectedUser: self.model.toJSON().userId,
+        selectedUser: self.model.toJSON().UserId,
         onSelected: function(user) {
           self.model.set({
-            userId: user.UserID
+            UserId: user.UserID
           });
         }
       });
@@ -247,7 +247,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     doSearch: function() {
       // console.log(this.model.toJSON());
-      var queryParams = _.pick(this.model.toJSON(), 'userId');
+      var queryParams = _.pick(this.model.toJSON(), 'UserId');
       var currentBase = Backbone.history.getHash().split('?')[0];
       var queryString = utils.getQueryString(queryParams, true);
       Backbone.history.navigate(currentBase + queryString);
@@ -255,7 +255,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getAjaxURL: function() {
-      var queryParams = _.pick(this.model.toJSON(), 'userId');
+      var queryParams = _.pick(this.model.toJSON(), 'UserId');
       var queryString = utils.getQueryString(queryParams, true);
       return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/delegation-list' + queryString;
     }

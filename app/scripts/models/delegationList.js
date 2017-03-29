@@ -10,7 +10,7 @@ Hktdc.Models = Hktdc.Models || {};
     initialize: function() {},
 
     defaults: {
-      userId: '',
+      UserId: '',
       userCollection: null
     },
 
