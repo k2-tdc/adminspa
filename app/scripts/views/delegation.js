@@ -412,7 +412,7 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var rawData = this.model.toJSON();
       var data = {
-        UserID: rawData.UserID,
+        UserID: (rawData.showUser) ? rawData.UserID : Hktdc.Config.userID,
         ProcessID: rawData.ProcessID,
         TaskID: rawData.TaskID,
         Dept: rawData.Dept,
