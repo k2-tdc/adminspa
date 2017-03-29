@@ -82,8 +82,10 @@ Hktdc.Views = Hktdc.Views || {};
           }, {
             silent: true
           });
+          if (self.model.toJSON().showUser) {
+            self.renderUserSelect();
+          }
           self.renderProcessSelect();
-          self.renderUserSelect();
           self.renderDepartmentSelection(departmentCollection);
           self.renderActionSelect(actionCollection);
           self.renderDatePicker();
@@ -251,21 +253,19 @@ Hktdc.Views = Hktdc.Views || {};
     renderUserSelect: function() {
       var self = this;
       var userView;
-      if (Hktdc.Config.isAdmin) {
-        userView = new Hktdc.Views.UserSelect({
-          collection: self.model.toJSON().userCollection,
-          selectedUser: self.model.toJSON().UserID,
-          onSelected: function(selectedUser) {
-            var userId = selectedUser.UserID;
-            self.model.set({
-              UserID: userId
-            });
-          }
-        });
+      userView = new Hktdc.Views.UserSelect({
+        collection: self.model.toJSON().userCollection,
+        selectedUser: self.model.toJSON().UserID,
+        onSelected: function(selectedUser) {
+          var userId = selectedUser.UserID;
+          self.model.set({
+            UserID: userId
+          });
+        }
+      });
 
-        userView.render();
-        $('.userContainer', self.el).html(userView.el);
-      }
+      userView.render();
+      $('.userContainer', self.el).html(userView.el);
     },
 
     renderDatePicker: function() {
@@ -353,20 +353,18 @@ Hktdc.Views = Hktdc.Views || {};
     renderDelegationUserSelect: function() {
       var self = this;
       var DelegationUserView;
-      if (Hktdc.Config.isAdmin) {
-        DelegationUserView = new Hktdc.Views.DelegationUserSelect({
-          collection: self.model.toJSON().delegationUserCollection,
-          selectedDelegationUser: self.model.toJSON().DelegateUserID,
-          onSelected: function(delegationUserId) {
-            self.model.set({
-              DelegateUserID: delegationUserId
-            });
-          }
-        });
+      DelegationUserView = new Hktdc.Views.DelegationUserSelect({
+        collection: self.model.toJSON().delegationUserCollection,
+        selectedDelegationUser: self.model.toJSON().DelegateUserID,
+        onSelected: function(delegationUserId) {
+          self.model.set({
+            DelegateUserID: delegationUserId
+          });
+        }
+      });
 
-        DelegationUserView.render();
-        $('.delegationUserContainer', self.el).html(DelegationUserView.el);
-      }
+      DelegationUserView.render();
+      $('.delegationUserContainer', self.el).html(DelegationUserView.el);
     },
 
     updateFormModel: function(ev) {
