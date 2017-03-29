@@ -36,6 +36,16 @@ Hktdc.Views = Hktdc.Views || {};
           }
         });
       }
+      if (self.model.toJSON().Dept) {
+        setTimeout(function() {
+          self.loadSharingUser(self.model.toJSON().Dept)
+            .then(function(sharingUserCollection) {
+              self.model.set({
+                sharingUserCollection: sharingUserCollection
+              });
+            });
+        });
+      }
 
       self.model.on('change:stepCollection', function(model, stepCol) {
         self.renderTaskSelect();
@@ -55,21 +65,18 @@ Hktdc.Views = Hktdc.Views || {};
           return [];
         }),
         self.loadDepartment(),
-        self.loadPermission(),
-        self.loadSharingUser()
+        self.loadPermission()
       ])
         .then(function(results) {
           var processCollection = results[0];
           var userCollection = results[1];
           var departmentCollection = results[2];
           var actionCollection = results[3];
-          var sharingUserCollection = results[4];
 
           console.debug('[ sharing.js ] - load all the remote resources');
           self.model.set({
             processCollection: processCollection,
-            userCollection: userCollection,
-            sharingUserCollection: sharingUserCollection
+            userCollection: userCollection
           }, {
             silent: true
           });
@@ -80,7 +87,6 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderDepartmentSelection(departmentCollection);
           self.renderPermissionSelect(actionCollection);
           self.renderDatePicker();
-          self.renderSharingUserSelect();
         })
 
         .catch(function(err) {
@@ -123,9 +129,11 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
-    loadSharingUser: function(departmentCode) {
+    loadSharingUser: function(input) {
       var deferred = Q.defer();
-      var sharingUserCollection = new Hktdc.Collections.SharingUser();
+      var departmentCode = (input === 'All') ? '' : input;
+      var sharingUserCollection = new Hktdc.Collections.DelegationUser();
+      sharingUserCollection.url = sharingUserCollection.url(departmentCode);
       sharingUserCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
@@ -304,6 +312,13 @@ Hktdc.Views = Hktdc.Views || {};
             self.model.set({
               Dept: departmentId
             });
+            self.loadSharingUser(departmentId)
+              .then(function(sharingUserCollection) {
+                self.model.set({
+                  DelegateUserID: null,
+                  sharingUserCollection: sharingUserCollection
+                });
+              });
           }
         });
         departmentSelectView.render();
@@ -319,9 +334,9 @@ Hktdc.Views = Hktdc.Views || {};
         var actionSelectView = new Hktdc.Views.SharingPermissionSelect({
           collection: actionCollection,
           selectedSharingAction: self.model.toJSON().Permission,
-          onSelect: function(departmentId) {
+          onSelect: function(permissionId) {
             self.model.set({
-              Permission: departmentId
+              Permission: permissionId
             });
           }
         });
@@ -398,7 +413,7 @@ Hktdc.Views = Hktdc.Views || {};
         DelegateUserID: rawData.DelegateUserID,
         StartDate: rawData.StartDate + ' ' + rawData.StartTime,
         EndDate: rawData.EndDate + ' ' + rawData.EndTime,
-        Action: rawData.Action,
+        Permission: rawData.Permission,
         Remark: rawData.Remark
       };
       if (rawData.saveType === 'PUT') {
