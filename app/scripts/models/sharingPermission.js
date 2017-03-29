@@ -6,7 +6,7 @@ Hktdc.Models = Hktdc.Models || {};
   'use strict';
 
   Hktdc.Models.SharingPermission = Backbone.Model.extend({
-    idAttribute: 'Key',
+    idAttribute: 'Value',
 
     initialize: function() {},
 

@@ -19,8 +19,8 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       var self = this;
       this.collection.unshift({
-        Value: '-- Select --',
-        Key: ''
+        Key: '-- Select --',
+        Value: ''
       });
 
       this.collection.each(this.renderSharingPermissionItem);
@@ -50,7 +50,7 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'option',
     attributes: function() {
       return {
-        value: String(this.model.toJSON().Key)
+        value: String(this.model.toJSON().Value)
       };
     },
 

@@ -6,7 +6,7 @@ Hktdc.Models = Hktdc.Models || {};
   'use strict';
 
   Hktdc.Models.DelegationAction = Backbone.Model.extend({
-    idAttribute: 'Key',
+    idAttribute: 'Value',
 
     initialize: function() {},
 

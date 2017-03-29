@@ -156,12 +156,12 @@ Hktdc.Views = Hktdc.Views || {};
 
     loadTask: function() {
       var deferred = Q.defer();
-      var stpeCollection = new Hktdc.Collections.Step();
-      stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessName, encodeURI('Delegation'));
-      stpeCollection.fetch({
+      var stepCollection = new Hktdc.Collections.Step();
+      stepCollection.url = stepCollection.url(this.model.toJSON().ProcessName, encodeURI('Delegation'));
+      stepCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
-          deferred.resolve(stpeCollection);
+          deferred.resolve(stepCollection);
         },
         error: function(collection, err) {
           deferred.reject(err);
