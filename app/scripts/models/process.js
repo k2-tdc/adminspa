@@ -6,8 +6,7 @@ Hktdc.Models = Hktdc.Models || {};
   'use strict';
 
   Hktdc.Models.Process = Backbone.Model.extend({
-
-    initialize: function() {},
+    idAttribute: 'ProcessID',
 
     defaults: {
       FULL_NAME: '',

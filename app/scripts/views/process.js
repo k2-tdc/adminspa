@@ -19,9 +19,10 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-      // console.log(this.collection.toJSON());
       var self = this;
-      this.collection.unshift({ProcessDisplayName: '-- Select --', ProcessID: 0});
+      if (!this.collection.get(0)) {
+        this.collection.unshift({ProcessDisplayName: '-- Select --', ProcessID: 0});
+      }
       this.collection.each(this.renderProcessItem);
       self.$el.prop('disabled', self.disable);
       setTimeout(function() {

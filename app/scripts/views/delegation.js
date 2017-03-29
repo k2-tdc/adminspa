@@ -200,7 +200,7 @@ Hktdc.Views = Hktdc.Views || {};
     renderProcessSelect: function() {
       var self = this;
       self.model.toJSON().processCollection.unshift({
-        ProcessID: '0',
+        ProcessID: 0,
         ProcessDisplayName: '-- All Workflow --',
         ProcessName: 'All'
       });
