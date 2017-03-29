@@ -84,7 +84,7 @@ window.utils = {
       if (Cookies.get('ACCESS-TOKEN')) {
         xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get('ACCESS-TOKEN'));
       } else {
-        window.location.href = window.Hktdc.Config.OAuthLoginUrl;
+        window.location.href = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
       }
     }
   },
