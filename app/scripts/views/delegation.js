@@ -454,11 +454,10 @@ Hktdc.Views = Hktdc.Views || {};
                 message: 'You have deleted the record!'
               });
               Hktdc.Dispatcher.trigger('closeConfirm');
-              Backbone.history.navigate('emaildelegation', {
-                trigger: true
-              });
+              window.history.back();
             })
-            .catch(function() {
+            .catch(function(err) {
+              console.error(err);
               Hktdc.Dispatcher.trigger('openAlert', {
                 type: 'error',
                 title: 'error',
@@ -471,20 +470,19 @@ Hktdc.Views = Hktdc.Views || {};
 
     doDeleteDelegation: function(delegationId) {
       var deferred = Q.defer();
-      var DeleteDelegationModel = Backbone.Model.extend({
-        url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-delegations/' + delegationId
-      });
-      var DeleteDelegationtance = new DeleteDelegationModel();
-      DeleteDelegationtance.save(null, {
+      var deleteDelegationModel = new Hktdc.Models.DeleteDelegation();
+      deleteDelegationModel.save(null, {
         type: 'DELETE',
         beforeSend: utils.setAuthHeader,
         success: function(model, response) {
-          // Hktdc.Dispatcher.trigger('reloadMenu');
-          deferred.resolve();
+          if (String(response.Success) === '1') {
+            deferred.resolve();
+          } else {
+            deferred.reject(response.Msg);
+          }
         },
         error: function(err) {
-          deferred.reject();
-          console.log(err);
+          deferred.reject(err);
         }
       });
       return deferred.promise;
