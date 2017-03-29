@@ -107,7 +107,7 @@ Hktdc.Views = Hktdc.Views || {};
                 user: item.User,
                 workflowTask: item.Workflow + (item.Task) ? ' / ' + item.Task : '',
                 department: item.Department,
-                sharingAction: item.DelegateTo + ' / ' + item.Action,
+                sharingPermission: item.DelegateTo + ' / ' + item.Action,
                 date: moment(item.StartDate).format('DD MMM YYYY') + ' -<br />' + moment(item.EndDate).format('DD MMM YYYY'),
                 endDate: item.EndDate
               };
@@ -143,7 +143,7 @@ Hktdc.Views = Hktdc.Views || {};
         }, {
           data: 'department'
         }, {
-          data: 'sharingAction'
+          data: 'sharingPermission'
         }, {
           data: 'date'
         }]
