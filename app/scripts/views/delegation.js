@@ -21,12 +21,19 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       if (this.model.toJSON().ProcessID) {
         setTimeout(function() {
-          self.loadTask()
-            .then(function(stepCollection) {
-              self.model.set({
-                stepCollection: stepCollection
+          if (String(process.ProcessID) !== '0') {
+            self.loadTask()
+              .then(function(stepCollection) {
+                self.model.set({
+                  stepCollection: stepCollection
+                });
               });
+          } else {
+            self.model.set({
+              stepCollection: new Hktdc.Collections.Step([]),
+              TaskID: 0
             });
+          }
         });
       }
       if (this.model.toJSON().Dept) {
@@ -40,13 +47,10 @@ Hktdc.Views = Hktdc.Views || {};
         });
       }
 
-      var self = this;
-      self.model.on('change:stepCollection', function() {
-        console.log('change step collection');
-        self.renderTaskSelect();
+      self.model.on('change:stepCollection', function(model, stepCol) {
+        self.renderTaskSelect(!stepCol.length);
       });
       self.model.on('change:delegationUserCollection', function() {
-        console.log('change delegationUser Collection');
         self.renderDelegationUserSelect();
       });
     },
@@ -193,7 +197,11 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderProcessSelect: function() {
       var self = this;
-      self.model.toJSON().processCollection.unshift({ ProcessID: '0', ProcessDisplayName: '-- All Workflow --' });
+      self.model.toJSON().processCollection.unshift({
+        ProcessID: '0',
+        ProcessDisplayName: '-- All Workflow --',
+        ProcessName: 'All'
+      });
       var processSelectView = new Hktdc.Views.ProcessSelect({
         collection: self.model.toJSON().processCollection,
         selectedProcess: self.model.toJSON().ProcessID,
@@ -202,27 +210,35 @@ Hktdc.Views = Hktdc.Views || {};
             ProcessID: process.ProcessID,
             ProcessName: process.ProcessName
           });
-          self.loadTask()
-            .then(function(stepCollection) {
-              self.model.set({
-                StepID: null,
-                stepCollection: stepCollection
+          if (String(process.ProcessID) !== '0') {
+            self.loadTask()
+              .then(function(stepCollection) {
+                self.model.set({
+                  TaskID: 0,
+                  stepCollection: stepCollection
+                });
               });
+          } else {
+            self.model.set({
+              TaskID: 0,
+              stepCollection: new Hktdc.Collections.Step([])
             });
+          }
         }
       });
       processSelectView.render();
       $('.workflowContainer', self.el).html(processSelectView.el);
     },
 
-    renderTaskSelect: function() {
+    renderTaskSelect: function(disabled) {
       var self = this;
       var stepSelectView = new Hktdc.Views.StepSelect({
         collection: self.model.toJSON().stepCollection,
         selectedStep: self.model.toJSON().TaskID,
-        onSelected: function(stepId) {
+        disabled: disabled,
+        onSelected: function(taskId) {
           self.model.set({
-            TaskID: stepId
+            TaskID: taskId
           });
         }
       });

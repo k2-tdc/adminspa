@@ -110,6 +110,7 @@ Hktdc.Views = Hktdc.Views || {};
           StepID: 0
         });
         this.collection.each(this.renderStepItem);
+        this.$el.prop('disabled', this.disabled);
       } catch (e) {
         console.error(e);
       }
