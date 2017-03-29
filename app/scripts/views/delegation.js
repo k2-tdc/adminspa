@@ -488,6 +488,7 @@ Hktdc.Views = Hktdc.Views || {};
     doDeleteDelegation: function(delegationId) {
       var deferred = Q.defer();
       var deleteDelegationModel = new Hktdc.Models.DeleteDelegation();
+      deleteDelegationModel.url = deleteDelegationModel.url(this.model.toJSON().DelegationID);
       deleteDelegationModel.save(null, {
         type: 'DELETE',
         beforeSend: utils.setAuthHeader,
