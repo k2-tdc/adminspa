@@ -19,9 +19,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function() {
       var self = this;
-      if (this.model.toJSON().ProcessID) {
+      if (self.model.toJSON().ProcessID) {
         setTimeout(function() {
-          if (String(process.ProcessID) !== '0') {
+          if (String(self.model.toJSON().ProcessID) !== '0') {
             self.loadTask()
               .then(function(stepCollection) {
                 self.model.set({
@@ -36,7 +36,7 @@ Hktdc.Views = Hktdc.Views || {};
           }
         });
       }
-      if (this.model.toJSON().Dept) {
+      if (self.model.toJSON().Dept) {
         setTimeout(function() {
           self.loadDelegationUser(self.model.toJSON().Dept)
             .then(function(delegationUserCollection) {
@@ -434,10 +434,9 @@ Hktdc.Views = Hktdc.Views || {};
       });
       // console.log('is valid: ', saveDelegationModel.isValid());
       if (saveDelegationModel.isValid()) {
-        var method = (saveDelegationModel.toJSON().DelegationId) ? 'PUT' : 'POST';
         saveDelegationModel.save({}, {
           beforeSend: utils.setAuthHeader,
-          type: method,
+          type: rawData.saveType,
           success: function(mymodel, response) {
             // console.log(response);
             if (response.Success) {
