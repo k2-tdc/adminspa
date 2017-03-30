@@ -420,7 +420,7 @@ Hktdc.Views = Hktdc.Views || {};
         Remark: rawData.Remark
       };
       if (rawData.saveType === 'PUT') {
-        data.SharingID = rawData.SharingID;
+        data.DelegationID = rawData.DelegationID;
       }
       var saveSharingModel = new Hktdc.Models.SaveSharing();
       saveSharingModel.set(data);
