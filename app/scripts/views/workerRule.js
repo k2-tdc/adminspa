@@ -64,15 +64,27 @@ Hktdc.Views = Hktdc.Views || {};
     loadProcess: function() {
       var deferred = Q.defer();
       var processCollection = new Hktdc.Collections.Process();
-      processCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(processCollection);
-        },
-        error: function(collection, response) {
-          deferred.reject(response);
-        }
-      });
+      var doFetch = function() {
+        processCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(processCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting process.');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -83,15 +95,27 @@ Hktdc.Views = Hktdc.Views || {};
         deferred.resolve(self.model.toJSON().fullUserCollection);
       } else {
         var fullUserCollection = new Hktdc.Collections.FullUser();
-        fullUserCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            deferred.resolve(fullUserCollection);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          fullUserCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              deferred.resolve(fullUserCollection);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on loading full users');
+              }
+            }
+          });
+        };
+        doFetch();
       }
       return deferred.promise;
     },
@@ -301,35 +325,45 @@ Hktdc.Views = Hktdc.Views || {};
 
       if (saveWorkerRuleModel.isValid()) {
         saveWorkerRuleModel.url = saveWorkerRuleModel.url(this.model.toJSON().UserRoleGUID);
-        saveWorkerRuleModel.save({}, {
-          beforeSend: utils.setAuthHeader,
-          type: this.model.toJSON().saveType,
-          success: function(model, response) {
-            if (String(response.Success) === '1') {
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'saved',
-                type: 'confirmation',
-                title: 'Confirmation'
-              });
-              Backbone.history.navigate('worker-rule', {
-                trigger: true
-              });
-            } else {
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: response.Msg || 'Error on saving.',
-                type: 'error',
-                title: 'Error'
-              });
+        var doSave = function() {
+          saveWorkerRuleModel.save({}, {
+            beforeSend: utils.setAuthHeader,
+            type: this.model.toJSON().saveType,
+            success: function(model, response) {
+              if (String(response.Success) === '1') {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: 'saved',
+                  type: 'confirmation',
+                  title: 'Confirmation'
+                });
+                Backbone.history.navigate('worker-rule', {
+                  trigger: true
+                });
+              } else {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: response.Msg || 'Error on saving.',
+                  type: 'error',
+                  title: 'Error'
+                });
+              }
+            },
+            error: function(model, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doSave();
+                });
+              } else {
+                console.error(response.responseText);
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: 'error on saving worker rule',
+                  type: 'error',
+                  title: 'Error'
+                });
+              }
             }
-          },
-          error: function(err) {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              message: err,
-              type: 'error',
-              title: 'error on saving user role'
-            });
-          }
-        });
+          });
+        };
+        doSave();
       }
     },
 
@@ -342,36 +376,45 @@ Hktdc.Views = Hktdc.Views || {};
           // console.log(self.model.toJSON().selectedWorker);
           var delWorkerRuleModel = new Hktdc.Models.DeleteWorkerRule();
           delWorkerRuleModel.url = delWorkerRuleModel.url(self.model.toJSON().WorkerRuleId);
-          delWorkerRuleModel.save(null, {
-            type: 'DELETE',
-            beforeSend: utils.setAuthHeader,
-            success: function(model, response) {
-              if (String(response.Success) === '1') {
-                Hktdc.Dispatcher.trigger('closeConfirm');
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: 'Deleted',
-                  type: 'confirmation',
-                  title: 'Confirmation'
-                });
+          var doSave = function() {
+            delWorkerRuleModel.save(null, {
+              type: 'DELETE',
+              beforeSend: utils.setAuthHeader,
+              success: function(model, response) {
+                if (String(response.Success) === '1') {
+                  Hktdc.Dispatcher.trigger('closeConfirm');
+                  Hktdc.Dispatcher.trigger('openAlert', {
+                    message: 'Deleted',
+                    type: 'confirmation',
+                    title: 'Confirmation'
+                  });
 
-                Backbone.history.navigate('worker-rule', {trigger: true});
-              } else {
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: response.Msg || 'Error on delete',
-                  type: 'error',
-                  title: 'Error'
-                });
+                  Backbone.history.navigate('worker-rule', {trigger: true});
+                } else {
+                  Hktdc.Dispatcher.trigger('openAlert', {
+                    message: response.Msg || 'Error on delete',
+                    type: 'error',
+                    title: 'Error'
+                  });
+                }
+              },
+              error: function(model, response) {
+                if (response.status === 401) {
+                  utils.getAccessToken(function() {
+                    doSave();
+                  });
+                } else {
+                  console.error(response.responseText);
+                  Hktdc.Dispatcher.trigger('openAlert', {
+                    message: 'Error on saving user role',
+                    type: 'error',
+                    title: 'Error'
+                  });
+                }
               }
-            },
-            error: function(model, err) {
-              // console.log(err);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: err.responseText || 'Error on saving user role',
-                type: 'error',
-                title: 'Error'
-              });
-            }
-          });
+            });
+          };
+          doSave();
         }
       });
     },
@@ -404,16 +447,28 @@ Hktdc.Views = Hktdc.Views || {};
         var deferred = Q.defer();
         var delMemberModel = new Hktdc.Models.DeleteWorkerRuleMember();
         delMemberModel.url = delMemberModel.url(settingId);
-        delMemberModel.save(null, {
-          type: 'DELETE',
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            deferred.resolve();
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doSave = function() {
+          delMemberModel.save(null, {
+            type: 'DELETE',
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              deferred.resolve();
+            },
+            error: function(model, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doSave();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on remove worker rule member');
+              }
+            }
+          });
+        };
+        doSave();
         return deferred.promise;
       };
       if (!(self.model.toJSON().selectedMember && self.model.toJSON().selectedMember.length)) {

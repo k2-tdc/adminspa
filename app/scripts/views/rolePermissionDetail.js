@@ -83,15 +83,27 @@ Hktdc.Views = Hktdc.Views || {};
         deferred.resolve(roleCollection);
       } else {
         roleCollection.url = roleCollection.url(processId);
-        roleCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            deferred.resolve(roleCollection);
-          },
-          error: function(collection, err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          roleCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              deferred.resolve(roleCollection);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on getting role.');
+              }
+            }
+          });
+        };
+        doFetch();
       }
 
       return deferred.promise;
@@ -100,15 +112,27 @@ Hktdc.Views = Hktdc.Views || {};
     loadProcess: function(processId) {
       var deferred = Q.defer();
       var processCollection = new Hktdc.Collections.Process();
-      processCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(processCollection);
-        },
-        error: function(collection, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        processCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(processCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting process');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -120,16 +144,28 @@ Hktdc.Views = Hktdc.Views || {};
         deferred.resolve(processPermissionCollection);
       } else {
         processPermissionCollection.url = processPermissionCollection.url(processId);
-        processPermissionCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function(res) {
-            console.log('res: ', res);
-            deferred.resolve(res);
-          },
-          error: function(collection, err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          processPermissionCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function(res) {
+              console.log('res: ', res);
+              deferred.resolve(res);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on getting process permission.');
+              }
+            }
+          });
+        };
+        doFetch();
       }
 
       return deferred.promise;
@@ -237,16 +273,28 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var delPermissionModel = new Hktdc.Models.DeleteRolePermission();
       delPermissionModel.url = delPermissionModel.url(permissionGUIDArray);
-      delPermissionModel.save(null, {
-        type: 'DELETE',
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve();
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doSave = function() {
+        delPermissionModel.save(null, {
+          type: 'DELETE',
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve();
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on deleting permission.');
+            }
+          }
+        });
+      };
+      doSave();
       return deferred.promise;
     },
 
@@ -258,16 +306,28 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       var savePermissionModel = new Hktdc.Models.SaveRolePermission({ data: data });
-      savePermissionModel.save(null, {
-        type: self.model.toJSON().saveType,
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve();
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doSave = function() {
+        savePermissionModel.save(null, {
+          type: self.model.toJSON().saveType,
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve();
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on saving permission.');
+            }
+          }
+        });
+      };
+      doSave();
       return deferred.promise;
     },
 

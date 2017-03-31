@@ -91,26 +91,37 @@ Hktdc.Views = Hktdc.Views || {};
           var saveUserRoleMemberModel = new Hktdc.Models.SaveUserRoleMember();
           saveUserRoleMemberModel.clear();
           saveUserRoleMemberModel.url = saveUserRoleMemberModel.url(rawData.UserRoleMemberGUID);
-          saveUserRoleMemberModel.save(null, {
-            type: 'DELETE',
-            beforeSend: utils.setAuthHeader,
-            success: function() {
-              Hktdc.Dispatcher.trigger('closeConfirm');
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Deleted',
-                type: 'confirmation',
-                title: 'Confirmation'
-              });
-              Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
-            },
-            error: function(err) {
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: err,
-                type: 'error',
-                title: 'error on saving user role'
-              });
-            }
-          });
+          var doSave = function() {
+            saveUserRoleMemberModel.save(null, {
+              type: 'DELETE',
+              beforeSend: utils.setAuthHeader,
+              success: function() {
+                Hktdc.Dispatcher.trigger('closeConfirm');
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: 'Deleted',
+                  type: 'confirmation',
+                  title: 'Confirmation'
+                });
+                Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
+              },
+              error: function(model, response) {
+                if (response.status === 401) {
+                  utils.getAccessToken(function() {
+                    doSave();
+                  });
+                } else {
+                  console.error(response.responseText);
+
+                  Hktdc.Dispatcher.trigger('openAlert', {
+                    message: 'error on deleting user role member.',
+                    type: 'error',
+                    title: 'error on saving user role'
+                  });
+                }
+              }
+            });
+          };
+          doSave();
         }
       });
     },
@@ -128,26 +139,36 @@ Hktdc.Views = Hktdc.Views || {};
           : ''
       });
       saveUserRoleMemberModel.url = saveUserRoleMemberModel.url(rawData.UserRoleMemberGUID);
-      saveUserRoleMemberModel.save(null, {
-        beforeSend: utils.setAuthHeader,
-        type: this.model.toJSON().saveType,
-        success: function() {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'saved',
-            type: 'confirmation',
-            title: 'Confirmation'
-          });
+      var doSave = function() {
+        saveUserRoleMemberModel.save(null, {
+          beforeSend: utils.setAuthHeader,
+          type: this.model.toJSON().saveType,
+          success: function() {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'saved',
+              type: 'confirmation',
+              title: 'Confirmation'
+            });
 
-          Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
-        },
-        error: function(err) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'error on saving user role'
-          });
-        }
-      });
+            Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              });
+            } else {
+              console.error(response.responseText);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'error on saving user role member',
+                type: 'error',
+                title: 'error on saving user role'
+              });
+            }
+          }
+        });
+      };
+      doSave();
     }
 
   });
