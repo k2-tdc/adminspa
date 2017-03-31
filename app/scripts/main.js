@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils, _, $, Q, NProgress */
+/* global Hktdc, Backbone, utils, _, $, Q, NProgress, alert */
 
 window.Hktdc = {
   Models: {},
@@ -87,21 +87,6 @@ window.Hktdc = {
               });
               Backbone.history.start();
             });
-
-            /* to prevent token expiry when using the SPA */
-            setInterval(function() {
-              Hktdc.Config.gettingToken = true;
-              utils.getAccessToken(function(accessToken) {
-                Hktdc.Config.gettingToken = false;
-                Hktdc.Config.accessToken = accessToken;
-                console.log('refreshed the access token: ', accessToken);
-              }, function(error) {
-                /* else */
-                console.error('OAuth Error', error);
-                alert('Error on refreshing the access token. Redirect to login page.');
-                window.location.href = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
-              });
-            }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
           }, function(error) {
             console.log('Error on getting userID', error);
           });
@@ -198,6 +183,13 @@ window.Hktdc = {
               });
               newMenuModel.set('activeTab', Backbone.history.getHash());
               $('#menu').html(newMenuView.el);
+            })
+            .catch(function(error) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: error,
+                type: 'error',
+                title: 'Error'
+              });
             });
         });
         // console.log(Hktdc.Config.environments[Hktdc.Config.environment].SPAHomePath);
@@ -215,25 +207,40 @@ window.Hktdc = {
         onSuccess(menuModel);
       })
       .catch(function(error) {
-        console.error(error);
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: error,
+          type: 'error',
+          title: 'Error'
+        });
       });
   },
 
   loadMenu: function() {
     var deferred = Q.defer();
     var menuModel = new Hktdc.Models.Menu();
-    menuModel.fetch({
-      beforeSend: utils.setAuthHeader,
-      success: function(menuModel) {
-        // menuModel.set('activeTab', Backbone.history.getHash());
-        // onSuccess(menuModel);
-        deferred.resolve(menuModel);
-      },
-      error: function(model, error) {
-        console.error('error on rendering menu');
-        deferred.reject(error);
-      }
-    });
+    var doFetch = function() {
+      menuModel.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function(menuModel) {
+          // menuModel.set('activeTab', Backbone.history.getHash());
+          // onSuccess(menuModel);
+          deferred.resolve(menuModel);
+        },
+        error: function(model, response) {
+          if (response.status === 401) {
+            utils.getAccessToken(function() {
+              doFetch();
+            }, function(err) {
+              deferred.reject(err);
+            });
+          } else {
+            console.error(response.responseText);
+            deferred.reject('error on rendering menu');
+          }
+        }
+      });
+    };
+    doFetch();
     return deferred.promise;
   },
 
@@ -299,15 +306,6 @@ window.Hktdc = {
     $(document).ajaxComplete(function() {
       NProgress.done();
       // NProgress.remove();
-    });
-    $(document).ajaxError(function(xhr, status, err) {
-      if (/4\d{2}$/.test(status.status)) {
-        console.log('xhr: ', xhr);
-        console.log('status: ', status);
-        console.log('err: ', err);
-        alert('server return 4xx error, redirect to login page.');
-        window.location.href = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
-      }
     });
   }
 
