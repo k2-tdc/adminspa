@@ -167,8 +167,7 @@ Hktdc.Views = Hktdc.Views || {};
       var saveData = {
         Dept: rawData.Dept,
         ExpiryDate: (rawData.ExpiryDate && moment(rawData.ExpiryDate, 'YYYY-MM-DD').isValid())
-          // ? moment(rawData.ExpiryDate, 'YYYY-MM-DD').format('YYYYMMDD')
-          ? rawData.ExpiryDate + ' ' + '00:00:00'
+          ? moment(rawData.ExpiryDate, 'YYYY-MM-DD').format('YYYYMMDD')
           : '',
         Query: rawData.Query,
         User: rawData.User,

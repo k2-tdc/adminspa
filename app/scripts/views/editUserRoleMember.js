@@ -124,8 +124,7 @@ Hktdc.Views = Hktdc.Views || {};
       saveUserRoleMemberModel.set({
         UserRoleMemberGUID: rawData.UserRoleMemberGUID,
         ExpiryDate: (rawData.ExpiryDate && moment(rawData.ExpiryDate, 'YYYY-MM-DD').isValid())
-          // ? moment(rawData.ExpiryDate, 'YYYY-MM-DD').format('YYYYMMDD')
-          ? rawData.ExpiryDate + ' ' + '00:00:00'
+          ? moment(rawData.ExpiryDate, 'YYYY-MM-DD').format('YYYYMMDD')
           : ''
       });
       saveUserRoleMemberModel.url = saveUserRoleMemberModel.url(rawData.UserRoleMemberGUID);
