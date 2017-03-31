@@ -71,15 +71,27 @@ Hktdc.Views = Hktdc.Views || {};
     loadProcess: function() {
       var deferred = Q.defer();
       var processCollection = new Hktdc.Collections.Process();
-      processCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(processCollection);
-        },
-        error: function(collection, response) {
-          deferred.reject(response);
-        }
-      });
+      var doFetch = function() {
+        processCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(processCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting process');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -87,15 +99,27 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var stepCollection = new Hktdc.Collections.Step();
       stepCollection.url = stepCollection.url(this.model.toJSON().process, 'Email');
-      stepCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(stepCollection);
-        },
-        error: function(collectoin, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        stepCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(stepCollection);
+          },
+          error: function(collectoin, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting step');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -268,16 +292,28 @@ Hktdc.Views = Hktdc.Views || {};
         url: Hktdc.Config.apiURL + '/email-templates/delete-templates'
       });
       var DeleteTemplateInstance = new DeleteTemplateModel({data: data});
-      DeleteTemplateInstance.save(null, {
-        type: 'POST',
-        beforeSend: utils.setAuthHeader,
-        success: function(model, response) {
-          deferred.resolve(response);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doSave = function() {
+        DeleteTemplateInstance.save(null, {
+          type: 'POST',
+          beforeSend: utils.setAuthHeader,
+          success: function(model, response) {
+            deferred.resolve(response);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on deleting template');
+            }
+          }
+        });
+      };
+      doSave();
       return deferred.promise;
     },
 

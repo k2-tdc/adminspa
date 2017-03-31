@@ -104,30 +104,54 @@ Hktdc.Views = Hktdc.Views || {};
     loadProcess: function() {
       var deferred = Q.defer();
       var processCollection = new Hktdc.Collections.Process();
-      processCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(processCollection);
-        },
-        error: function(collection, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        processCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(processCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('Error on getting process list');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
     loadFullUser: function() {
       var deferred = Q.defer();
       var userCollection = new Hktdc.Collections.FullUser();
-      userCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(userCollection);
-        },
-        error: function(collectoin, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        userCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(userCollection);
+          },
+          error: function(collectoin, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('Error on getting full user list');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -135,15 +159,27 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var delegationUserCollection = new Hktdc.Collections.DelegationUser();
       delegationUserCollection.url = delegationUserCollection.url(departmentCode);
-      delegationUserCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(delegationUserCollection);
-        },
-        error: function(collectoin, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        delegationUserCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(delegationUserCollection);
+          },
+          error: function(collectoin, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting delegation users');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -151,15 +187,27 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var delegationActionCollection = new Hktdc.Collections.DelegationAction();
       delegationActionCollection.url = delegationActionCollection.url('Delegation');
-      delegationActionCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(delegationActionCollection);
-        },
-        error: function(collectoin, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        delegationActionCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(delegationActionCollection);
+          },
+          error: function(collectoin, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting action');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -167,15 +215,27 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var stpeCollection = new Hktdc.Collections.Step();
       stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessName, encodeURI('Delegation'));
-      stpeCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(stpeCollection);
-        },
-        error: function(collection, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        stpeCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(stpeCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('Error on getting task.');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -183,17 +243,29 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var departmentCollection = new Hktdc.Collections.Department();
       departmentCollection.url = departmentCollection.url();
-      departmentCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          // console.log('selectedUserCollection: ', self.model.toJSON().selectedUserCollection);
-          // console.log('selectedUserCollection: ', self.model);
-          deferred.resolve(departmentCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        departmentCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            // console.log('selectedUserCollection: ', self.model.toJSON().selectedUserCollection);
+            // console.log('selectedUserCollection: ', self.model);
+            deferred.resolve(departmentCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('Error on getting department');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -434,21 +506,33 @@ Hktdc.Views = Hktdc.Views || {};
       });
       // console.log('is valid: ', saveDelegationModel.isValid());
       if (saveDelegationModel.isValid()) {
-        saveDelegationModel.save({}, {
-          beforeSend: utils.setAuthHeader,
-          type: rawData.saveType,
-          success: function(mymodel, response) {
-            // console.log(response);
-            if (response.Success) {
-              deferred.resolve(response);
-            } else {
-              deferred.reject('save failed');
+        var doSave = function() {
+          saveDelegationModel.save({}, {
+            beforeSend: utils.setAuthHeader,
+            type: rawData.saveType,
+            success: function(mymodel, response) {
+              // console.log(response);
+              if (response.Success) {
+                deferred.resolve(response);
+              } else {
+                deferred.reject('save failed');
+              }
+            },
+            error: function(model, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doSave();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('Save Delegation Error');
+              }
             }
-          },
-          error: function(model, e) {
-            deferred.reject('Submit Request Error' + JSON.stringify(e, null, 2));
-          }
-        });
+          });
+        };
+        doSave();
         // } else {
         //   deferred.reject('Please fill all the fields.');
       }
@@ -487,20 +571,32 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var deleteDelegationModel = new Hktdc.Models.DeleteDelegation();
       deleteDelegationModel.url = deleteDelegationModel.url(this.model.toJSON().DelegationID);
-      deleteDelegationModel.save(null, {
-        type: 'DELETE',
-        beforeSend: utils.setAuthHeader,
-        success: function(model, response) {
-          if (String(response.Success) === '1') {
-            deferred.resolve();
-          } else {
-            deferred.reject(response.Msg);
+      var doSave = function() {
+        deleteDelegationModel.save(null, {
+          type: 'DELETE',
+          beforeSend: utils.setAuthHeader,
+          success: function(model, response) {
+            if (String(response.Success) === '1') {
+              deferred.resolve();
+            } else {
+              deferred.reject(response.Msg);
+            }
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on deleting delegation.');
+            }
           }
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+        });
+      };
+      doSave();
       return deferred.promise;
     }
 
