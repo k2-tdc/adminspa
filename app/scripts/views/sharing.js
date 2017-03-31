@@ -336,7 +336,7 @@ Hktdc.Views = Hktdc.Views || {};
         var self = this;
         var actionSelectView = new Hktdc.Views.SharingPermissionSelect({
           collection: actionCollection,
-          selectedSharingAction: self.model.toJSON().Permission,
+          selectedSharingPermission: self.model.toJSON().Permission,
           onSelect: function(permissionId) {
             self.model.set({
               Permission: permissionId
@@ -461,7 +461,7 @@ Hktdc.Views = Hktdc.Views || {};
         title: 'confirmation',
         message: 'Are you sure to delete the sharing?',
         onConfirm: function() {
-          self.doDeleteSharing(self.model.toJSON().SharingId)
+          self.doDeleteSharing()
             .then(function() {
               Hktdc.Dispatcher.trigger('openAlert', {
                 type: 'success',
@@ -483,10 +483,10 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    doDeleteSharing: function(sharingId) {
+    doDeleteSharing: function() {
       var deferred = Q.defer();
       var deleteSharingModel = new Hktdc.Models.DeleteSharing();
-      deleteSharingModel.url = deleteSharingModel.url(this.model.toJSON().SharingID);
+      deleteSharingModel.url = deleteSharingModel.url(this.model.toJSON().DelegationID);
       deleteSharingModel.save(null, {
         type: 'DELETE',
         beforeSend: utils.setAuthHeader,
