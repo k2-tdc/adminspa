@@ -90,7 +90,7 @@ Hktdc.Routers = Hktdc.Routers || {};
           $('#mainContent').addClass('compress');
 
           var emailTemplateModel = new Hktdc.Models.EmailTemplate({
-            mode: 'EMAIL TEMPLATE'
+            showDelete: !!tId
           });
           var onSuccess = function() {
             var emailTemplateView = new Hktdc.Views.EmailTemplate({
