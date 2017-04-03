@@ -13,6 +13,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {
       'click .saveBtn': 'saveTemplate',
+      'click .deleteBtn': 'deleteButtonHandler',
       'blur .formTextField': 'updateFormModel',
       'change .formCheckboxField': 'updateFormModel'
     },
@@ -201,6 +202,60 @@ Hktdc.Views = Hktdc.Views || {};
         },
         error: function(model, e) {
           deferred.reject('Submit Request Error' + JSON.stringify(e, null, 2));
+        }
+      });
+      return deferred.promise;
+    },
+
+    deleteButtonHandler: function() {
+      var self = this;
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'confirmation',
+        message: 'Are you sure to Delete?',
+        onConfirm: function() {
+          self.doDeleteTemplate()
+            .then(function(response) {
+              Hktdc.Dispatcher.trigger('closeConfirm');
+              if (String(response.success) === '1') {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  type: 'success',
+                  title: 'confirmation',
+                  message: 'Deleted record.'
+                });
+
+                window.history.back();
+              } else {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  type: 'error',
+                  title: 'error',
+                  message: response.Msg
+                });
+              }
+            })
+            .catch(function(err) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                type: 'error',
+                title: 'error',
+                message: 'delete failed'
+              });
+              console.error(err);
+            });
+        }
+      });
+    },
+
+    doDeleteTemplate: function() {
+      var deferred = Q.defer();
+      var data = [{ TemplateId: this.model.toJSON().TemplateId }];
+      var DeleteTemplateModel = new Hktdc.Models.DeleteEmailTemplate({data: data});
+      DeleteTemplateModel.save(null, {
+        type: 'POST',
+        beforeSend: utils.setAuthHeader,
+        success: function(model, response) {
+          deferred.resolve(response);
+        },
+        error: function(err) {
+          deferred.reject(err);
         }
       });
       return deferred.promise;

@@ -264,10 +264,7 @@ Hktdc.Views = Hktdc.Views || {};
           return {TemplateId: tId };
         })
         : [{ TemplateId: input }];
-      var DeleteTemplateModel = Backbone.Model.extend({
-        url: Hktdc.Config.apiURL + '/email-templates/delete-templates'
-      });
-      var DeleteTemplateInstance = new DeleteTemplateModel({data: data});
+      var DeleteTemplateInstance = new Hktdc.Models.DeleteEmailTemplate({data: data});
       DeleteTemplateInstance.save(null, {
         type: 'POST',
         beforeSend: utils.setAuthHeader,
