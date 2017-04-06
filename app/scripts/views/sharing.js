@@ -105,30 +105,54 @@ Hktdc.Views = Hktdc.Views || {};
     loadProcess: function() {
       var deferred = Q.defer();
       var processCollection = new Hktdc.Collections.Process();
-      processCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(processCollection);
-        },
-        error: function(collection, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        processCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(processCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting process');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
     loadFullUser: function() {
       var deferred = Q.defer();
       var userCollection = new Hktdc.Collections.FullUser();
-      userCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(userCollection);
-        },
-        error: function(collectoin, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        userCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(userCollection);
+          },
+          error: function(collectoin, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting full user.');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -137,15 +161,27 @@ Hktdc.Views = Hktdc.Views || {};
       var departmentCode = (input === 'All') ? '' : input;
       var sharingUserCollection = new Hktdc.Collections.DelegationUser();
       sharingUserCollection.url = sharingUserCollection.url(departmentCode);
-      sharingUserCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(sharingUserCollection);
-        },
-        error: function(collectoin, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        sharingUserCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(sharingUserCollection);
+          },
+          error: function(collectoin, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting sharing users.');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -153,15 +189,27 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var sharingPermissionCollection = new Hktdc.Collections.SharingPermission();
       sharingPermissionCollection.url = sharingPermissionCollection.url('Sharing');
-      sharingPermissionCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(sharingPermissionCollection);
-        },
-        error: function(collectoin, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        sharingPermissionCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(sharingPermissionCollection);
+          },
+          error: function(collectoin, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting permission');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -169,15 +217,27 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var stepCollection = new Hktdc.Collections.Step();
       stepCollection.url = stepCollection.url(this.model.toJSON().ProcessName, encodeURI('Delegation'));
-      stepCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(stepCollection);
-        },
-        error: function(collection, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        stepCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(stepCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting task.');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -185,17 +245,29 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var departmentCollection = new Hktdc.Collections.Department();
       departmentCollection.url = departmentCollection.url();
-      departmentCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          // console.log('selectedUserCollection: ', self.model.toJSON().selectedUserCollection);
-          // console.log('selectedUserCollection: ', self.model);
-          deferred.resolve(departmentCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        departmentCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            // console.log('selectedUserCollection: ', self.model.toJSON().selectedUserCollection);
+            // console.log('selectedUserCollection: ', self.model);
+            deferred.resolve(departmentCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting department');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -434,21 +506,33 @@ Hktdc.Views = Hktdc.Views || {};
       console.log(data);
       // console.log('is valid: ', saveSharingModel.isValid());
       if (saveSharingModel.isValid()) {
-        saveSharingModel.save({}, {
-          beforeSend: utils.setAuthHeader,
-          type: rawData.saveType,
-          success: function(mymodel, response) {
-            // console.log(response);
-            if (response.Success) {
-              deferred.resolve(response);
-            } else {
-              deferred.reject('save failed');
+        var doSave = function() {
+          saveSharingModel.save({}, {
+            beforeSend: utils.setAuthHeader,
+            type: rawData.saveType,
+            success: function(mymodel, response) {
+              // console.log(response);
+              if (response.Success) {
+                deferred.resolve(response);
+              } else {
+                deferred.reject('save failed');
+              }
+            },
+            error: function(model, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doSave();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on saving sharing.');
+              }
             }
-          },
-          error: function(model, e) {
-            deferred.reject('Submit Request Error' + JSON.stringify(e, null, 2));
-          }
-        });
+          });
+        };
+        doSave();
         // } else {
         //   deferred.reject('Please fill all the fields.');
       }
@@ -487,20 +571,32 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var deleteSharingModel = new Hktdc.Models.DeleteSharing();
       deleteSharingModel.url = deleteSharingModel.url(this.model.toJSON().DelegationID);
-      deleteSharingModel.save(null, {
-        type: 'DELETE',
-        beforeSend: utils.setAuthHeader,
-        success: function(model, response) {
-          if (String(response.Success) === '1') {
-            deferred.resolve();
-          } else {
-            deferred.reject(response.Msg);
+      var doSave = function() {
+        deleteSharingModel.save(null, {
+          type: 'DELETE',
+          beforeSend: utils.setAuthHeader,
+          success: function(model, response) {
+            if (String(response.Success) === '1') {
+              deferred.resolve();
+            } else {
+              deferred.reject(response.Msg);
+            }
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on deleting sharing.');
+            }
           }
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+        });
+      };
+      doSave();
       return deferred.promise;
     }
 

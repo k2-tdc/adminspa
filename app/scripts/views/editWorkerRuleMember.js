@@ -168,18 +168,30 @@ Hktdc.Views = Hktdc.Views || {};
         var ruleCollection = new Hktdc.Collections.Rule();
         // console.log(this.model.toJSON());
         ruleCollection.url = ruleCollection.url(this.model.toJSON().Code);
-        ruleCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            self.model.set({
-              ruleCollection: ruleCollection
-            });
-            deferred.resolve(ruleCollection);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          ruleCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              self.model.set({
+                ruleCollection: ruleCollection
+              });
+              deferred.resolve(ruleCollection);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on getting rules');
+              }
+            }
+          });
+        };
+        doFetch();
       }
       return deferred.promise;
     },
@@ -192,18 +204,30 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         var natureCollection = new Hktdc.Collections.RuleFieldNature();
         natureCollection.url = natureCollection.url(self.model.toJSON().Code);
-        natureCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            self.model.set({
-              natureCollection: natureCollection
-            });
-            deferred.resolve(natureCollection);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          natureCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              self.model.set({
+                natureCollection: natureCollection
+              });
+              deferred.resolve(natureCollection);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on getting nature.');
+              }
+            }
+          });
+        };
+        doFetch();
       }
       return deferred.promise;
     },
@@ -216,18 +240,30 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         var fullUserCollection = new Hktdc.Collections.FullUser();
         // console.log(self.model.toJSON());
-        fullUserCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            self.model.set({
-              fullUserCollection: fullUserCollection
-            });
-            deferred.resolve(fullUserCollection);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          fullUserCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              self.model.set({
+                fullUserCollection: fullUserCollection
+              });
+              deferred.resolve(fullUserCollection);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on getting full users.');
+              }
+            }
+          });
+        };
+        doFetch();
       }
       return deferred.promise;
     },
@@ -241,18 +277,30 @@ Hktdc.Views = Hktdc.Views || {};
         var gradingCollection = new Hktdc.Collections.Grading();
         // console.log(self.model.toJSON());
         gradingCollection.url = gradingCollection.url(self.model.toJSON().Code);
-        gradingCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            self.model.set({
-              gradingCollection: gradingCollection
-            });
-            deferred.resolve(gradingCollection);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          gradingCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              self.model.set({
+                gradingCollection: gradingCollection
+              });
+              deferred.resolve(gradingCollection);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on gettin grades');
+              }
+            }
+          });
+        };
+        doFetch();
       }
 
       return deferred.promise;
@@ -266,18 +314,30 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         var groupCollection = new Hktdc.Collections.Group();
         groupCollection.url = groupCollection.url();
-        groupCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            self.model.set({
-              groupCollection: groupCollection
-            });
-            deferred.resolve(groupCollection);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          groupCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              self.model.set({
+                groupCollection: groupCollection
+              });
+              deferred.resolve(groupCollection);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on getting group.');
+              }
+            }
+          });
+        };
+        doFetch();
       }
       return deferred.promise;
     },
@@ -289,18 +349,30 @@ Hktdc.Views = Hktdc.Views || {};
         deferred.resolve(self.model.toJSON().levelCollection);
       } else {
         var levelCollection = new Hktdc.Collections.Level();
-        levelCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            self.model.set({
-              levelCollection: levelCollection
-            });
-            deferred.resolve(levelCollection);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          levelCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              self.model.set({
+                levelCollection: levelCollection
+              });
+              deferred.resolve(levelCollection);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on getting level');
+              }
+            }
+          });
+        };
+        doFetch();
       }
       return deferred.promise;
     },
@@ -312,18 +384,30 @@ Hktdc.Views = Hktdc.Views || {};
         deferred.resolve(self.model.toJSON().ruleDepartmentCollection);
       } else {
         var ruleDepartmentCollection = new Hktdc.Collections.RuleDepartment();
-        ruleDepartmentCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            self.model.set({
-              ruleDepartmentCollection: ruleDepartmentCollection
-            });
-            deferred.resolve(ruleDepartmentCollection);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          ruleDepartmentCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              self.model.set({
+                ruleDepartmentCollection: ruleDepartmentCollection
+              });
+              deferred.resolve(ruleDepartmentCollection);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on getting rule department');
+              }
+            }
+          });
+        };
+        doFetch();
       }
       return deferred.promise;
     },
@@ -335,18 +419,30 @@ Hktdc.Views = Hktdc.Views || {};
         deferred.resolve(self.model.toJSON().teamCollection);
       } else {
         var teamCollection = new Hktdc.Collections.Team();
-        teamCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            self.model.set({
-              teamCollection: teamCollection
-            });
-            deferred.resolve(teamCollection);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          teamCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              self.model.set({
+                teamCollection: teamCollection
+              });
+              deferred.resolve(teamCollection);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on getting team');
+              }
+            }
+          });
+        };
+        doFetch();
       }
       return deferred.promise;
     },
@@ -358,18 +454,30 @@ Hktdc.Views = Hktdc.Views || {};
         deferred.resolve(self.model.toJSON().teamFilterCollection);
       } else {
         var teamFilterCollection = new Hktdc.Collections.TeamFilter();
-        teamFilterCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            self.model.set({
-              teamFilterCollection: teamFilterCollection
-            });
-            deferred.resolve(teamFilterCollection);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          teamFilterCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              self.model.set({
+                teamFilterCollection: teamFilterCollection
+              });
+              deferred.resolve(teamFilterCollection);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on getting team filter.');
+              }
+            }
+          });
+        };
+        doFetch();
       }
       return deferred.promise;
     },
@@ -377,15 +485,27 @@ Hktdc.Views = Hktdc.Views || {};
     loadFileTypeRules: function() {
       var deferred = Q.defer();
       var fileRuleModel = new Hktdc.Models.FileRule();
-      fileRuleModel.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(fileRuleModel);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        fileRuleModel.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(fileRuleModel);
+          },
+          error: function(collcetion, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting file type rules.');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -397,19 +517,30 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         var criteriaCollection = new Hktdc.Collections.Criteria();
         criteriaCollection.url = criteriaCollection.url(self.model.toJSON().Code);
-        criteriaCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-
-          success: function() {
-            self.model.set({
-              criteriaCollection: criteriaCollection
-            });
-            deferred.resolve(criteriaCollection);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          criteriaCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              self.model.set({
+                criteriaCollection: criteriaCollection
+              });
+              deferred.resolve(criteriaCollection);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on getting criteria');
+              }
+            }
+          });
+        };
+        doFetch();
       }
       return deferred.promise;
     },
@@ -422,18 +553,30 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         var priorityCollection = new Hktdc.Collections.Priority();
         priorityCollection.url = priorityCollection.url(self.model.toJSON().Code);
-        priorityCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            self.model.set({
-              priorityCollection: priorityCollection
-            });
-            deferred.resolve(priorityCollection);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doFetch = function() {
+          priorityCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              self.model.set({
+                priorityCollection: priorityCollection
+              });
+              deferred.resolve(priorityCollection);
+            },
+            error: function(collection, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on getting priority');
+              }
+            }
+          });
+        };
+        doFetch();
       }
       return deferred.promise;
     },
@@ -1011,26 +1154,36 @@ Hktdc.Views = Hktdc.Views || {};
         onConfirm: function() {
           var delMemberModel = new Hktdc.Models.DeleteWorkerRuleMember();
           delMemberModel.url = delMemberModel.url(self.model.toJSON().WorkerSettingId);
-          delMemberModel.save(null, {
-            type: 'DELETE',
-            beforeSend: utils.setAuthHeader,
-            success: function() {
-              Hktdc.Dispatcher.trigger('closeConfirm');
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Deleted',
-                type: 'confirmation',
-                title: 'Confirmation'
-              });
-              Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
-            },
-            error: function(err) {
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: err,
-                type: 'error',
-                title: 'error on saving user role'
-              });
-            }
-          });
+          var doSave = function() {
+            delMemberModel.save(null, {
+              type: 'DELETE',
+              beforeSend: utils.setAuthHeader,
+              success: function() {
+                Hktdc.Dispatcher.trigger('closeConfirm');
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: 'Deleted',
+                  type: 'confirmation',
+                  title: 'Confirmation'
+                });
+                Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
+              },
+              error: function(model, response) {
+                if (response.status === 401) {
+                  utils.getAccessToken(function() {
+                    doSave();
+                  });
+                } else {
+                  console.error(response.responseText);
+                  Hktdc.Dispatcher.trigger('openAlert', {
+                    message: 'error on deleting worker rule member.',
+                    type: 'error',
+                    title: 'error on saving user role'
+                  });
+                }
+              }
+            });
+          };
+          doSave();
         }
       });
     },
@@ -1082,16 +1235,28 @@ Hktdc.Views = Hktdc.Views || {};
 
       if (saveRuleMemberModel.isValid()) {
         console.log('saveModel: ', saveRuleMemberModel.toJSON());
-        saveRuleMemberModel.save(null, {
-          type: rawData.saveType,
-          beforeSend: utils.setAuthHeader,
-          success: function(model, response) {
-            deferred.resolve(response);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
+        var doSave = function() {
+          saveRuleMemberModel.save(null, {
+            type: rawData.saveType,
+            beforeSend: utils.setAuthHeader,
+            success: function(model, response) {
+              deferred.resolve(response);
+            },
+            error: function(model, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doSave();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('error on saving rule member.');
+              }
+            }
+          });
+        };
+        doSave();
       }
 
       return deferred.promise;
@@ -1125,16 +1290,27 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       ajaxOptions.data = data;
-
-      sendAttachmentModel.save(null, $.extend({}, ajaxOptions, {
-        beforeSend: utils.setAuthHeader,
-        success: function(model, response) {
-          deferred.resolve();
-        },
-        error: function(e) {
-          deferred.reject('Submit File Error' + JSON.stringify(e, null, 2));
-        }
-      }));
+      var doSave = function() {
+        sendAttachmentModel.save(null, $.extend({}, ajaxOptions, {
+          beforeSend: utils.setAuthHeader,
+          success: function(model, response) {
+            deferred.resolve();
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('Submit File Error');
+            }
+          }
+        }));
+      };
+      doSave();
       return deferred.promise;
     }
 

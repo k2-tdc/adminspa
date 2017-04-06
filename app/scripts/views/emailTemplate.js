@@ -64,15 +64,27 @@ Hktdc.Views = Hktdc.Views || {};
     loadProcess: function() {
       var deferred = Q.defer();
       var processCollection = new Hktdc.Collections.Process();
-      processCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(processCollection);
-        },
-        error: function(collection, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        processCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(processCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting process');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -80,15 +92,27 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var stpeCollection = new Hktdc.Collections.Step();
       stpeCollection.url = stpeCollection.url(this.model.toJSON().ProcessName, 'Email');
-      stpeCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(stpeCollection);
-        },
-        error: function(collection, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        stpeCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(stpeCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting step');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -189,21 +213,33 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         var method = 'POST';
       }
-      sendEmailTemplateModel.save({}, {
-        beforeSend: utils.setAuthHeader,
-        type: method,
-        success: function(mymodel, response) {
-          // console.log(response);
-          if (response.Success === '1' || response.Success === 1) {
-            deferred.resolve();
-          } else {
-            deferred.reject(response.Msg);
+      var doSave = function() {
+        sendEmailTemplateModel.save({}, {
+          beforeSend: utils.setAuthHeader,
+          type: method,
+          success: function(mymodel, response) {
+            // console.log(response);
+            if (response.Success === '1' || response.Success === 1) {
+              deferred.resolve();
+            } else {
+              deferred.reject(response.Msg);
+            }
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on saving email template.');
+            }
           }
-        },
-        error: function(model, e) {
-          deferred.reject('Submit Request Error' + JSON.stringify(e, null, 2));
-        }
-      });
+        });
+      };
+      doSave();
       return deferred.promise;
     },
 

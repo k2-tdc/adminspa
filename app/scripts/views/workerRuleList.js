@@ -58,15 +58,27 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var processCollection = new Hktdc.Collections.WorkerRuleProcess();
       processCollection.url = processCollection.url(this.model.toJSON().menuId);
-      processCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(processCollection);
-        },
-        error: function(collection, response) {
-          deferred.reject(response);
-        }
-      });
+      var doFetch = function() {
+        processCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(processCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on loading process');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -178,27 +190,37 @@ Hktdc.Views = Hktdc.Views || {};
           var saveUserRoleModel = new Hktdc.Models.SaveWorkerRule();
           saveUserRoleModel.clear();
           saveUserRoleModel.url = saveUserRoleModel.url(this.model.toJSON().WorkerRuleId);
-          saveUserRoleModel.save(null, {
-            beforeSend: utils.setAuthHeader,
-            type: 'POST',
-            success: function(response) {
-              Hktdc.Dispatcher.trigger('closeConfirm');
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'deleted',
-                type: 'confirmation',
-                title: 'Confirmation'
-              });
+          var doSave = function() {
+            saveUserRoleModel.save(null, {
+              beforeSend: utils.setAuthHeader,
+              type: 'POST',
+              success: function(response) {
+                Hktdc.Dispatcher.trigger('closeConfirm');
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: 'deleted',
+                  type: 'confirmation',
+                  title: 'Confirmation'
+                });
 
-              Backbone.history.navigate('userrole', {trigger: true});
-            },
-            error: function(err) {
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: err,
-                type: 'error',
-                title: 'error on saving user role'
-              });
-            }
-          });
+                Backbone.history.navigate('userrole', {trigger: true});
+              },
+              error: function(model, response) {
+                if (response.status === 401) {
+                  utils.getAccessToken(function() {
+                    doSave();
+                  });
+                } else {
+                  console.error(response.responseText);
+                  Hktdc.Dispatcher.trigger('openAlert', {
+                    message: 'error on saving user role',
+                    type: 'error',
+                    title: 'Error'
+                  });
+                }
+              }
+            });
+          };
+          doSave();
         }
       });
     }

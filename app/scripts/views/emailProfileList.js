@@ -76,15 +76,27 @@ Hktdc.Views = Hktdc.Views || {};
     loadProfileUser: function() {
       var deferred = Q.defer();
       var profileUserCollection = new Hktdc.Collections.ProfileUser();
-      profileUserCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(profileUserCollection);
-        },
-        error: function(collectoin, err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        profileUserCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(profileUserCollection);
+          },
+          error: function(collectoin, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting profile users');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -280,19 +292,30 @@ Hktdc.Views = Hktdc.Views || {};
         url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-profiles/' + tId
       });
       var DeleteProfiletance = new DeleteProfileModel();
-      DeleteProfiletance.save(null, {
-        type: 'DELETE',
-        beforeSend: utils.setAuthHeader,
-        success: function(model, response) {
-          self.profileDataTable.ajax.reload();
-          // Hktdc.Dispatcher.trigger('reloadMenu');
-          deferred.resolve();
-        },
-        error: function(err) {
-          deferred.reject();
-          console.log(err);
-        }
-      });
+      var doSave = function() {
+        DeleteProfiletance.save(null, {
+          type: 'DELETE',
+          beforeSend: utils.setAuthHeader,
+          success: function(model, response) {
+            self.profileDataTable.ajax.reload();
+            // Hktdc.Dispatcher.trigger('reloadMenu');
+            deferred.resolve();
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on deleting profile');
+            }
+          }
+        });
+      };
+      doSave();
       return deferred.promise;
     },
 

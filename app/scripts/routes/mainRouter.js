@@ -110,20 +110,34 @@ Hktdc.Routers = Hktdc.Routers || {};
 
           if (tId) {
             emailTemplateModel.url = emailTemplateModel.url(tId);
-            emailTemplateModel.fetch({
-              beforeSend: utils.setAuthHeader,
-              success: function() {
-                emailTemplateModel.set({
-                  TemplateId: tId,
-                  ProcessId: emailTemplateModel.toJSON().ProcessID,
-                  StepId: emailTemplateModel.toJSON().ActivityGroupID
-                });
-                onSuccess();
-              },
-              error: function(model, err) {
-                throw err;
-              }
-            });
+            var doFetch = function() {
+              emailTemplateModel.fetch({
+                beforeSend: utils.setAuthHeader,
+                success: function() {
+                  emailTemplateModel.set({
+                    TemplateId: tId,
+                    ProcessId: emailTemplateModel.toJSON().ProcessID,
+                    StepId: emailTemplateModel.toJSON().ActivityGroupID
+                  });
+                  onSuccess();
+                },
+                error: function(model, response) {
+                  if (response.status === 401) {
+                    utils.getAccessToken(function() {
+                      doFetch();
+                    });
+                  } else {
+                    console.error(response.responseText);
+                    Hktdc.Dispatcher.trigger('openAlert', {
+                      message: 'Error on getting eamil template',
+                      type: 'error',
+                      title: 'Error'
+                    });
+                  }
+                }
+              });
+            };
+            doFetch();
           } else {
             onSuccess();
           }
@@ -188,47 +202,61 @@ Hktdc.Routers = Hktdc.Routers || {};
 
           if (profileId) {
             emailProfileModel.url = emailProfileModel.url(profileId);
-            emailProfileModel.fetch({
-              beforeSend: utils.setAuthHeader,
-              success: function() {
-                var dayOfWeek = [];
-                if (emailProfileModel.toJSON().WeekDay1) {
-                  dayOfWeek.push('1');
+            var doFetch = function() {
+              emailProfileModel.fetch({
+                beforeSend: utils.setAuthHeader,
+                success: function() {
+                  var dayOfWeek = [];
+                  if (emailProfileModel.toJSON().WeekDay1) {
+                    dayOfWeek.push('1');
+                  }
+                  if (emailProfileModel.toJSON().WeekDay2) {
+                    dayOfWeek.push('2');
+                  }
+                  if (emailProfileModel.toJSON().WeekDay3) {
+                    dayOfWeek.push('3');
+                  }
+                  if (emailProfileModel.toJSON().WeekDay4) {
+                    dayOfWeek.push('4');
+                  }
+                  if (emailProfileModel.toJSON().WeekDay5) {
+                    dayOfWeek.push('5');
+                  }
+                  if (emailProfileModel.toJSON().WeekDay6) {
+                    dayOfWeek.push('6');
+                  }
+                  if (emailProfileModel.toJSON().WeekDay7) {
+                    dayOfWeek.push('7');
+                  }
+                  emailProfileModel.set({
+                    ProfileId: emailProfileModel.toJSON().EmailNotificationProfileID,
+                    ProcessId: emailProfileModel.toJSON().ProcessID,
+                    StepId: emailProfileModel.toJSON().StepID,
+                    TimeSlot: emailProfileModel.toJSON().TimeSlot,
+                    UserId: emailProfileModel.toJSON().UserID || Hktdc.Config.userID,
+                    showProfile: Hktdc.Config.isAdmin,
+                    DayOfWeek: dayOfWeek,
+                    showDelete: true
+                  });
+                  onSuccess();
+                },
+                error: function(model, response) {
+                  if (response.status === 401) {
+                    utils.getAccessToken(function() {
+                      doFetch();
+                    });
+                  } else {
+                    console.error(response.responseText);
+                    Hktdc.Dispatcher.trigger('openAlert', {
+                      message: 'Error on getting email profile.',
+                      type: 'error',
+                      title: 'Error'
+                    });
+                  }
                 }
-                if (emailProfileModel.toJSON().WeekDay2) {
-                  dayOfWeek.push('2');
-                }
-                if (emailProfileModel.toJSON().WeekDay3) {
-                  dayOfWeek.push('3');
-                }
-                if (emailProfileModel.toJSON().WeekDay4) {
-                  dayOfWeek.push('4');
-                }
-                if (emailProfileModel.toJSON().WeekDay5) {
-                  dayOfWeek.push('5');
-                }
-                if (emailProfileModel.toJSON().WeekDay6) {
-                  dayOfWeek.push('6');
-                }
-                if (emailProfileModel.toJSON().WeekDay7) {
-                  dayOfWeek.push('7');
-                }
-                emailProfileModel.set({
-                  ProfileId: emailProfileModel.toJSON().EmailNotificationProfileID,
-                  ProcessId: emailProfileModel.toJSON().ProcessID,
-                  StepId: emailProfileModel.toJSON().StepID,
-                  TimeSlot: emailProfileModel.toJSON().TimeSlot,
-                  UserId: emailProfileModel.toJSON().UserID || Hktdc.Config.userID,
-                  showProfile: Hktdc.Config.isAdmin,
-                  DayOfWeek: dayOfWeek,
-                  showDelete: true
-                });
-                onSuccess();
-              },
-              error: function(model, err) {
-                throw err;
-              }
-            });
+              });
+            };
+            doFetch();
           } else {
             emailProfileModel.set({
               UserId: Hktdc.Config.userID,
@@ -297,15 +325,29 @@ Hktdc.Routers = Hktdc.Routers || {};
 
           if (userRoleId) {
             userRoleModel.url = userRoleModel.url(userRoleId);
-            userRoleModel.fetch({
-              beforeSend: utils.setAuthHeader,
-              success: function() {
-                onSuccess();
-              },
-              error: function(model, err) {
-                throw err;
-              }
-            });
+            var doFetch = function() {
+              userRoleModel.fetch({
+                beforeSend: utils.setAuthHeader,
+                success: function() {
+                  onSuccess();
+                },
+                error: function(model, response) {
+                  if (response.status === 401) {
+                    utils.getAccessToken(function() {
+                      doFetch();
+                    });
+                  } else {
+                    console.error(response.responseText);
+                    Hktdc.Dispatcher.trigger('openAlert', {
+                      message: 'Error on getting user role.',
+                      type: 'error',
+                      title: 'Error'
+                    });
+                  }
+                }
+              });
+            };
+            doFetch();
           } else {
             onSuccess();
           }
@@ -329,15 +371,27 @@ Hktdc.Routers = Hktdc.Routers || {};
             });
             var deferred = Q.defer();
             userRoleModel.url = userRoleModel.url(userRoleId);
-            userRoleModel.fetch({
-              beforeSend: utils.setAuthHeader,
-              success: function() {
-                deferred.resolve(userRoleModel.toJSON());
-              },
-              error: function(model, err) {
-                deferred.reject();
-              }
-            });
+            var doFetch = function() {
+              userRoleModel.fetch({
+                beforeSend: utils.setAuthHeader,
+                success: function() {
+                  deferred.resolve(userRoleModel.toJSON());
+                },
+                error: function(model, response) {
+                  if (response.status === 401) {
+                    utils.getAccessToken(function() {
+                      doFetch();
+                    }, function(err) {
+                      deferred.reject(err);
+                    });
+                  } else {
+                    console.error(response.responseText);
+                    deferred.reject('Error on getting user rule.');
+                  }
+                }
+              });
+            };
+            doFetch();
             return deferred.promise;
           };
           var onSuccess = function() {
@@ -360,18 +414,27 @@ Hktdc.Routers = Hktdc.Routers || {};
               saveType: 'PUT'
             });
             userRoleMemberModel.url = userRoleMemberModel.url(memberId);
-            userRoleMemberModel.fetch({
-              beforeSend: utils.setAuthHeader,
-              success: function() {
-                userRoleMemberView = new Hktdc.Views.EditUserRoleMember({
-                  model: userRoleMemberModel
-                });
-                onSuccess();
-              },
-              error: function(err) {
-                console.error(err);
-              }
-            });
+            var doFetch = function() {
+              userRoleMemberModel.fetch({
+                beforeSend: utils.setAuthHeader,
+                success: function() {
+                  userRoleMemberView = new Hktdc.Views.EditUserRoleMember({
+                    model: userRoleMemberModel
+                  });
+                  onSuccess();
+                },
+                error: function(model, response) {
+                  if (response.status === 401) {
+                    utils.getAccessToken(function() {
+                      doFetch();
+                    });
+                  } else {
+                    console.error(response.responseText);
+                  }
+                }
+              });
+            };
+            doFetch();
           // create
           } else {
             getUserRole()
@@ -433,15 +496,27 @@ Hktdc.Routers = Hktdc.Routers || {};
             var deferred = Q.defer();
             var permissionModel = new Hktdc.Models.RolePermission();
             permissionModel.url = permissionModel.url(permissionId);
-            permissionModel.fetch({
-              beforeSend: utils.setAuthHeader,
-              success: function() {
-                deferred.resolve(permissionModel);
-              },
-              error: function(err) {
-                deferred.reject(err);
-              }
-            });
+            var doFetch = function() {
+              permissionModel.fetch({
+                beforeSend: utils.setAuthHeader,
+                success: function() {
+                  deferred.resolve(permissionModel);
+                },
+                error: function(model, response) {
+                  if (response.status === 401) {
+                    utils.getAccessToken(function() {
+                      doFetch();
+                    }, function(err) {
+                      deferred.reject(err);
+                    });
+                  } else {
+                    console.error(response.responseText);
+                    deferred.reject('Error on getting role permission.');
+                  }
+                }
+              });
+            };
+            doFetch();
             return deferred.promise;
           };
 
@@ -569,15 +644,29 @@ Hktdc.Routers = Hktdc.Routers || {};
 
           if (workerRuleId) {
             workerRuleModel.url = workerRuleModel.url(workerRuleId);
-            workerRuleModel.fetch({
-              beforeSend: utils.setAuthHeader,
-              success: function() {
-                onSuccess();
-              },
-              error: function(model, err) {
-                throw err;
-              }
-            });
+            var doFetch = function() {
+              workerRuleModel.fetch({
+                beforeSend: utils.setAuthHeader,
+                success: function() {
+                  onSuccess();
+                },
+                error: function(model, response) {
+                  if (response.status === 401) {
+                    utils.getAccessToken(function() {
+                      doFetch();
+                    });
+                  } else {
+                    console.error(response.responseText);
+                    Hktdc.Dispatcher.trigger('openAlert', {
+                      message: 'Error on getting worker rule.',
+                      type: 'error',
+                      title: 'Error'
+                    });
+                  }
+                }
+              });
+            };
+            doFetch();
           } else {
             onSuccess();
           }
@@ -600,15 +689,27 @@ Hktdc.Routers = Hktdc.Routers || {};
             });
             var deferred = Q.defer();
             workerRuleModel.url = workerRuleModel.url(userRoleId);
-            workerRuleModel.fetch({
-              beforeSend: utils.setAuthHeader,
-              success: function() {
-                deferred.resolve(workerRuleModel.toJSON());
-              },
-              error: function(model, err) {
-                deferred.reject();
-              }
-            });
+            var doFetch = function() {
+              workerRuleModel.fetch({
+                beforeSend: utils.setAuthHeader,
+                success: function() {
+                  deferred.resolve(workerRuleModel.toJSON());
+                },
+                error: function(model, response) {
+                  if (response.status === 401) {
+                    utils.getAccessToken(function() {
+                      doFetch();
+                    }, function(err) {
+                      deferred.reject(err);
+                    });
+                  } else {
+                    console.error(response.responseText);
+                    deferred.reject('Error on getting worker rule');
+                  }
+                }
+              });
+            };
+            doFetch();
             return deferred.promise;
           };
           var onSuccess = function(renderByRule) {
@@ -637,29 +738,38 @@ Hktdc.Routers = Hktdc.Routers || {};
               if (memberId) {
                 workerRuleMemberModel = new Hktdc.Models.WorkerRuleMember();
                 workerRuleMemberModel.url = workerRuleMemberModel.url(memberId);
-                workerRuleMemberModel.fetch({
-                  beforeSend: utils.setAuthHeader,
-                  success: function() {
-                    // console.log(workerRuleMemberModel.toJSON().DateFrom);
-                    // console.log(moment(workerRuleMemberModel.toJSON().DateFrom).format('DD MMM YYYY'));
-                    workerRuleMemberModel.set({
-                      saveType: 'PUT',
-                      ProcessDisplayName: workerRule.ProcessDisplayName,
-                      Code: workerRule.Code,
-                      Worker: workerRule.Worker
-                      // DateFrom: moment(workerRuleMemberModel.toJSON().DateFrom).format(''),
-                      // DateTo: moment(workerRuleMemberModel.toJSON().DateTo).format(''),
-                    });
-                    workerRuleMemberView = new Hktdc.Views.EditWorkerRuleMember({
-                      model: workerRuleMemberModel
-                    });
-                    // console.log(workerRuleMemberModel.toJSON().Rule);
-                    onSuccess(workerRuleMemberModel.toJSON().Rule);
-                  },
-                  error: function(err) {
-                    console.error(err);
-                  }
-                });
+                var doFetch = function() {
+                  workerRuleMemberModel.fetch({
+                    beforeSend: utils.setAuthHeader,
+                    success: function() {
+                      // console.log(workerRuleMemberModel.toJSON().DateFrom);
+                      // console.log(moment(workerRuleMemberModel.toJSON().DateFrom).format('DD MMM YYYY'));
+                      workerRuleMemberModel.set({
+                        saveType: 'PUT',
+                        ProcessDisplayName: workerRule.ProcessDisplayName,
+                        Code: workerRule.Code,
+                        Worker: workerRule.Worker
+                        // DateFrom: moment(workerRuleMemberModel.toJSON().DateFrom).format(''),
+                        // DateTo: moment(workerRuleMemberModel.toJSON().DateTo).format(''),
+                      });
+                      workerRuleMemberView = new Hktdc.Views.EditWorkerRuleMember({
+                        model: workerRuleMemberModel
+                      });
+                      // console.log(workerRuleMemberModel.toJSON().Rule);
+                      onSuccess(workerRuleMemberModel.toJSON().Rule);
+                    },
+                    error: function(model, response) {
+                      if (response.status === 401) {
+                        utils.getAccessToken(function() {
+                          doFetch();
+                        });
+                      } else {
+                        console.error(response.responseText);
+                      }
+                    }
+                  });
+                };
+                doFetch();
               // create
               } else {
                 _.extend(workerRule, { saveType: 'POST' });
@@ -736,21 +846,35 @@ Hktdc.Routers = Hktdc.Routers || {};
 
           if (delegationId) {
             delegationModel.url = delegationModel.url(delegationId);
-            delegationModel.fetch({
-              beforeSend: utils.setAuthHeader,
-              success: function(model) {
-                delegationModel.set({
-                  StartDate: moment(model.toJSON().StartDate).format('YYYY-MM-DD'),
-                  StartTime: moment(model.toJSON().StartDate).format('HH:mm'),
-                  EndDate: moment(model.toJSON().EndDate).format('YYYY-MM-DD'),
-                  EndTime: moment(model.toJSON().EndDate).format('HH:mm')
-                });
-                onSuccess();
-              },
-              error: function(model, err) {
-                throw err;
-              }
-            });
+            var doFetch = function() {
+              delegationModel.fetch({
+                beforeSend: utils.setAuthHeader,
+                success: function(model) {
+                  delegationModel.set({
+                    StartDate: moment(model.toJSON().StartDate).format('YYYY-MM-DD'),
+                    StartTime: moment(model.toJSON().StartDate).format('HH:mm'),
+                    EndDate: moment(model.toJSON().EndDate).format('YYYY-MM-DD'),
+                    EndTime: moment(model.toJSON().EndDate).format('HH:mm')
+                  });
+                  onSuccess();
+                },
+                error: function(model, response) {
+                  if (response.status === 401) {
+                    utils.getAccessToken(function() {
+                      doFetch();
+                    });
+                  } else {
+                    console.error(response.responseText);
+                    Hktdc.Dispatcher.trigger('openAlert', {
+                      message: 'Error on getting delegation',
+                      type: 'error',
+                      title: 'Error'
+                    });
+                  }
+                }
+              });
+            };
+            doFetch();
           } else {
             onSuccess();
           }
@@ -814,21 +938,35 @@ Hktdc.Routers = Hktdc.Routers || {};
 
           if (delegationId) {
             sharingModel.url = sharingModel.url(delegationId);
-            sharingModel.fetch({
-              beforeSend: utils.setAuthHeader,
-              success: function(model) {
-                sharingModel.set({
-                  StartDate: moment(model.toJSON().StartDate).format('YYYY-MM-DD'),
-                  StartTime: moment(model.toJSON().StartDate).format('HH:mm'),
-                  EndDate: moment(model.toJSON().EndDate).format('YYYY-MM-DD'),
-                  EndTime: moment(model.toJSON().EndDate).format('HH:mm')
-                });
-                onSuccess();
-              },
-              error: function(model, err) {
-                throw err;
-              }
-            });
+            var doFetch = function() {
+              sharingModel.fetch({
+                beforeSend: utils.setAuthHeader,
+                success: function(model) {
+                  sharingModel.set({
+                    StartDate: moment(model.toJSON().StartDate).format('YYYY-MM-DD'),
+                    StartTime: moment(model.toJSON().StartDate).format('HH:mm'),
+                    EndDate: moment(model.toJSON().EndDate).format('YYYY-MM-DD'),
+                    EndTime: moment(model.toJSON().EndDate).format('HH:mm')
+                  });
+                  onSuccess();
+                },
+                error: function(model, response) {
+                  if (response.status === 401) {
+                    utils.getAccessToken(function() {
+                      doFetch();
+                    });
+                  } else {
+                    console.error(response.responseText);
+                    Hktdc.Dispatcher.trigger('openAlert', {
+                      message: 'Error on getting sharing',
+                      type: 'error',
+                      title: 'Error'
+                    });
+                  }
+                }
+              });
+            };
+            doFetch();
           } else {
             sharingModel.set({
               Dept: 'All'

@@ -45,32 +45,56 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var departmentCollection = new Hktdc.Collections.Department();
       departmentCollection.url = departmentCollection.url();
-      departmentCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          // console.log('selectedUserCollection: ', self.model.toJSON().selectedUserCollection);
-          // console.log('selectedUserCollection: ', self.model);
-          deferred.resolve(departmentCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        departmentCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            // console.log('selectedUserCollection: ', self.model.toJSON().selectedUserCollection);
+            // console.log('selectedUserCollection: ', self.model);
+            deferred.resolve(departmentCollection);
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting department.');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
     loadUser: function() {
       var deferred = Q.defer();
       var userCollection = new Hktdc.Collections.FullUser();
-      userCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(userCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        userCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(userCollection);
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('Error on getting full user list.');
+            }
+          }
+        });
+      };
+      doFetch();
 
       return deferred.promise;
     },
@@ -174,26 +198,34 @@ Hktdc.Views = Hktdc.Views || {};
         UserRoleGUID: rawData.UserRoleGUID
       };
       var saveUserRoleMemberModel = new Hktdc.Models.SaveUserRoleMember(saveData);
-
-      saveUserRoleMemberModel.save({}, {
-        beforeSend: utils.setAuthHeader,
-        type: this.model.toJSON().saveType,
-        success: function() {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'saved',
-            type: 'confirmation',
-            title: 'Confirmation'
-          });
-          Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
-        },
-        error: function(err) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'error on saving user role'
-          });
-        }
-      });
+      var doSave = function() {
+        saveUserRoleMemberModel.save({}, {
+          beforeSend: utils.setAuthHeader,
+          type: this.model.toJSON().saveType,
+          success: function() {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'saved',
+              type: 'confirmation',
+              title: 'Confirmation'
+            });
+            Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              });
+            } else {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'Error on saving user role member.',
+                type: 'error',
+                title: 'error on saving user role'
+              });
+            }
+          }
+        });
+      };
+      doSave();
     }
 
   });
