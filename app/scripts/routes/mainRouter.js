@@ -283,7 +283,7 @@ Hktdc.Routers = Hktdc.Routers || {};
           });
           var onSuccess = function() {
             var userRoleView = new Hktdc.Views.UserRole({
-              model: userRoleModel,
+              model: userRoleModel
             });
             userRoleView.render();
             $('#mainContent').empty().html(userRoleView.el);

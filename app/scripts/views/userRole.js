@@ -58,6 +58,8 @@ Hktdc.Views = Hktdc.Views || {};
         bRetrieve: true,
         searching: false,
         processing: true,
+        paging: false,
+        info: false,
         oLanguage: {
           sProcessing: '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>'
         },
