@@ -303,6 +303,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     saveButtonHandler: function() {
       var rawData = this.model.toJSON();
+      var self = this;
       var saveData = {
         ProcessId: rawData.ProcessId,
         Code: rawData.Code,
@@ -312,8 +313,8 @@ Hktdc.Views = Hktdc.Views || {};
         Remark: rawData.Remark,
         Score: rawData.Score
       };
-      if (this.model.toJSON().saveType === 'PUT') {
-        saveData.WorkerRuleId = this.model.toJSON().WorkerRuleId;
+      if (self.model.toJSON().saveType === 'PUT') {
+        saveData.WorkerRuleId = self.model.toJSON().WorkerRuleId;
       }
       var saveWorkerRuleModel = new Hktdc.Models.SaveWorkerRule();
       saveWorkerRuleModel.set(saveData);
@@ -326,11 +327,11 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       if (saveWorkerRuleModel.isValid()) {
-        saveWorkerRuleModel.url = saveWorkerRuleModel.url(this.model.toJSON().UserRoleGUID);
+        saveWorkerRuleModel.url = saveWorkerRuleModel.url(self.model.toJSON().UserRoleGUID);
         var doSave = function() {
           saveWorkerRuleModel.save({}, {
             beforeSend: utils.setAuthHeader,
-            type: this.model.toJSON().saveType,
+            type: self.model.toJSON().saveType,
             success: function(model, response) {
               if (String(response.Success) === '1') {
                 Hktdc.Dispatcher.trigger('openAlert', {

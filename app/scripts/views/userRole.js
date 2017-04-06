@@ -212,6 +212,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     saveButtonHandler: function() {
       var rawData = this.model.toJSON();
+      var self = this;
       var saveData = {
         Role: rawData.Role,
         Desc: rawData.Desc,
@@ -224,11 +225,11 @@ Hktdc.Views = Hktdc.Views || {};
         saveUserRoleModel.unset('UserRoleGUID');
       }
 
-      saveUserRoleModel.url = saveUserRoleModel.url(this.model.toJSON().UserRoleGUID);
+      saveUserRoleModel.url = saveUserRoleModel.url(self.model.toJSON().UserRoleGUID);
       var doSave = function() {
         saveUserRoleModel.save({}, {
           beforeSend: utils.setAuthHeader,
-          type: this.model.toJSON().saveType,
+          type: self.model.toJSON().saveType,
           success: function() {
             Hktdc.Dispatcher.trigger('openAlert', {
               message: 'saved',

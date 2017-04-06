@@ -201,7 +201,7 @@ Hktdc.Views = Hktdc.Views || {};
       var doSave = function() {
         saveUserRoleMemberModel.save({}, {
           beforeSend: utils.setAuthHeader,
-          type: this.model.toJSON().saveType,
+          type: self.model.toJSON().saveType,
           success: function() {
             Hktdc.Dispatcher.trigger('openAlert', {
               message: 'saved',
