@@ -7,6 +7,8 @@ Hktdc.Views = Hktdc.Views || {};
   Hktdc.Views.RuleFieldSetGrade = Backbone.View.extend({
     template: JST['app/scripts/templates/ruleFieldSetGrade.ejs'],
 
+    className: 'row',
+
     initialize: function(opts) {
       _.extend(this, opts);
       if (!this.collection.get(0)) {

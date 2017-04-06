@@ -113,10 +113,14 @@
         <div class="col-md-3">
           <div class="form-label text-right">Of</div>
         </div>
-        <div class="col-md-3 ofFromContainer"></div>
-        <div class="col-md-1">To</div>
-        <div class="col-md-3 ofToContainer"></div>
-        <div class="col-md-1">User</div>
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-4 ofFromContainer"></div>
+            <div class="col-md-2 text-center" style="padding:0"><span class="form-label">To</span></div>
+            <div class="col-md-4 ofToContainer"></div>
+            <div class="col-md-2 text-right" style="padding-left:0"><span class="form-label">User</span></div>
+          </div>
+        </div>
       </div>
       <div class="sep-space"></div>
     <% } // endif %>
@@ -143,10 +147,10 @@
     <% if (showDateRange) { %>
       <div class="row">
         <div class="col-md-3">
-          <div class="form-label text-right">from</div>
+          <div class="form-label text-right">From</div>
         </div>
         <div class="col-md-4 fromDatePicker"></div>
-        <div class="col-md-1"><span class="form-label">to</span></div>
+        <div class="col-md-1"><span class="form-label">To</span></div>
         <div class="col-md-4 toDatePicker"></div>
       </div>
       <div class="sep-space"></div>

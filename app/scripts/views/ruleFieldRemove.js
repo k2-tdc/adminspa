@@ -5,6 +5,8 @@ Hktdc.Views = Hktdc.Views || {};
 (function() {
   'use strict';
   Hktdc.Views.RuleFieldRemoveGrade = Backbone.View.extend({
+    className: 'row',
+    
     template: JST['app/scripts/templates/ruleFieldRemoveGrade.ejs'],
 
     initialize: function(opts) {
