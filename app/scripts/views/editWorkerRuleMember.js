@@ -167,7 +167,7 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         var ruleCollection = new Hktdc.Collections.Rule();
         // console.log(this.model.toJSON());
-        ruleCollection.url = ruleCollection.url(this.model.toJSON().Code);
+        ruleCollection.url = ruleCollection.url(self.model.toJSON().Code);
         var doFetch = function() {
           ruleCollection.fetch({
             beforeSend: utils.setAuthHeader,

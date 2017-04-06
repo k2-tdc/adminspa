@@ -28,13 +28,13 @@ Hktdc.Models = Hktdc.Models || {};
     validate: function(attrs, options) {
       var errors = [];
       if (attrs.data && attrs.data.length === 0) {
-        errors.push('Role is required');
+        errors.push('Role is required.');
       }
       _.each(attrs.data, function(data) {
         if (!data.MenuItemGUID) {
           errors.push('Permission is required.');
         }
-        if (!attrs.UserRoleGUID) {
+        if (!data.UserRoleGUID) {
           errors.push('Role is required.');
         }
       });

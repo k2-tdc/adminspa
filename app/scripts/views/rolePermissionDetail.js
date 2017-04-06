@@ -306,6 +306,14 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       var savePermissionModel = new Hktdc.Models.SaveRolePermission({ data: data });
+      savePermissionModel.on('invalid', function(model, err) {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: err,
+          type: 'error',
+          title: 'Error'
+        });
+      });
+
       var doSave = function() {
         savePermissionModel.save(null, {
           type: self.model.toJSON().saveType,
