@@ -236,7 +236,7 @@ Hktdc.Views = Hktdc.Views || {};
               type: 'confirmation',
               title: 'Confirmation'
             });
-            Backbone.history.navigate('userrole', {trigger: true});
+            // Backbone.history.navigate('userrole', {trigger: true});
           },
           error: function(model, response) {
             if (response.status === 401) {
