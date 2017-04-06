@@ -247,9 +247,7 @@ Hktdc.Routers = Hktdc.Routers || {};
         Hktdc.Dispatcher.trigger('checkPagePermission', function() {
           var userRoleListModel = new Hktdc.Models.UserRoleList({});
           userRoleListModel.set({
-            mode: 'User Role',
-            profile: utils.getParameterByName('profile'),
-            showSearch: Hktdc.Config.isAdmin
+            processId: utils.getParameterByName('processId')
           });
           var emailProfileListView = new Hktdc.Views.UserRoleList({
             model: userRoleListModel

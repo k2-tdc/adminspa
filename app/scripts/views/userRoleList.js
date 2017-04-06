@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, utils, _ */
+/* global Hktdc, Backbone, JST, $, utils, _, Q */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -12,16 +12,53 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'div',
 
     events: {
+      'click .searchBtn': 'doSearch',
       'click .createBtn': 'goToCreatePage'
     },
 
     initialize: function() {
-      this.listenTo(this.model, 'change', this.render);
+      // this.listenTo(this.model, 'change', this.render);
     },
 
     render: function() {
-      this.$el.html(this.template(this.model.toJSON()));
-      this.renderDataTable();
+      var self = this;
+      self.$el.html(self.template(self.model.toJSON()));
+      self.renderDataTable();
+      self.loadProcess()
+        .then(function(processCollection) {
+          self.renderProcessSelect(processCollection);
+        });
+    },
+
+    loadProcess: function() {
+      var deferred = Q.defer();
+      var processCollection = new Hktdc.Collections.Process();
+      processCollection.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          deferred.resolve(processCollection);
+        },
+        error: function(collection, err) {
+          deferred.reject(err);
+        }
+      });
+      return deferred.promise;
+    },
+
+    renderProcessSelect: function(processCollection) {
+      var self = this;
+      var processSelectView = new Hktdc.Views.ProcessSelect({
+        collection: processCollection,
+        selectedProcess: self.model.toJSON().processId,
+        onSelected: function(process) {
+          self.model.set({
+            process: process.ProcessName,
+            processId: process.ProcessID
+          });
+        }
+      });
+      processSelectView.render();
+      $('.processContainer', self.el).html(processSelectView.el);
     },
 
     renderDataTable: function() {
@@ -81,10 +118,18 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getAjaxURL: function() {
-      var queryParams = _.omit(this.model.toJSON(), 'stepCollection', 'processCollection', 'mode');
+      var queryParams = _.pick(this.model.toJSON(), 'process');
       var queryString = utils.getQueryString(queryParams, true);
       return Hktdc.Config.apiURL + '/user-role' + queryString;
-    }
+    },
 
+    doSearch: function() {
+      // console.log(this.model.toJSON());
+      var queryParams = _.pick(this.model.toJSON(), 'processId');
+      var currentBase = Backbone.history.getHash().split('?')[0];
+      var queryString = utils.getQueryString(queryParams, true);
+      Backbone.history.navigate(currentBase + queryString);
+      this.userRoleDataTable.ajax.url(this.getAjaxURL()).load();
+    }
   });
 })();
