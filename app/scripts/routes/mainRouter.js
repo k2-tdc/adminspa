@@ -278,11 +278,12 @@ Hktdc.Routers = Hktdc.Routers || {};
 
           var userRoleModel = new Hktdc.Models.UserRole({
             showMember: !!userRoleId,
+            showDelete: !!userRoleId,
             saveType: (userRoleId) ? 'PUT' : 'POST'
           });
           var onSuccess = function() {
             var userRoleView = new Hktdc.Views.UserRole({
-              model: userRoleModel
+              model: userRoleModel,
             });
             userRoleView.render();
             $('#mainContent').empty().html(userRoleView.el);
