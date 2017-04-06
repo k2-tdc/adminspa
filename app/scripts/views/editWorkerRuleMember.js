@@ -448,7 +448,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.model.set({
               Rule: rule.TemplateID,
               Nature: '',
-              Score: '',
+              Score: rule.DefaultScore,
               UserId: '',
               UserId1: '',
               UserId2: '',
