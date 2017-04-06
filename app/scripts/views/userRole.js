@@ -222,7 +222,7 @@ Hktdc.Views = Hktdc.Views || {};
             type: 'confirmation',
             title: 'Confirmation'
           });
-          Backbone.history.navigate('userrole', {trigger: true});
+          // Backbone.history.navigate('userrole', {trigger: true});
         },
         error: function(err) {
           Hktdc.Dispatcher.trigger('openAlert', {
