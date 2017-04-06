@@ -393,17 +393,9 @@ Hktdc.Views = Hktdc.Views || {};
         }
       };
 
-      var saveRolePermission = function() {
-        if (self.model.toJSON().permissionCollection.length) {
-          return self.savePromise(self.model.toJSON().permissionCollection.toJSON());
-        } else {
-          return true;
-        }
-      };
-
       Q.all([
         deleteRolePermission(),
-        saveRolePermission()
+        self.savePromise(self.model.toJSON().permissionCollection.toJSON())
       ])
         .then(function(results) {
           Hktdc.Dispatcher.trigger('openAlert', {
