@@ -230,12 +230,15 @@ Hktdc.Views = Hktdc.Views || {};
         saveUserRoleModel.save({}, {
           beforeSend: utils.setAuthHeader,
           type: self.model.toJSON().saveType,
-          success: function() {
+          success: function(model, response) {
             Hktdc.Dispatcher.trigger('openAlert', {
               message: 'saved',
               type: 'confirmation',
               title: 'Confirmation'
             });
+            if (self.model.toJSON().saveType === 'POST' && response.Msg) {
+              Backbone.history.navigate('userrole/' + response.Msg, {trigger: true});
+            }
             // Backbone.history.navigate('userrole', {trigger: true});
           },
           error: function(model, response) {
