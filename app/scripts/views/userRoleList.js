@@ -28,11 +28,17 @@ Hktdc.Views = Hktdc.Views || {};
           var selectedProcess = _.find(processCollection.toJSON(), function(process) {
             return String(process.ProcessID) === String(self.model.toJSON().processId);
           });
-          self.model.set({
-            process: selectedProcess.ProcessName
-          });
+          // console.log(selectedProcess);
+          if (selectedProcess) {
+            self.model.set({
+              process: selectedProcess.ProcessName
+            });
+          }
           self.renderDataTable();
           self.renderProcessSelect(processCollection);
+        })
+        .catch(function(err) {
+          console.log(err);
         });
     },
 
@@ -130,7 +136,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     doSearch: function() {
       // console.log(this.model.toJSON());
-      var queryParams = _.pick(this.model.toJSON(), 'process');
+      var queryParams = _.pick(this.model.toJSON(), 'processId');
       var currentBase = Backbone.history.getHash().split('?')[0];
       var queryString = utils.getQueryString(queryParams, true);
       Backbone.history.navigate(currentBase + queryString);
