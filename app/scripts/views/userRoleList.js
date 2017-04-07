@@ -113,12 +113,11 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     goToCreatePage: function() {
-      console.log('crash');
       Backbone.history.navigate('userrole/new', {trigger: true});
     },
 
     getAjaxURL: function() {
-      var queryParams = _.pick(this.model.toJSON(), 'process');
+      var queryParams = _.pick(this.model.toJSON(), 'processId');
       var queryString = utils.getQueryString(queryParams, true);
       return Hktdc.Config.apiURL + '/user-role' + queryString;
     },
