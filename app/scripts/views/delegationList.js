@@ -125,6 +125,20 @@ Hktdc.Views = Hktdc.Views || {};
               };
             });
             return modData;
+          },
+          error: function(xhr, status, err) {
+            if (xhr.status === 401) {
+              utils.getAccessToken(function() {
+                self.delegationDataTable.ajax.url(self.getAjaxURL()).load();
+              });
+            } else {
+              console.error(xhr.responseText);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'Error on getting delegation list.',
+                type: 'error',
+                title: 'Error'
+              });
+            }
           }
         },
         createdRow: function(row, data, index) {

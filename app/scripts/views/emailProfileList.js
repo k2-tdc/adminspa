@@ -173,6 +173,20 @@ Hktdc.Views = Hktdc.Views || {};
             // console.log(modData);
             return modData;
             // return { data: modData, recordsTotal: modData.length };
+          },
+          error: function(xhr, status, err) {
+            if (xhr.status === 401) {
+              utils.getAccessToken(function() {
+                self.profileDataTable.ajax.url(self.getAjaxURL()).load();
+              });
+            } else {
+              console.error(xhr.responseText);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'Error on getting email profile list.',
+                type: 'error',
+                title: 'Error'
+              });
+            }
           }
         },
         createdRow: function(row, data, index) {

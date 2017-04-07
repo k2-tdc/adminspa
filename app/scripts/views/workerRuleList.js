@@ -100,7 +100,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderDataTable: function() {
       var self = this;
-      self.templateDataTable = $('#workerTable', self.el).DataTable({
+      self.workerRuleDataTable = $('#workerTable', self.el).DataTable({
         bRetrieve: true,
         order: [1, 'asc'],
         searching: false,
@@ -124,6 +124,21 @@ Hktdc.Views = Hktdc.Views || {};
             });
             return modData;
             // return { data: modData, recordsTotal: modData.length };
+          },
+          error: function(xhr, status, err) {
+            console.log(xhr);
+            if (xhr.status === 401) {
+              utils.getAccessToken(function() {
+                self.workerRuleDataTable.ajax.url(self.getAjaxURL()).load();
+              });
+            } else {
+              console.error(xhr.responseText);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'Error on getting worker rule list.',
+                type: 'error',
+                title: 'Error'
+              });
+            }
           }
         },
         createdRow: function(row, data, index) {
@@ -151,7 +166,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       $('#workerTable tbody', this.el).on('click', 'tr', function(ev) {
-        var rowData = self.templateDataTable.row(this).data();
+        var rowData = self.workerRuleDataTable.row(this).data();
         Backbone.history.navigate('worker-rule/' + rowData.id, {
           trigger: true
         });
@@ -167,7 +182,7 @@ Hktdc.Views = Hktdc.Views || {};
       var currentBase = Backbone.history.getHash().split('?')[0];
       var queryString = utils.getQueryString(queryParams, true);
       Backbone.history.navigate(currentBase + queryString);
-      this.templateDataTable.ajax.url(this.getAjaxURL()).load();
+      this.workerRuleDataTable.ajax.url(this.getAjaxURL()).load();
     },
 
     getAjaxURL: function() {
