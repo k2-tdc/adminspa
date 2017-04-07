@@ -36,23 +36,23 @@ Hktdc.Views = Hktdc.Views || {};
           }
         });
       }
-      if (self.model.toJSON().Dept) {
-        setTimeout(function() {
-          self.loadDelegationUser(self.model.toJSON().Dept)
-            .then(function(delegationUserCollection) {
-              self.model.set({
-                delegationUserCollection: delegationUserCollection
-              });
-            });
-        });
-      }
+      // if (self.model.toJSON().Dept) {
+      //   setTimeout(function() {
+      //     self.loadDelegationUser(self.model.toJSON().Dept)
+      //       .then(function(delegationUserCollection) {
+      //         self.model.set({
+      //           delegationUserCollection: delegationUserCollection
+      //         });
+      //       });
+      //   });
+      // }
 
       self.model.on('change:stepCollection', function(model, stepCol) {
         self.renderTaskSelect(String(model.toJSON().ProcessID) === '0');
       });
-      self.model.on('change:delegationUserCollection', function() {
-        self.renderDelegationUserSelect();
-      });
+      // self.model.on('change:delegationUserCollection', function() {
+      //   self.renderDelegationUserSelect();
+      // });
     },
 
     render: function() {
@@ -61,12 +61,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       Q.all([
         self.loadProcess(),
-        Q.fcall(function() {
-          if (self.model.toJSON().showUser) {
-            return self.loadFullUser();
-          }
-          return [];
-        }),
+        self.loadFullUser(),
         self.loadDepartment(),
         self.loadAction()
       ])
@@ -85,6 +80,7 @@ Hktdc.Views = Hktdc.Views || {};
           if (self.model.toJSON().showUser) {
             self.renderUserSelect();
           }
+          self.renderDelegationUserSelect();
           self.renderProcessSelect();
           self.renderDepartmentSelection(departmentCollection);
           self.renderActionSelect(actionCollection);
@@ -130,28 +126,36 @@ Hktdc.Views = Hktdc.Views || {};
 
     loadFullUser: function() {
       var deferred = Q.defer();
-      var userCollection = new Hktdc.Collections.FullUser();
-      var doFetch = function() {
-        userCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            deferred.resolve(userCollection);
-          },
-          error: function(collectoin, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+      var self = this;
+      if (self.model.toJSON().userCollection) {
+        deferred.resolve(self.model.toJSON().userCollection);
+      } else {
+        var userCollection = new Hktdc.Collections.FullUser();
+        var doFetch = function() {
+          userCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function(collection) {
+              self.model.set({
+                userCollection: collection
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('Error on getting full user list');
+              deferred.resolve(userCollection);
+            },
+            error: function(collectoin, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+                deferred.reject('Error on getting full user list');
+              }
             }
-          }
-        });
-      };
-      doFetch();
+          });
+        };
+        doFetch();
+      }
       return deferred.promise;
     },
 
@@ -387,13 +391,13 @@ Hktdc.Views = Hktdc.Views || {};
             self.model.set({
               Dept: departmentId
             });
-            self.loadDelegationUser(departmentId)
-              .then(function(delegationUserCollection) {
-                self.model.set({
-                  DelegateUserID: null,
-                  delegationUserCollection: delegationUserCollection
-                });
-              });
+            // self.loadDelegationUser(departmentId)
+            //   .then(function(delegationUserCollection) {
+            //     self.model.set({
+            //       DelegateUserID: null,
+            //       delegationUserCollection: delegationUserCollection
+            //     });
+            //   });
           }
         });
         departmentSelectView.render();
@@ -426,7 +430,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var DelegationUserView;
       DelegationUserView = new Hktdc.Views.DelegationUserSelect({
-        collection: self.model.toJSON().delegationUserCollection,
+        collection: self.model.toJSON().userCollection,
         selectedDelegationUser: self.model.toJSON().DelegateUserID,
         onSelected: function(delegationUserId) {
           self.model.set({

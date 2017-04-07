@@ -383,8 +383,9 @@ Hktdc.Views = Hktdc.Views || {};
       if (self.model.toJSON().ruleDepartmentCollection) {
         deferred.resolve(self.model.toJSON().ruleDepartmentCollection);
       } else {
-        var ruleDepartmentCollection = new Hktdc.Collections.RuleDepartment();
         var doFetch = function() {
+          var ruleDepartmentCollection = new Hktdc.Collections.Department();
+          ruleDepartmentCollection.url = ruleDepartmentCollection.url('worker-rule');
           ruleDepartmentCollection.fetch({
             beforeSend: utils.setAuthHeader,
             success: function() {
