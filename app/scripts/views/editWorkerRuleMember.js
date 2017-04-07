@@ -919,7 +919,7 @@ Hktdc.Views = Hktdc.Views || {};
               });
             } else {
               self.model.set({
-                Department: selectedData.DepartmentCode
+                Department: selectedData.DeptCode
               });
             }
           }

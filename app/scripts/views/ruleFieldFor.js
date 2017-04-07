@@ -21,8 +21,8 @@ Hktdc.Views = Hktdc.Views || {};
           data.GroupID = '0';
           data.Description = '-- Select --';
         } else if (this.type === 'department') {
-          data.DepartmentCode = '0';
-          data.Department = '-- Select --';
+          data.DeptCode = '0';
+          data.DeptName = '-- Select --';
         }
         this.collection.unshift(data);
       }
@@ -76,7 +76,7 @@ Hktdc.Views = Hktdc.Views || {};
         var targetId = $(ev.target).find('option:selected').val();
         this.onSelected(_.find(this.collection.toJSON(), function(selectedItem) {
           return (
-            String(selectedItem.DepartmentCode) === String(targetId) ||
+            String(selectedItem.DeptCode) === String(targetId) ||
             String(selectedItem.GroupID) === String(targetId) ||
             String(selectedItem.UserID) === String(targetId) ||
             String(selectedItem.Code) === String(targetId)
@@ -100,7 +100,7 @@ Hktdc.Views = Hktdc.Views || {};
     attributes: function() {
       return {
         value: String(
-          this.model.toJSON().DepartmentCode ||
+          this.model.toJSON().DeptCode ||
           this.model.toJSON().GroupID ||
           this.model.toJSON().UserID ||
           this.model.toJSON().Code
