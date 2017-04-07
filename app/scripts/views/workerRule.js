@@ -339,9 +339,11 @@ Hktdc.Views = Hktdc.Views || {};
                   type: 'confirmation',
                   title: 'Confirmation'
                 });
-                Backbone.history.navigate('worker-rule', {
-                  trigger: true
-                });
+                if (self.model.toJSON().saveType === 'POST' && response.Msg) {
+                  Backbone.history.navigate('worker-rule/' + response.Msg, {
+                    trigger: true
+                  });
+                }
               } else {
                 Hktdc.Dispatcher.trigger('openAlert', {
                   message: response.Msg || 'Error on saving.',
