@@ -23,9 +23,15 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       var self = this;
       self.$el.html(self.template(self.model.toJSON()));
-      self.renderDataTable();
       self.loadProcess()
         .then(function(processCollection) {
+          var selectedProcess = _.find(processCollection.toJSON(), function(process) {
+            return String(process.ProcessID) === String(self.model.toJSON().processId);
+          });
+          self.model.set({
+            process: selectedProcess.ProcessName
+          });
+          self.renderDataTable();
           self.renderProcessSelect(processCollection);
         });
     },
@@ -117,14 +123,14 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getAjaxURL: function() {
-      var queryParams = _.pick(this.model.toJSON(), 'processId');
+      var queryParams = _.pick(this.model.toJSON(), 'process');
       var queryString = utils.getQueryString(queryParams, true);
       return Hktdc.Config.apiURL + '/user-role' + queryString;
     },
 
     doSearch: function() {
       // console.log(this.model.toJSON());
-      var queryParams = _.pick(this.model.toJSON(), 'processId');
+      var queryParams = _.pick(this.model.toJSON(), 'process');
       var currentBase = Backbone.history.getHash().split('?')[0];
       var queryString = utils.getQueryString(queryParams, true);
       Backbone.history.navigate(currentBase + queryString);
