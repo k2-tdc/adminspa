@@ -373,8 +373,8 @@ Hktdc.Views = Hktdc.Views || {};
     deleteButtonHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
-        message: 'Are you sure to delete?',
+        title: 'Alert',
+        message: dialogMessage.userRole.delete.confirm,
         onConfirm: function() {
           var saveUserRoleModel = new Hktdc.Models.SaveUserRole();
           saveUserRoleModel.clear();
@@ -453,7 +453,7 @@ Hktdc.Views = Hktdc.Views || {};
       };
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
-        message: 'Are you sure to remove this member?',
+        message: dialogMessage.userRoleMember.batchDelete.confirm,
         onConfirm: function() {
           Q.all(_.map(self.model.toJSON().selectedMember, function(memberGUID) {
             return removeSingleMember(memberGUID);

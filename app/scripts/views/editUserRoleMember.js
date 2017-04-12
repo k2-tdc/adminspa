@@ -85,7 +85,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
-        message: 'Are you sure to delete?',
+        message: dialogMessage.userRoleMember.delete.confirm,
         onConfirm: function() {
           var rawData = self.model.toJSON();
           var saveUserRoleMemberModel = new Hktdc.Models.SaveUserRoleMember();

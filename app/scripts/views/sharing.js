@@ -542,7 +542,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'confirmation',
-        message: 'Are you sure to delete the sharing?',
+        message: dialogMessage.sharing.delete.confirm,
         onConfirm: function() {
           self.doDeleteSharing()
             .then(function() {

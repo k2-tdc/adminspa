@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, utils, _,  $, Q */
+/* global Hktdc, Backbone, JST, utils, _,  $, Q, sprintf, dialogMessage */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -63,7 +63,7 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
+            message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown'),
             type: 'error',
             title: 'Runtime Error'
           });
@@ -87,11 +87,21 @@ Hktdc.Views = Hktdc.Views || {};
               utils.getAccessToken(function() {
                 doFetch();
               }, function(err) {
-                deferred.reject(err);
+                deferred.reject({
+                  error: err,
+                  request_id: false
+                });
               });
             } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting profile users');
+              try {
+                deferred.reject(JSON.parse(response.responseText));
+              } catch (e) {
+                console.error(response.responseText);
+                deferred.reject({
+                  error: 'error on getting profile users',
+                  request_id: false
+                });
+              }
             }
           }
         });
@@ -180,10 +190,16 @@ Hktdc.Views = Hktdc.Views || {};
                 self.profileDataTable.ajax.url(self.getAjaxURL()).load();
               });
             } else {
-              console.error(xhr.responseText);
+              var requestId;
+              try {
+                requestId = JSON.parse(xhr.responseText).request_id;
+              } catch (e) {
+                console.error('Error on getting email profile list.');
+                console.error(xhr.responseText);
+                requestId = 'unknown';
+              }
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Error on getting email profile list.',
-                type: 'error',
+                message: sprintf(dialogMessage.common.serverError.fail, requestId || 'unknown'),
                 title: 'Error'
               });
             }
@@ -220,36 +236,6 @@ Hktdc.Views = Hktdc.Views || {};
           //   return data.timeSlot;
           // }
         }]
-      });
-
-      $('#profileTable tbody', this.el).on('click', '.deleteBtn', function(ev) {
-        ev.stopPropagation();
-        var rowData = self.profileDataTable.row($(this).parents('tr')).data();
-        var targetId = rowData.id;
-        Hktdc.Dispatcher.trigger('openConfirm', {
-          title: 'confirmation',
-          message: 'Are you sure to Delete?',
-          onConfirm: function() {
-            self.deleteProfile(targetId)
-              .then(function() {
-                Hktdc.Dispatcher.trigger('closeConfirm');
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  type: 'success',
-                  title: 'confirmation',
-                  message: 'deleted!'
-                });
-              })
-              .catch(function() {
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  type: 'error',
-                  title: 'error',
-                  message: 'delete failed'
-                });
-              });
-          }
-        });
-
-        // console.log('rowData', rowData);
       });
 
       $('#profileTable tbody', this.el).on('click', 'tr', function(ev) {
@@ -320,11 +306,21 @@ Hktdc.Views = Hktdc.Views || {};
               utils.getAccessToken(function() {
                 doSave();
               }, function(err) {
-                deferred.reject(err);
+                deferred.reject({
+                  error: err,
+                  request_id: false
+                });
               });
             } else {
-              console.error(response.responseText);
-              deferred.reject('error on deleting profile');
+              try {
+                deferred.reject(JSON.parse(response.responseText));
+              } catch (e) {
+                console.error(response.responseText);
+                deferred.reject({
+                  error: 'error on deleting profile',
+                  request_id: false
+                });
+              }
             }
           }
         });

@@ -336,7 +336,7 @@ Hktdc.Views = Hktdc.Views || {};
       };
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
-        message: 'Are you sure to remove this sharing?',
+        message: dialogMessage.sharing.batchDelete.confirm,
         onConfirm: function() {
           Q.all(_.map(self.model.toJSON().selectedSharing, function(sharingId) {
             return removeSingleSharing(sharingId);

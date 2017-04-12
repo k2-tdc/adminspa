@@ -142,21 +142,18 @@ Hktdc.Views = Hktdc.Views || {};
                 self.delegationDataTable.ajax.url(self.getAjaxURL()).load();
               });
             } else {
+              var requestId;
               try {
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: sprintf(dialogMessage.common.serverError.fail, JSON.parse(xhr.responseText).request_id),
-                  type: 'error',
-                  title: 'Error'
-                });
+                requestId = JSON.parse(xhr.responseText).request_id;
               } catch (e) {
                 console.error('Error on getting delegation list.');
                 console.error(xhr.responseText);
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: sprintf(dialogMessage.common.serverError.fail, 'unknown'),
-                  type: 'error',
-                  title: 'Error'
-                });
+                requestId = 'unknown';
               }
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: sprintf(dialogMessage.common.serverError.fail, requestId || 'unknown'),
+                title: 'Error'
+              });
             }
           }
         },
