@@ -18,6 +18,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
+      $('#mainContent').removeClass('compress');
     },
 
     render: function() {
