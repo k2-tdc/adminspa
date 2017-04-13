@@ -42,7 +42,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       var rawMenu = this.model.toJSON();
-      var menu = rawMenu.Menu;
+      var menu = rawMenu.Menu || [];
       /* add PList and User into menu for mobile version */
       var PListMenu = {
         Mlink: '#',
