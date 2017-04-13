@@ -105,7 +105,7 @@ Hktdc.Views = Hktdc.Views || {};
           success: function() {
             deferred.resolve(stepCollection);
           },
-          error: function(collectoin, response) {
+          error: function(collection, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doFetch();

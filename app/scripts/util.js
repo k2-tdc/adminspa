@@ -122,16 +122,29 @@ window.utils = {
     return text;
   },
 
-  // showAlert: function(title, text, klass) {
-  //   $('.alert').removeClass('alert-error alert-warning alert-success alert-info');
-  //   $('.alert').addClass(klass);
-  //   $('.alert').html('<strong>' + title + '</strong> ' + text);
-  //   $('.alert').show();
-  // },
-  //
-  // hideAlert: function() {
-  //   $('.alert').hide();
-  // },
+  apiErrorHandling: function(options) {
+    // options: response, apiRequest, onError, apiName
+    if (options.response.status === 401) {
+      this.getAccessToken(function() {
+        options.apiRequest();
+      }, function(err) {
+        options.onError({
+          error: err,
+          request_id: false
+        });
+      });
+    } else {
+      try {
+        options.onError(JSON.parse(options.response.responseText));
+      } catch (e) {
+        console.error(options.response.responseText);
+        options.onError({
+          error: options.apiName + ' error',
+          request_id: false
+        });
+      }
+    }
+  },
 
   /* =============================================>>>>>
   = OAuth Login =

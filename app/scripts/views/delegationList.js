@@ -62,27 +62,18 @@ Hktdc.Views = Hktdc.Views || {};
           success: function() {
             deferred.resolve(userCollection);
           },
-          error: function(collectoin, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
+          error: function(collection, response) {
+            utils.apiErrorHandling({
+              apiName: 'get full user list',
+              response: response,
+              apiRequest: doFetch,
+              onError: function(errObj) {
                 deferred.reject({
-                  error: err,
-                  request_id: false
-                });
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  error: 'error on getting full user list. ',
-                  request_id: false
+                  error: errObj.error,
+                  request_id: errObj.request_id
                 });
               }
-            }
+            });
           }
         });
       };
@@ -252,50 +243,6 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    deleteProfile: function(tId) {
-      var self = this;
-      var deferred = Q.defer();
-      var DeleteProfileModel = Backbone.Model.extend({
-        url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-profiles/' + tId
-      });
-      var DeleteProfiletance = new DeleteProfileModel();
-      var doSave = function() {
-        DeleteProfiletance.save(null, {
-          type: 'DELETE',
-          beforeSend: utils.setAuthHeader,
-          success: function(model, response) {
-            self.delegationDataTable.ajax.reload();
-            // Hktdc.Dispatcher.trigger('reloadMenu');
-            deferred.resolve();
-          },
-          error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject({
-                  error: err,
-                  request_id: false
-                });
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  error: 'error on deleting profile',
-                  request_id: false
-                });
-              }
-            }
-          }
-        });
-      };
-      doSave();
-      return deferred.promise;
-    },
-
     goToCreatePage: function() {
       Backbone.history.navigate('delegation/new', {
         trigger: true
@@ -346,6 +293,12 @@ Hktdc.Views = Hktdc.Views || {};
               }
             },
             error: function(model, response) {
+              utils.apiErrorHandling({
+                apiName: 'delete delegation',
+                response: response,
+                apiRequest:
+                onError
+              })
               if (response.status === 401) {
                 utils.getAccessToken(function() {
                   doSave();

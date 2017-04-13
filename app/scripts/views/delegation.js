@@ -158,7 +158,7 @@ Hktdc.Views = Hktdc.Views || {};
               });
               deferred.resolve(userCollection);
             },
-            error: function(collectoin, response) {
+            error: function(collection, response) {
               if (response.status === 401) {
                 utils.getAccessToken(function() {
                   doFetch();
@@ -197,7 +197,7 @@ Hktdc.Views = Hktdc.Views || {};
           success: function() {
             deferred.resolve(delegationUserCollection);
           },
-          error: function(collectoin, response) {
+          error: function(collection, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doFetch();
@@ -235,7 +235,7 @@ Hktdc.Views = Hktdc.Views || {};
           success: function() {
             deferred.resolve(delegationActionCollection);
           },
-          error: function(collectoin, response) {
+          error: function(collection, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doFetch();
