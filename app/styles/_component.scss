@@ -1,6 +1,19 @@
 .red{
   color: red;
 }
+.hidden {
+  display: none !important;
+}
+.error-message{
+  color: red;
+  font-size: 12px;
+  padding: 2px 8px;
+  clear: both;
+}
+.error-input{
+  border: 1px solid red !important;
+}
+
 label.control-label {
   color: #006bf0;
   font-weight: lighter;
