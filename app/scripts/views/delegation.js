@@ -53,6 +53,14 @@ Hktdc.Views = Hktdc.Views || {};
       // self.model.on('change:delegationUserCollection', function() {
       //   self.renderDelegationUserSelect();
       // });
+      self.model.on('invalid', function(model, invalidObject) {
+        self.toggleInvalidMessage(invalidObject.field, true);
+      });
+
+      self.listenTo(self.model, 'valid', function(validObj) {
+        // console.log('is valid', validObj);
+        self.toggleInvalidMessage(validObj.field, false);
+      });
     },
 
     render: function() {
