@@ -53,14 +53,6 @@ Hktdc.Views = Hktdc.Views || {};
       // self.model.on('change:delegationUserCollection', function() {
       //   self.renderDelegationUserSelect();
       // });
-      self.model.on('invalid', function(model, invalidObject) {
-        self.toggleInvalidMessage(invalidObject.field, true);
-      });
-
-      self.listenTo(self.model, 'valid', function(validObj) {
-        // console.log('is valid', validObj);
-        self.toggleInvalidMessage(validObj.field, false);
-      });
     },
 
     render: function() {
@@ -532,6 +524,8 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         updateObject[targetField] = $target.val();
       }
+      self.model.set(updateObject);
+
       // double set is to prevent invalid value bypass the set model process
       // because if saved the valid model, then set the invalid model will not success and the model still in valid state
       self.model.set(updateObject, {
@@ -541,8 +535,6 @@ Hktdc.Views = Hktdc.Views || {};
           self.toggleInvalidMessage(targetField, invalidObject.message, true);
         }
       });
-
-      self.model.set(updateObject);
     },
 
     saveDelegation: function() {
