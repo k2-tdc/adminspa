@@ -18,12 +18,13 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       var self = this;
-      if (!this.collection.get('All')) {
+
+      //if (!this.collection.get('All')) {
         this.collection.unshift({
           DeptName: '-- Select --',
           DeptCode: 0
         });
-      }
+      //}
 
       this.collection.each(this.renderDepartmentItem);
       setTimeout(function() {
