@@ -36,11 +36,11 @@ Hktdc.Models = Hktdc.Models || {};
       if (!attrs.TaskID && attrs.ProcessID !== 0) {
         errors.push('Task is required.');
       }
-      if (!attrs.Dept) {
-        errors.push('Department is required.');
+      if (!attrs.Dept || attrs.Dept == 0) {
+          errors.push('Department is required.');
       }
-      if (!attrs.DelegateUserID) {
-        errors.push('Delegate To is required.');
+      if (!attrs.DelegateUserID || attrs.DelegateUserID == 0) {
+          errors.push('Delegate To is required.');
       }
       if (!attrs.StartDate) {
         errors.push('Start Date is required.');

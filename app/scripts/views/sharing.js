@@ -512,10 +512,10 @@ Hktdc.Views = Hktdc.Views || {};
             type: rawData.saveType,
             success: function(mymodel, response) {
               // console.log(response);
-              if (response.Success) {
+              if (response.Success === "1" || response.Success === 1) {
                 deferred.resolve(response);
               } else {
-                deferred.reject('save failed');
+                deferred.reject(response.Msg);
               }
             },
             error: function(model, response) {
