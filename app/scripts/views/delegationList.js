@@ -295,7 +295,8 @@ Hktdc.Views = Hktdc.Views || {};
     getAjaxURL: function() {
       var queryParams = _.pick(this.model.toJSON(), 'UserId');
       var queryString = utils.getQueryString(queryParams, true);
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/delegation-list' + queryString;
+      var delegateUser = (queryParams.UserId && queryParams.UserId !== "0") ? queryParams.UserId : Hktdc.Config.userID;
+      return Hktdc.Config.apiURL + '/users/' + delegateUser + '/delegation-list';
     },
 
     removeButtonHandler: function() {
