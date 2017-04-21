@@ -19,10 +19,10 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function() {
       var self = this;
       // this.listenTo(this.model, 'change', this.render);
-      this.model.on('change:ProcessId', function(model, processId) {
+      this.model.on('change:ProcessName', function(model, processName) {
         return Q.all([
-          self.loadProcessPermission(processId),
-          self.loadRole(processId)
+          self.loadProcessPermission(processName),
+          self.loadRole(processName)
         ])
           .then(function(results) {
             var permissionCollection = results[0];
@@ -48,8 +48,8 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderProcessSelect();
           console.log(self.model.toJSON().ProcessId);
           return Q.all([
-            self.loadProcessPermission(self.model.toJSON().ProcessId),
-            self.loadRole(self.model.toJSON().ProcessId)
+            self.loadProcessPermission(self.model.toJSON().ProcessName),
+            self.loadRole(self.model.toJSON().ProcessName)
           ]);
         })
 
@@ -76,13 +76,13 @@ Hktdc.Views = Hktdc.Views || {};
         });
     },
 
-    loadRole: function(processId) {
+    loadRole: function(processName) {
       var deferred = Q.defer();
       var roleCollection = new Hktdc.Collections.UserRole();
-      if (!processId) {
+      if (!processName) {
         deferred.resolve(roleCollection);
       } else {
-        roleCollection.url = roleCollection.url(processId);
+        roleCollection.url = roleCollection.url(processName);
         var doFetch = function() {
           roleCollection.fetch({
             beforeSend: utils.setAuthHeader,

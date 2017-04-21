@@ -36,7 +36,7 @@ Hktdc.Views = Hktdc.Views || {};
           }
         });
       }
-      if (self.model.toJSON().Dept) {
+      /*if (self.model.toJSON().Dept) {
         setTimeout(function() {
           self.loadSharingUser(self.model.toJSON().Dept)
             .then(function(sharingUserCollection) {
@@ -45,14 +45,14 @@ Hktdc.Views = Hktdc.Views || {};
               });
             });
         });
-      }
+      }*/
 
       self.model.on('change:stepCollection', function(model, stepCol) {
         self.renderTaskSelect();
       });
-      self.model.on('change:sharingUserCollection', function() {
+      /*self.model.on('change:sharingUserCollection', function() {
         self.renderSharingUserSelect();
-      });
+      });*/
     },
 
     render: function() {
@@ -86,6 +86,7 @@ Hktdc.Views = Hktdc.Views || {};
           if (self.model.toJSON().showUser) {
             self.renderUserSelect();
           }
+          self.renderSharingUserSelect();
           self.renderProcessSelect();
           self.renderDepartmentSelection(departmentCollection);
           self.renderPermissionSelect(actionCollection);
@@ -387,13 +388,13 @@ Hktdc.Views = Hktdc.Views || {};
             self.model.set({
               Dept: departmentId
             });
-            self.loadSharingUser(departmentId)
+            /*self.loadSharingUser(departmentId)
               .then(function(sharingUserCollection) {
                 self.model.set({
                   DelegateUserID: null,
                   sharingUserCollection: sharingUserCollection
                 });
-              });
+              });*/
           }
         });
         departmentSelectView.render();
@@ -425,7 +426,7 @@ Hktdc.Views = Hktdc.Views || {};
     renderSharingUserSelect: function() {
       var self = this;
       var SharingUserView = new Hktdc.Views.SharingUserSelect({
-        collection: self.model.toJSON().sharingUserCollection,
+        collection: self.model.toJSON().userCollection,
         selectedSharingUser: self.model.toJSON().DelegateUserID,
         onSelected: function(sharingUserId) {
           self.model.set({

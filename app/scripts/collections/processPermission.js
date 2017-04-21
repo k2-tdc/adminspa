@@ -7,8 +7,8 @@ Hktdc.Collections = Hktdc.Collections || {};
 
   Hktdc.Collections.ProcessPermission = Backbone.Collection.extend({
 
-    url: function(processId) {
-      return Hktdc.Config.apiURL + '/role-permission/menuitem/' + processId;
+    url: function(processName) {
+      return Hktdc.Config.apiURL + '/permissions?process=' + processName;
     },
 
     model: Hktdc.Models.ProcessPermission

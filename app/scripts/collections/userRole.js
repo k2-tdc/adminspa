@@ -7,8 +7,8 @@ Hktdc.Collections = Hktdc.Collections || {};
 
   Hktdc.Collections.UserRole = Backbone.Collection.extend({
 
-    url: function(processId) {
-      return Hktdc.Config.apiURL + '/role-permission/user-role/' + processId;
+    url: function(processName) {
+      return Hktdc.Config.apiURL + '/user-role?process=' + processName;
     },
 
     model: Hktdc.Models.UserRole
