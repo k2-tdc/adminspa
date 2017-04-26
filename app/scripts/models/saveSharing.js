@@ -7,8 +7,9 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.SaveSharing = Backbone.Model.extend({
 
-    url: function() {
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/sharing-list';
+    url: function(sharingId) {
+      var sharingIdURI = (sharingId) ? '/' + sharingId : '';
+      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/sharing-list' + sharingIdURI;
     },
 
     initialize: function() {},

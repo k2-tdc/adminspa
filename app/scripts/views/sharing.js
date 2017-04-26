@@ -497,6 +497,9 @@ Hktdc.Views = Hktdc.Views || {};
       }
       var saveSharingModel = new Hktdc.Models.SaveSharing();
       saveSharingModel.set(data);
+      if (rawData.saveType === 'PUT') {
+        saveSharingModel.url = saveSharingModel.url(parseInt(rawData.DelegationID));
+      }
       saveSharingModel.on('invalid', function(model, err) {
         Hktdc.Dispatcher.trigger('openAlert', {
           message: err,

@@ -501,6 +501,9 @@ Hktdc.Views = Hktdc.Views || {};
       }
       var saveDelegationModel = new Hktdc.Models.SaveDelegation();
       saveDelegationModel.set(data);
+      if (rawData.saveType === 'PUT') {
+        saveDelegationModel.url = saveDelegationModel.url(parseInt(rawData.DelegationID));
+      }
       saveDelegationModel.on('invalid', function(model, err) {
         Hktdc.Dispatcher.trigger('openAlert', {
           message: err,

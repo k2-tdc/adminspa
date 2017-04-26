@@ -167,7 +167,7 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         var ruleCollection = new Hktdc.Collections.Rule();
         // console.log(this.model.toJSON());
-        ruleCollection.url = ruleCollection.url(self.model.toJSON().Code);
+        ruleCollection.url = ruleCollection.url(self.model.toJSON().WorkerRuleId);
         var doFetch = function() {
           ruleCollection.fetch({
             beforeSend: utils.setAuthHeader,
@@ -203,7 +203,7 @@ Hktdc.Views = Hktdc.Views || {};
         deferred.resolve(self.model.toJSON().natureCollection);
       } else {
         var natureCollection = new Hktdc.Collections.RuleFieldNature();
-        natureCollection.url = natureCollection.url(self.model.toJSON().Code);
+        natureCollection.url = natureCollection.url(self.model.toJSON().WorkerRuleId);
         var doFetch = function() {
           natureCollection.fetch({
             beforeSend: utils.setAuthHeader,
@@ -276,7 +276,7 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         var gradingCollection = new Hktdc.Collections.Grading();
         // console.log(self.model.toJSON());
-        gradingCollection.url = gradingCollection.url(self.model.toJSON().Code);
+        gradingCollection.url = gradingCollection.url(self.model.toJSON().WorkerRuleId);
         var doFetch = function() {
           gradingCollection.fetch({
             beforeSend: utils.setAuthHeader,
@@ -385,7 +385,7 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         var doFetch = function() {
           var ruleDepartmentCollection = new Hktdc.Collections.Department();
-          ruleDepartmentCollection.url = ruleDepartmentCollection.url('worker-rule');
+          ruleDepartmentCollection.url = ruleDepartmentCollection.url('worker-rules');
           ruleDepartmentCollection.fetch({
             beforeSend: utils.setAuthHeader,
             success: function() {
@@ -517,7 +517,7 @@ Hktdc.Views = Hktdc.Views || {};
         deferred.resolve(self.model.toJSON().criteriaCollection);
       } else {
         var criteriaCollection = new Hktdc.Collections.Criteria();
-        criteriaCollection.url = criteriaCollection.url(self.model.toJSON().Code);
+        criteriaCollection.url = criteriaCollection.url(self.model.toJSON().WorkerRuleId);
         var doFetch = function() {
           criteriaCollection.fetch({
             beforeSend: utils.setAuthHeader,
@@ -553,7 +553,7 @@ Hktdc.Views = Hktdc.Views || {};
         deferred.resolve(self.model.toJSON().priorityCollection);
       } else {
         var priorityCollection = new Hktdc.Collections.Priority();
-        priorityCollection.url = priorityCollection.url(self.model.toJSON().Code);
+        priorityCollection.url = priorityCollection.url(self.model.toJSON().WorkerRuleId);
         var doFetch = function() {
           priorityCollection.fetch({
             beforeSend: utils.setAuthHeader,
@@ -1065,7 +1065,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     previewButtonHandler: function() {
       var queryParams = _.omit(this.model.toJSON(), 'departmentCollection', 'applicantCollection');
-      var url = Hktdc.Config.apiURL + '/worker-rule/preview';
+      var url = Hktdc.Config.apiURL + '/worker-rules/preview';
       var xhr = new XMLHttpRequest();
       var rawData = this.model.toJSON();
       // console.log(rawData.DateFrom);

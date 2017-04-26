@@ -147,7 +147,7 @@ Hktdc.Views = Hktdc.Views || {};
     getAjaxURL: function() {
       var queryParams = _.pick(this.model.toJSON(), 'process');
       var queryString = utils.getQueryString(queryParams, true);
-      return Hktdc.Config.apiURL + '/user-role' + queryString;
+      return Hktdc.Config.apiURL + '/user-roles' + queryString;
     },
 
     doSearch: function() {

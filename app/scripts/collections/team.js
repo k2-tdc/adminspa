@@ -8,7 +8,7 @@ Hktdc.Collections = Hktdc.Collections || {};
   Hktdc.Collections.Team = Backbone.Collection.extend({
 
     url: function() {
-      return Hktdc.Config.apiURL + '/worker-rule/team';
+      return Hktdc.Config.apiURL + '/worker-rule-settings/teams';
     },
 
     model: Hktdc.Models.Team

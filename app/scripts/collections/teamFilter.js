@@ -7,7 +7,7 @@ Hktdc.Collections = Hktdc.Collections || {};
 
   Hktdc.Collections.TeamFilter = Backbone.Collection.extend({
     url: function(code) {
-      return Hktdc.Config.apiURL + '/worker-rule/team-filter';
+      return Hktdc.Config.apiURL + '/worker-rule-settings/team-filters';
     },
 
     model: Hktdc.Models.TeamFilter

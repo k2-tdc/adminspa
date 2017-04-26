@@ -8,7 +8,7 @@ Hktdc.Collections = Hktdc.Collections || {};
   Hktdc.Collections.WorkerRuleProcess = Backbone.Collection.extend({
 
     url: function(menuId) {
-      return Hktdc.Config.apiURL + '/worker-rule/process?MenuId=' + menuId;
+      return Hktdc.Config.apiURL + '/worker-rules/process?MenuId=' + menuId;
     },
 
     model: Hktdc.Models.Process

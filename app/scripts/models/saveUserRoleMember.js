@@ -9,7 +9,7 @@ Hktdc.Models = Hktdc.Models || {};
 
     url: function(memberId) {
       var memberIdPath = (memberId) ? '/' + memberId : '';
-      return Hktdc.Config.apiURL + '/user-role-member' + memberIdPath;
+      return Hktdc.Config.apiURL + '/user-role-members' + memberIdPath;
     },
 
     initialize: function() {},

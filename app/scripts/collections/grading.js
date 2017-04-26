@@ -8,7 +8,7 @@ Hktdc.Collections = Hktdc.Collections || {};
   Hktdc.Collections.Grading = Backbone.Collection.extend({
 
     url: function(code) {
-      return Hktdc.Config.apiURL + '/worker-rule/grade';
+      return Hktdc.Config.apiURL + '/worker-rule-settings/grades';
     },
     model: Hktdc.Models.Grading
 

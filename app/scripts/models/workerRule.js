@@ -9,7 +9,7 @@ Hktdc.Models = Hktdc.Models || {};
 
     url: function(workerRuleId) {
       var path = workerRuleId ? '/' + workerRuleId : '';
-      return Hktdc.Config.apiURL + '/worker-rule' + path;
+      return Hktdc.Config.apiURL + '/worker-rules' + path;
     },
 
     initialize: function() {},

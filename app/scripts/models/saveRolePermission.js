@@ -10,7 +10,7 @@ Hktdc.Models = Hktdc.Models || {};
     idAttribute: 'UserRoleGUID',
 
     url: function() {
-      return Hktdc.Config.apiURL + '/role-permission';
+      return Hktdc.Config.apiURL + '/role-permissions';
     },
 
     initialize: function() {},

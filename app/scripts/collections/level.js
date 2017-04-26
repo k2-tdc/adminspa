@@ -8,7 +8,7 @@ Hktdc.Collections = Hktdc.Collections || {};
   Hktdc.Collections.Level = Backbone.Collection.extend({
 
     url: function() {
-      return Hktdc.Config.apiURL + '/worker-rule/level';
+      return Hktdc.Config.apiURL + '/worker-rule-settings/levels';
     },
 
     model: Hktdc.Models.Level

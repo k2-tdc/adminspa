@@ -8,7 +8,7 @@ Hktdc.Collections = Hktdc.Collections || {};
   Hktdc.Collections.RuleFieldNature = Backbone.Collection.extend({
 
     url: function(code) {
-      return Hktdc.Config.apiURL + '/worker-rule/nature';
+      return Hktdc.Config.apiURL + '/worker-rule-settings/natures';
     },
 
     model: Hktdc.Models.RuleFieldNature

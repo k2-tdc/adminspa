@@ -8,7 +8,7 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.DeleteWorkerRuleMember = Backbone.Model.extend({
 
     url: function(id) {
-      return Hktdc.Config.apiURL + '/worker-rule/rule/' + id;
+      return Hktdc.Config.apiURL + '/worker-rule-settings/' + id;
     },
 
     initialize: function() {},

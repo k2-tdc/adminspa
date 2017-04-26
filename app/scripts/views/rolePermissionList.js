@@ -103,7 +103,7 @@ Hktdc.Views = Hktdc.Views || {};
       // var queryParams = _.omit(this.model.toJSON(), 'stepCollection', 'processCollection', 'mode');
       // var queryString = utils.getQueryString(queryParams, true);
       // return Hktdc.Config.apiURL + '/role-permission' + queryString;
-      return Hktdc.Config.apiURL + '/role-permission';
+      return Hktdc.Config.apiURL + '/role-permissions';
     }
 
   });

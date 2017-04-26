@@ -6,8 +6,8 @@ Hktdc.Collections = Hktdc.Collections || {};
   'use strict';
 
   Hktdc.Collections.Priority = Backbone.Collection.extend({
-    url: function(code) {
-      return Hktdc.Config.apiURL + '/worker-rule/priority/'+ code;
+    url: function(workerRuleId) {
+      return Hktdc.Config.apiURL + '/worker-rule-settings/priorities?worker-rule-id='+ workerRuleId;
     },
 
     model: Hktdc.Models.Priority

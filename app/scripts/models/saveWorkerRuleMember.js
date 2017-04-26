@@ -8,7 +8,7 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.SaveWorkerRuleMember = Backbone.Model.extend({
 
     url: function() {
-      return Hktdc.Config.apiURL + '/worker-rule/rule';
+      return Hktdc.Config.apiURL + '/worker-rule-settings';
     },
 
     initialize: function() {},

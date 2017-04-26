@@ -8,7 +8,7 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.EditUserRoleMember = Backbone.Model.extend({
 
     url: function(memberGUID) {
-      return Hktdc.Config.apiURL + '/user-role-member/' + memberGUID;
+      return Hktdc.Config.apiURL + '/user-role-members/' + memberGUID;
     },
 
     initialize: function() {},
