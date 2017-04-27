@@ -23,8 +23,8 @@ Hktdc.Models = Hktdc.Models || {};
       StartDate: '',
       EndDate: '',
       // custom
-      StartTime: '17:30',
-      EndTime: '17:30',
+      StartTime: '00:00',
+      EndTime: '00:00',
       // custom
       Permission: '',
       Remark: ''
