@@ -61,12 +61,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       Q.all([
         self.loadProcess(),
-        Q.fcall(function() {
-          if (self.model.toJSON().showUser) {
-            return self.loadFullUser();
-          }
-          return [];
-        }),
+        self.loadFullUser(),
         self.loadDepartment(),
         self.loadPermission()
       ])
