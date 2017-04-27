@@ -1065,9 +1065,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     previewButtonHandler: function() {
       var queryParams = _.omit(this.model.toJSON(), 'departmentCollection', 'applicantCollection');
-      var url = Hktdc.Config.apiURL + '/worker-rules/preview';
-      var xhr = new XMLHttpRequest();
       var rawData = this.model.toJSON();
+      var url = Hktdc.Config.apiURL + '/worker-rules/' + rawData.WorkerRuleId + '/preview';
+      var xhr = new XMLHttpRequest();
       // console.log(rawData.DateFrom);
       // console.log(rawData.DateTo);
       var formData = new FormData();
