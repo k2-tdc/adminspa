@@ -464,7 +464,8 @@ Hktdc.Routers = Hktdc.Routers || {};
           rolePermissionListModel.set({
             mode: 'User Permission',
             profile: utils.getParameterByName('profile'),
-            showSearch: Hktdc.Config.isAdmin
+            showSearch: Hktdc.Config.isAdmin,
+            processId: utils.getParameterByName('processId')
           });
           var emailProfileListView = new Hktdc.Views.RolePermissionDetailList({
             model: rolePermissionListModel
