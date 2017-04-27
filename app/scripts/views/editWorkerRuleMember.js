@@ -1236,6 +1236,9 @@ Hktdc.Views = Hktdc.Views || {};
 
       if (saveRuleMemberModel.isValid()) {
         console.log('saveModel: ', saveRuleMemberModel.toJSON());
+          if (self.model.toJSON().saveType === 'PUT') {
+              saveRuleMemberModel.url = saveRuleMemberModel.url(self.model.toJSON().WorkerSettingId);
+          }
         var doSave = function() {
           saveRuleMemberModel.save(null, {
             type: rawData.saveType,
