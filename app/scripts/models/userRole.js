@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone */
+/* global Hktdc, Backbone, _ */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -14,13 +14,28 @@ Hktdc.Models = Hktdc.Models || {};
       return Hktdc.Config.apiURL + '/user-role' + roleIdPath;
     },
 
-    initialize: function() {},
+    initialize: function() {
+      var self = this;
+      this.isInvalid = {
+        Role: function() {
+          return (self.attributes.Role) ? false : 'Role is required.';
+        },
+        Desc: function() {
+          return (self.attributes.Desc) ? false : 'Description is required.';
+        },
+        ProcessId: function() {
+          console.log(self.attributes.ProcessId);
+          return (String(self.attributes.ProcessId) !== '0' && !!self.attributes.ProcessId) ? false : 'Process is required.';
+        }
+      };
+    },
 
     defaults: {
-      UserRoleGUID: '',
       Role: '',
       Desc: '',
       ProcessId: '',
+      UserRoleGUID: '',
+
       ProcessName: '',
       Member: [
         // UserRoleMemberGUID: xxx,
@@ -35,11 +50,33 @@ Hktdc.Models = Hktdc.Models || {};
       selectedMember: []
     },
 
-    validate: function(attrs, options) {},
+    validate: function(attrs, options) {
+      // *** valid => return false;
+      // *** invalid => return true;
+
+      // for single validate
+      if (options.field && !_.isArray(options.field)) {
+        if (this.isInvalid[options.field] && this.isInvalid[options.field]()) {
+          console.log('invalid: ', options.field, '>> ', this.isInvalid[options.field]());
+          options.onInvalid({ message: this.isInvalid[options.field]() });
+          return true;
+        } else {
+          this.trigger('valid', { field: options.field });
+          return false;
+        }
+
+      // validate the whole form
+      } else {
+        return !(
+          !this.isInvalid.Role() &&
+          !this.isInvalid.Desc() &&
+          !this.isInvalid.ProcessId()
+        );
+      }
+    },
 
     parse: function(response, options) {
       return response;
     }
   });
-
 })();

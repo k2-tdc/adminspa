@@ -333,7 +333,6 @@ Hktdc.Views = Hktdc.Views || {};
             validate: true,
             field: 'TaskID',
             onInvalid: function(invalidObject) {
-              console.log('crash');
               self.toggleInvalidMessage('TaskID', invalidObject.message, true);
             }
           });

@@ -11,6 +11,7 @@ Hktdc.Models = Hktdc.Models || {};
       var path = delegationId ? '/' + delegationId : '';
       return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/delegation-list' + path;
     },
+
     initialize: function() {
       var self = this;
       this.isInvalid = {

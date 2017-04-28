@@ -23,8 +23,6 @@ Hktdc.Models = Hktdc.Models || {};
       UserRoleGUID: null
     },
 
-    validate: function(attrs, options) {},
-
     parse: function(response, options) {
       return response;
     }
