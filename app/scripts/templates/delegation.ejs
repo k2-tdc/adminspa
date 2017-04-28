@@ -10,7 +10,10 @@
         <div class="col-md-4">
           <div class="form-label text-right">User</div>
         </div>
-        <div class="col-md-8 userContainer"></div>
+        <div class="col-md-8 container">
+          <div class="userContainer"></div>
+          <div class="error-message hidden"></div>
+        </div>
       </div>
       <div class="sep-space"></div>
 
@@ -20,7 +23,7 @@
       <div class="col-md-4">
         <div class="form-label text-right">Workflow</div>
       </div>
-      <div class="col-md-8 workflowContainer"></div>
+      <div class="col-md-8 workflowContainer container"></div>
     </div>
     <div class="sep-space"></div>
 
@@ -28,10 +31,13 @@
       <div class="col-md-4">
         <div class="form-label text-right">Task</div>
       </div>
-      <div class="col-md-8 stepContainer">
-        <select class="form-control" disabled="disabled">
-          <option value="">-- Select --</option>
-        </select>
+      <div class="col-md-8 container">
+        <div class="stepContainer">
+          <select class="form-control" disabled="disabled">
+            <option value="">-- Select --</option>
+          </select>
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -41,7 +47,10 @@
       <div class="col-md-4">
         <div class="form-label text-right">Applicant Department</div>
       </div>
-      <div class="col-md-8 departmentContainer"></div>
+      <div class="col-md-8 container">
+        <div class="departmentContainer"></div>
+        <div class="error-message hidden"></div>
+      </div>
     </div>
     <div class="sep-space"></div>
 
@@ -49,10 +58,13 @@
       <div class="col-md-4">
         <div class="form-label text-right">Delegate To</div>
       </div>
-      <div class="col-md-8 delegationUserContainer">
-        <select class="form-control">
-          <option value="">-- Select --</option>
-        </select>
+      <div class="col-md-8 container">
+        <div class="delegationUserContainer">
+          <select class="form-control">
+            <option value="">-- Select --</option>
+          </select>
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -63,9 +75,15 @@
       </div>
       <div class="col-md-8">
         <div class="row">
-          <div class="col-md-8 fromDatePicker"></div>
-          <div class="col-md-4">
-            <input type="time" name="StartTime" step="300" class="form-control formTextField" value="<%= StartTime %>">
+          <div class="col-md-8 container">
+            <div class="fromDatePicker"></div>
+            <div class="error-message hidden"></div>
+          </div>
+          <div class="col-md-4 container">
+            <div>
+              <input type="time" name="StartTime" step="300" class="form-control formTextField" value="<%= StartTime %>">
+            </div>
+            <div class="error-message hidden"></div>
           </div>
         </div>
       </div>
@@ -78,9 +96,13 @@
       </div>
       <div class="col-md-8">
         <div class="row">
-          <div class="col-md-8 toDatePicker"></div>
-          <div class="col-md-4">
-            <input type="time" name="EndTime" step="300" class="form-control formTextField" value="<%= EndTime%>">
+          <div class="col-md-8 container">
+            <div class="toDatePicker"></div>
+            <div class="error-message hidden"></div>
+          </div>
+          <div class="col-md-4 container">
+            <div><input type="time" name="EndTime" step="300" class="form-control formTextField" value="<%= EndTime%>"></div>
+            <div class="error-message hidden"></div>
           </div>
         </div>
       </div>
@@ -91,7 +113,10 @@
       <div class="col-md-4">
         <div class="form-label text-right">Action</div>
       </div>
-      <div class="col-md-8 actionContainer"></div>
+      <div class="col-md-8 container">
+        <div class="actionContainer"></div>
+        <div class="error-message hidden"></div>
+      </div>
     </div>
     <div class="sep-space"></div>
 

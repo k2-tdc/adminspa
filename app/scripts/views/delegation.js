@@ -53,6 +53,14 @@ Hktdc.Views = Hktdc.Views || {};
       // self.model.on('change:delegationUserCollection', function() {
       //   self.renderDelegationUserSelect();
       // });
+      self.model.on('invalid', function(model, invalidObject) {
+        self.toggleInvalidMessage(invalidObject.field, true);
+      });
+
+      self.listenTo(self.model, 'valid', function(validObj) {
+        // console.log('is valid', validObj);
+        self.toggleInvalidMessage(validObj.field, false);
+      });
     },
 
     render: function() {
@@ -313,10 +321,20 @@ Hktdc.Views = Hktdc.Views || {};
       var stepSelectView = new Hktdc.Views.StepSelect({
         collection: self.model.toJSON().stepCollection,
         selectedStep: self.model.toJSON().TaskID,
+        attributes: { field: 'TaskID' },
         disabled: disabled,
         onSelected: function(taskId) {
           self.model.set({
             TaskID: taskId
+          });
+          self.model.set({
+            TaskID: taskId
+          }, {
+            validate: true,
+            field: 'TaskID',
+            onInvalid: function(invalidObject) {
+              self.toggleInvalidMessage('TaskID', invalidObject.message, true);
+            }
           });
         }
       });
@@ -331,11 +349,22 @@ Hktdc.Views = Hktdc.Views || {};
       var userView;
       userView = new Hktdc.Views.UserSelect({
         collection: self.model.toJSON().userCollection,
+        attributes: {field: 'UserID'},
         selectedUser: self.model.toJSON().UserID,
         onSelected: function(selectedUser) {
           var userId = selectedUser.UserID;
           self.model.set({
             UserID: userId
+          });
+
+          self.model.set({
+            UserID: userId
+          }, {
+            validate: true,
+            field: 'UserID',
+            onInvalid: function(invalidObject) {
+              self.toggleInvalidMessage('UserID', invalidObject.message, true);
+            }
           });
         }
       });
@@ -350,30 +379,49 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(moment(self.model.toJSON().DateFrom).format('DD MMM YYYY'));
       var fromDateView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
+          field: 'StartDate',
           value: (self.model.toJSON().StartDate)
             ? moment(self.model.toJSON().StartDate).format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
-          self.model.set({
+          var saveValue = {
             StartDate: (moment(val, 'YYYY-MM-DD').isValid())
               ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
               : ''
+          };
+          self.model.set(saveValue);
+
+          self.model.set(saveValue, {
+            validate: true,
+            field: 'StartDate',
+            onInvalid: function(invalidObject) {
+              self.toggleInvalidMessage('StartDate', invalidObject.message, true);
+            }
           });
         }
       });
 
       var toDateView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
+          field: 'EndDate',
           value: (self.model.toJSON().EndDate)
             ? moment(self.model.toJSON().EndDate).format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
-          self.model.set({
+          var saveValue = {
             EndDate: (moment(val, 'YYYY-MM-DD').isValid())
-              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
-              : ''
+            ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+            : ''
+          };
+          self.model.set(saveValue);
+          self.model.set(saveValue, {
+            validate: true,
+            field: 'EndDate',
+            onInvalid: function(invalidObject) {
+              self.toggleInvalidMessage('EndDate', invalidObject.message, true);
+            }
           });
         }
       });
@@ -386,10 +434,20 @@ Hktdc.Views = Hktdc.Views || {};
         var self = this;
         var departmentSelectView = new Hktdc.Views.DepartmentSelect({
           collection: departmentCollection,
+          attributes: { field: 'Dept' },
           selectedDepartment: self.model.toJSON().Dept,
           onSelect: function(departmentId) {
             self.model.set({
               Dept: departmentId
+            });
+            self.model.set({
+              Dept: departmentId
+            }, {
+              validate: true,
+              field: 'Dept',
+              onInvalid: function(invalidObject) {
+                self.toggleInvalidMessage('Dept', invalidObject.message, true);
+              }
             });
             // self.loadDelegationUser(departmentId)
             //   .then(function(delegationUserCollection) {
@@ -413,9 +471,19 @@ Hktdc.Views = Hktdc.Views || {};
         var actionSelectView = new Hktdc.Views.DelegationActionSelect({
           collection: actionCollection,
           selectedDelegationAction: self.model.toJSON().Action,
+          attributes: { field: 'Action' },
           onSelect: function(departmentId) {
             self.model.set({
               Action: departmentId
+            });
+            self.model.set({
+              Action: departmentId
+            }, {
+              validate: true,
+              field: 'Action',
+              onInvalid: function(invalidObject) {
+                self.toggleInvalidMessage('Action', invalidObject.message, true);
+              }
             });
           }
         });
@@ -432,9 +500,19 @@ Hktdc.Views = Hktdc.Views || {};
       DelegationUserView = new Hktdc.Views.DelegationUserSelect({
         collection: self.model.toJSON().userCollection,
         selectedDelegationUser: self.model.toJSON().DelegateUserID,
+        attributes: { field: 'DelegateUserID' },
         onSelected: function(delegationUserId) {
           self.model.set({
             DelegateUserID: delegationUserId
+          });
+          self.model.set({
+            DelegateUserID: delegationUserId
+          }, {
+            validate: true,
+            field: 'DelegateUserID',
+            onInvalid: function(invalidObject) {
+              self.toggleInvalidMessage('DelegateUserID', invalidObject.message, true);
+            }
           });
         }
       });
@@ -444,6 +522,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     updateFormModel: function(ev) {
+      var self = this;
       var updateObject = {};
       var $target = $(ev.target);
       var targetField = $target.attr('name');
@@ -452,34 +531,114 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         updateObject[targetField] = $target.val();
       }
-      this.model.set(updateObject);
+      self.model.set(updateObject);
 
-      // this.model.set(updateObject, {
-      // validate: true,
-      // field: targetField
-      // });
       // double set is to prevent invalid value bypass the set model process
       // because if saved the valid model, then set the invalid model will not success and the model still in valid state
+      self.model.set(updateObject, {
+        validate: true,
+        field: targetField,
+        onInvalid: function(invalidObject) {
+          self.toggleInvalidMessage(targetField, invalidObject.message, true);
+        }
+      });
     },
 
     saveDelegation: function() {
       // console.log(this.model.toJSON());
-      this.doSaveDelegation()
-        .then(function(response) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            type: 'success',
-            title: 'Confirmation',
-            message: 'Delegation is saved.'
+      // var self = this;
+      this.validateField();
+      if (this.model.isValid()) {
+        this.doSaveDelegation()
+          .then(function(response) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              type: 'success',
+              title: 'Confirmation',
+              message: 'Delegation is saved.'
+            });
+            window.history.back();
+          })
+          .catch(function(err) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              type: 'error',
+              title: 'Confirmation',
+              message: err
+            });
           });
-          window.history.back();
-        })
-        .catch(function(err) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            type: 'error',
-            title: 'Confirmation',
-            message: err
-          });
+      } else {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          type: 'error',
+          title: 'Alert',
+          message: 'Input is invalid.'
         });
+      }
+    },
+
+    validateField: function() {
+      var self = this;
+      this.model.set({
+        UserID: this.model.toJSON().UserID
+      }, {
+        validate: true,
+        field: 'UserID',
+        onInvalid: function(invalidObject) {
+          self.toggleInvalidMessage('UserID', invalidObject.message, true);
+        }
+      });
+      this.model.set({
+        TaskID: this.model.toJSON().TaskID
+      }, {
+        validate: true,
+        field: 'TaskID',
+        onInvalid: function(invalidObject) {
+          self.toggleInvalidMessage('TaskID', invalidObject.message, true);
+        }
+      });
+      this.model.set({
+        Dept: this.model.toJSON().Dept
+      }, {
+        validate: true,
+        field: 'Dept',
+        onInvalid: function(invalidObject) {
+          self.toggleInvalidMessage('Dept', invalidObject.message, true);
+        }
+      });
+      this.model.set({
+        DelegateUserID: this.model.toJSON().DelegateUserID
+      }, {
+        validate: true,
+        field: 'DelegateUserID',
+        onInvalid: function(invalidObject) {
+          self.toggleInvalidMessage('DelegateUserID', invalidObject.message, true);
+        }
+      });
+      this.model.set({
+        StartDate: this.model.toJSON().StartDate
+      }, {
+        validate: true,
+        field: 'StartDate',
+        onInvalid: function(invalidObject) {
+          self.toggleInvalidMessage('StartDate', invalidObject.message, true);
+        }
+      });
+      this.model.set({
+        EndDate: this.model.toJSON().EndDate
+      }, {
+        validate: true,
+        field: 'EndDate',
+        onInvalid: function(invalidObject) {
+          self.toggleInvalidMessage('EndDate', invalidObject.message, true);
+        }
+      });
+      this.model.set({
+        Action: this.model.toJSON().Action
+      }, {
+        validate: true,
+        field: 'Action',
+        onInvalid: function(invalidObject) {
+          self.toggleInvalidMessage('Action', invalidObject.message, true);
+        }
+      });
     },
 
     doSaveDelegation: function() {
@@ -501,44 +660,33 @@ Hktdc.Views = Hktdc.Views || {};
       }
       var saveDelegationModel = new Hktdc.Models.SaveDelegation();
       saveDelegationModel.set(data);
-      saveDelegationModel.on('invalid', function(model, err) {
-        Hktdc.Dispatcher.trigger('openAlert', {
-          message: err,
-          type: 'error',
-          title: 'Error'
-        });
-      });
-      // console.log('is valid: ', saveDelegationModel.isValid());
-      if (saveDelegationModel.isValid()) {
-        var doSave = function() {
-          saveDelegationModel.save({}, {
-            beforeSend: utils.setAuthHeader,
-            type: rawData.saveType,
-            success: function(mymodel, response) {
-              if (response.Success === "1" || response.Success === 1) {
-                deferred.resolve(response);
-              } else {
-                deferred.reject(response.Msg);
-              }
-            },
-            error: function(model, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doSave();
-                }, function(err) {
-                  deferred.reject(err);
-                });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('Save Delegation Error');
-              }
+      var doSave = function() {
+        saveDelegationModel.save({}, {
+          beforeSend: utils.setAuthHeader,
+          type: rawData.saveType,
+          success: function(mymodel, response) {
+            // console.log(response);
+            if (response.Success) {
+              deferred.resolve(response);
+            } else {
+              deferred.reject('save failed');
             }
-          });
-        };
-        doSave();
-        // } else {
-        //   deferred.reject('Please fill all the fields.');
-      }
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('Save Delegation Error');
+            }
+          }
+        });
+      };
+      doSave();
       return deferred.promise;
     },
 
@@ -601,7 +749,23 @@ Hktdc.Views = Hktdc.Views || {};
       };
       doSave();
       return deferred.promise;
-    }
+    },
 
+    toggleInvalidMessage: function(field, message, isShow) {
+      var self = this;
+      var $target = $('[field=' + field + ']', self.el);
+      var $errorContainer = ($target.parents('.container').find('.error-message').length)
+        ? $target.parents('.container').find('.error-message')
+        : $target.parents().siblings('.error-message');
+      if (isShow) {
+        $errorContainer.removeClass('hidden');
+        $errorContainer.html(message);
+        $target.addClass('error-input');
+      } else {
+        $errorContainer.addClass('hidden');
+        $errorContainer.empty();
+        $target.removeClass('error-input');
+      }
+    }
   });
 })();

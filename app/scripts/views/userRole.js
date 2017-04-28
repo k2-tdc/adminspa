@@ -12,7 +12,8 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'div',
 
     events: {
-      'change .formTextField': 'updateFormModel',
+      // 'change .formTextField': 'updateFormModel',
+      'blur .formTextField': 'updateFormModel',
       'click .delBtn': 'deleteButtonHandler',
       'click .saveBtn': 'saveButtonHandler',
       'click .addMemeberBtn': 'addMemberButtonHandler',
@@ -21,10 +22,20 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function() {
       // $('#mainContent').removeClass('compress');
-
-      this.model.on('change:selectedMember', function(model, value) {
+      var self = this;
+      self.model.on('change:selectedMember', function(model, value) {
         console.log(value);
       });
+
+      self.model.on('invalid', function(model, invalidObject) {
+        self.toggleInvalidMessage(invalidObject.field, true);
+      });
+
+      self.listenTo(self.model, 'valid', function(validObj) {
+        // console.log('is valid', validObj);
+        self.toggleInvalidMessage(validObj.field, false);
+      });
+
     },
 
     render: function() {
@@ -186,11 +197,21 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var processSelectView = new Hktdc.Views.ProcessSelect({
         collection: self.model.toJSON().processCollection,
+        attributes: { field: 'ProcessId', name: 'ProcessId' },
         selectedProcess: self.model.toJSON().ProcessId,
         onSelected: function(process) {
           self.model.set({
             ProcessId: process.ProcessID,
             ProcessName: process.ProcessName
+          });
+          self.model.set({
+            ProcessId: process.ProcessID
+          }, {
+            validate: true,
+            field: 'ProcessId',
+            onInvalid: function(invalidObject) {
+              self.toggleInvalidMessage('ProcessId', invalidObject.message, true);
+            }
           });
         }
       });
@@ -199,18 +220,63 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     updateFormModel: function(ev) {
+      var self = this;
       var updateObject = {};
       var $target = $(ev.target);
       var targetField = $target.attr('name');
-      if ($target.is('[type="checkbox"]')) {
-        updateObject[targetField] = ($target.prop('checked')) ? 1 : 0;
+      console.log(targetField);
+      if ($target.is('select')) {
+        updateObject[targetField] = $target.val();
       } else {
         updateObject[targetField] = $target.val();
       }
-      this.model.set(updateObject);
+      console.log(updateObject);
+      self.model.set(updateObject);
+
+      // double set is to prevent invalid value bypass the set model process
+      // because if saved the valid model, then set the invalid model will not success and the model still in valid state
+      self.model.set(updateObject, {
+        validate: true,
+        field: targetField,
+        onInvalid: function(invalidObject) {
+          self.toggleInvalidMessage(targetField, invalidObject.message, true);
+        }
+      });
     },
 
     saveButtonHandler: function() {
+      this.validateField();
+      if (this.model.isValid()) {
+        this.doSaveUserRole()
+          .then(function(response) {
+            console.log(response);
+            Hktdc.Dispatcher.trigger('openAlert', {
+              type: 'success',
+              title: 'Confirmation',
+              message: 'Delegation is saved.'
+            });
+            Backbone.history.navigate('userrole/' + response.Msg, {trigger: true});
+            // Backbone.history.navigate('userrole', {trigger: true});
+            // window.history.back();
+          })
+          .catch(function(err) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              type: 'error',
+              title: 'Confirmation',
+              message: err
+            });
+          });
+      } else {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          type: 'error',
+          title: 'Alert',
+          message: 'Input is invalid.'
+        });
+      }
+    },
+
+    doSaveUserRole: function() {
+      var deferred = Q.defer();
       var rawData = this.model.toJSON();
       var self = this;
       var saveData = {
@@ -231,33 +297,77 @@ Hktdc.Views = Hktdc.Views || {};
           beforeSend: utils.setAuthHeader,
           type: self.model.toJSON().saveType,
           success: function(model, response) {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'saved',
-              type: 'confirmation',
-              title: 'Confirmation'
-            });
             if (self.model.toJSON().saveType === 'POST' && response.Msg) {
-              Backbone.history.navigate('userrole/' + response.Msg, {trigger: true});
+              deferred.resolve(response);
+            } else {
+              deferred.reject('save failed');
             }
-            // Backbone.history.navigate('userrole', {trigger: true});
           },
           error: function(model, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doSave();
+              }, function(err) {
+                deferred.reject(err);
               });
             } else {
               console.error(response.responseText);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'error on saving user role',
-                type: 'error',
-                title: 'error on saving user role'
-              });
+              deferred.reject('error on saving user role');
             }
           }
         });
       };
       doSave();
+
+      return deferred.promise;
+    },
+
+    validateField: function() {
+      var self = this;
+      this.model.set({
+        Role: this.model.toJSON().Role
+      }, {
+        validate: true,
+        field: 'Role',
+        onInvalid: function(invalidObject) {
+          self.toggleInvalidMessage('Role', invalidObject.message, true);
+        }
+      });
+      this.model.set({
+        Desc: this.model.toJSON().Desc
+      }, {
+        validate: true,
+        field: 'Desc',
+        onInvalid: function(invalidObject) {
+          self.toggleInvalidMessage('Desc', invalidObject.message, true);
+        }
+      });
+      this.model.set({
+        ProcessId: this.model.toJSON().ProcessId
+      }, {
+        validate: true,
+        field: 'ProcessId',
+        onInvalid: function(invalidObject) {
+          self.toggleInvalidMessage('ProcessId', invalidObject.message, true);
+        }
+      });
+    },
+
+    toggleInvalidMessage: function(field, message, isShow) {
+      var self = this;
+      var $target = $('[field=' + field + ']', self.el);
+      var $errorContainer = ($target.parents('.container').find('.error-message').length)
+        ? $target.parents('.container').find('.error-message')
+        : $target.parents().siblings('.error-message');
+      if (isShow) {
+        $errorContainer.removeClass('hidden');
+        $errorContainer.html(message);
+        $target.addClass('error-input');
+      } else {
+        $errorContainer.addClass('hidden');
+        $errorContainer.empty();
+        $target.removeClass('error-input');
+      }
     },
 
     deleteButtonHandler: function() {

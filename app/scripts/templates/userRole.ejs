@@ -9,8 +9,10 @@
       <div class="col-md-2">
         <div class="form-label text-right">Process</div>
       </div>
-      <div class="col-md-10 processContainer">
+      <div class="col-md-10 container">
         <!-- status Select list here -->
+        <div class="processContainer"></div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
 
@@ -19,8 +21,12 @@
       <div class="col-md-2">
         <div class="form-label text-right">Role</div>
       </div>
-      <div class="col-md-10">
-        <input type="text" class="form-control formTextField" name="Role" value="<%= Role%>">
+      <div class="col-md-10 container">
+        <div>
+          <input type="text" class="form-control formTextField" field="Role" name="Role" value="<%= Role %>">
+        </div>
+        <div class="error-message hidden"></div>
+
       </div>
     </div>
     <div class="sep-space"></div>
@@ -30,8 +36,11 @@
       <div class="col-md-2">
         <div class="form-label text-right">Description</div>
       </div>
-      <div class="col-md-10">
-        <textarea name="Desc" class="form-control formTextField" rows="8" cols="80"><%= Desc %></textarea>
+      <div class="col-md-10 container">
+        <div>
+          <textarea field="Desc" name="Desc" class="form-control formTextField" rows="8" cols="80"><%= Desc %></textarea>
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
