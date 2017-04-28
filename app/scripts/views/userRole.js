@@ -253,7 +253,7 @@ Hktdc.Views = Hktdc.Views || {};
             Hktdc.Dispatcher.trigger('openAlert', {
               type: 'success',
               title: 'Confirmation',
-              message: 'Delegation is saved.'
+              message: 'User role is saved.'
             });
             Backbone.history.navigate('userrole/' + response.Msg, {trigger: true});
             // Backbone.history.navigate('userrole', {trigger: true});
@@ -297,7 +297,7 @@ Hktdc.Views = Hktdc.Views || {};
           beforeSend: utils.setAuthHeader,
           type: self.model.toJSON().saveType,
           success: function(model, response) {
-            if (self.model.toJSON().saveType === 'POST' && response.Msg) {
+            if (response.Msg) {
               deferred.resolve(response);
             } else {
               deferred.reject('save failed');
