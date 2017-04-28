@@ -61,12 +61,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       Q.all([
         self.loadProcess(),
-        Q.fcall(function() {
-          if (self.model.toJSON().showUser) {
-            return self.loadFullUser();
-          }
-          return [];
-        }),
+        self.loadFullUser(),
         self.loadDepartment(),
         self.loadPermission()
       ])
@@ -497,6 +492,9 @@ Hktdc.Views = Hktdc.Views || {};
       }
       var saveSharingModel = new Hktdc.Models.SaveSharing();
       saveSharingModel.set(data);
+      if (rawData.saveType === 'PUT') {
+        saveSharingModel.url = saveSharingModel.url(parseInt(rawData.DelegationID));
+      }
       saveSharingModel.on('invalid', function(model, err) {
         Hktdc.Dispatcher.trigger('openAlert', {
           message: err,

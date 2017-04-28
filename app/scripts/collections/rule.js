@@ -7,8 +7,8 @@ Hktdc.Collections = Hktdc.Collections || {};
 
   Hktdc.Collections.Rule = Backbone.Collection.extend({
 
-    url: function(code) {
-      return Hktdc.Config.apiURL + '/worker-rule/rule/' + code;
+    url: function(workerRuleId) {
+      return Hktdc.Config.apiURL + '/worker-rule-settings/rules?worker-rule-id=' + workerRuleId;
     },
 
     model: Hktdc.Models.Rule

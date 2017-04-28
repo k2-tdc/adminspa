@@ -7,8 +7,9 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.SaveDelegation = Backbone.Model.extend({
 
-    url: function() {
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/delegation-list';
+    url: function(delegationId) {
+      var delegationIdURI = (delegationId) ? '/' + delegationId : '';
+      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/delegation-list' + delegationIdURI;
     },
 
     defaults: {

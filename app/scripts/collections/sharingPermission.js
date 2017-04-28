@@ -7,7 +7,7 @@ Hktdc.Collections = Hktdc.Collections || {};
 
   Hktdc.Collections.SharingPermission = Backbone.Collection.extend({
     url: function(type) {
-      return Hktdc.Config.apiURL + '/sharing-list/action?type=' + type;
+      return Hktdc.Config.apiURL + '/sharing-list/actions?type=' + type;
     },
 
     model: Hktdc.Models.SharingPermission

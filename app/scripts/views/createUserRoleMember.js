@@ -44,7 +44,7 @@ Hktdc.Views = Hktdc.Views || {};
     loadDepartment: function() {
       var deferred = Q.defer();
       var departmentCollection = new Hktdc.Collections.Department();
-      departmentCollection.url = departmentCollection.url('user-role-member');
+      departmentCollection.url = departmentCollection.url('user-role-members');
       var doFetch = function() {
         departmentCollection.fetch({
           beforeSend: utils.setAuthHeader,

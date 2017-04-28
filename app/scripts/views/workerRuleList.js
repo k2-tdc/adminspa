@@ -188,7 +188,7 @@ Hktdc.Views = Hktdc.Views || {};
     getAjaxURL: function() {
       var queryParams = _.omit(this.model.toJSON(), 'showSearch', 'processCollection', 'mode', 'menuId');
       var queryString = utils.getQueryString(queryParams, true);
-      return Hktdc.Config.apiURL + '/worker-rule' + queryString;
+      return Hktdc.Config.apiURL + '/worker-rules' + queryString;
     },
 
     goToCreatePage: function() {

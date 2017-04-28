@@ -9,7 +9,7 @@ Hktdc.Models = Hktdc.Models || {};
 
     url: function(permissionGUIDArray) {
       var permissionGUIDString = permissionGUIDArray.join(',');
-      return Hktdc.Config.apiURL + '/role-permission?RolePermissionGUID=' + permissionGUIDString;
+      return Hktdc.Config.apiURL + '/role-permissions/' + permissionGUIDString;
     },
 
     initialize: function() {},

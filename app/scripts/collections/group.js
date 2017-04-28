@@ -7,7 +7,7 @@ Hktdc.Collections = Hktdc.Collections || {};
 
   Hktdc.Collections.Group = Backbone.Collection.extend({
     url: function() {
-      return Hktdc.Config.apiURL + '/worker-rule/user-group';
+      return Hktdc.Config.apiURL + '/worker-rule-settings/user-groups';
     },
 
     model: Hktdc.Models.Group

@@ -7,8 +7,9 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.SaveWorkerRuleMember = Backbone.Model.extend({
 
-    url: function() {
-      return Hktdc.Config.apiURL + '/worker-rule/rule';
+    url: function(roleSettingId) {
+        var roleSettingIdPath = (roleSettingId) ? '/' + roleSettingId : '';
+        return Hktdc.Config.apiURL + '/worker-rule-settings' + roleSettingIdPath;
     },
 
     initialize: function() {},

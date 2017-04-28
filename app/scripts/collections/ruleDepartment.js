@@ -8,7 +8,7 @@ Hktdc.Collections = Hktdc.Collections || {};
   Hktdc.Collections.RuleDepartment = Backbone.Collection.extend({
 
     url: function() {
-      return Hktdc.Config.apiURL + '/worker-rule/department';
+      return Hktdc.Config.apiURL + '/worker-rule-settings/department';
     },
 
     model: Hktdc.Models.RuleDepartment

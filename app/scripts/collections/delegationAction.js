@@ -7,7 +7,7 @@ Hktdc.Collections = Hktdc.Collections || {};
 
   Hktdc.Collections.DelegationAction = Backbone.Collection.extend({
     url: function(type) {
-      return Hktdc.Config.apiURL + '/delegation-sharing-list/action?type=' + type;
+      return Hktdc.Config.apiURL + '/delegation-list/actions?type=' + type;
     },
 
     model: Hktdc.Models.DelegationAction

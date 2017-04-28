@@ -11,7 +11,7 @@ Hktdc.Models = Hktdc.Models || {};
 
     url: function(roleId) {
       var roleIdPath = (roleId) ? '/' + roleId : '';
-      return Hktdc.Config.apiURL + '/user-role' + roleIdPath;
+      return Hktdc.Config.apiURL + '/user-roles' + roleIdPath;
     },
 
     initialize: function() {

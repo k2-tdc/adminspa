@@ -313,7 +313,12 @@ Hktdc.Views = Hktdc.Views || {};
     getAjaxURL: function() {
       var queryParams = _.pick(this.model.toJSON(), 'UserId', 'WorkerId');
       var queryString = utils.getQueryString(queryParams, true);
-      return Hktdc.Config.apiURL + '/worker-rule/' + this.model.toJSON().WorkerRuleId + '/rule/' + queryString;
+      if(queryString !== '') {
+          queryString = '&' + queryString.substr(1);
+          queryString = queryString.replace("UserId", "user-id");
+          queryString = queryString.replace("WorkerId", "worker-id");
+      }
+      return Hktdc.Config.apiURL + '/worker-rule-settings?worker-rule-id=' + this.model.toJSON().WorkerRuleId + queryString;
     },
 
     saveButtonHandler: function() {
