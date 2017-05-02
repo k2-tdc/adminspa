@@ -308,7 +308,7 @@ Hktdc.Views = Hktdc.Views || {};
             type: method,
             success: function(mymodel, response) {
               // console.log(response);
-              if (response.success) {
+              if (response.Success === '1' || response.Success === 1) {
                 deferred.resolve(response);
               } else {
                 deferred.reject('save failed');

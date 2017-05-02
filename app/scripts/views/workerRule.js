@@ -347,7 +347,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       if (saveWorkerRuleModel.isValid()) {
-        saveWorkerRuleModel.url = saveWorkerRuleModel.url(self.model.toJSON().UserRoleGUID);
+        saveWorkerRuleModel.url = saveWorkerRuleModel.url(self.model.toJSON().WorkerRuleId);
         var doSave = function() {
           saveWorkerRuleModel.save({}, {
             beforeSend: utils.setAuthHeader,

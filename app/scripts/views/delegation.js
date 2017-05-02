@@ -655,11 +655,13 @@ Hktdc.Views = Hktdc.Views || {};
         Action: rawData.Action,
         Remark: rawData.Remark
       };
+
+      var saveDelegationModel = new Hktdc.Models.SaveDelegation();
       if (rawData.saveType === 'PUT') {
         data.DelegationID = rawData.DelegationID;
         saveDelegationModel.url = saveDelegationModel.url(parseInt(rawData.DelegationID));
       }
-      var saveDelegationModel = new Hktdc.Models.SaveDelegation();
+     
       saveDelegationModel.set(data);
 
       var doSave = function() {

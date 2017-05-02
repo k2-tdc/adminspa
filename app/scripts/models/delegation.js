@@ -16,7 +16,7 @@ Hktdc.Models = Hktdc.Models || {};
       var self = this;
       this.isInvalid = {
         UserID: function() {
-          return (self.attributes.UserID) ? false : 'User is required.';
+          return (self.attributes.showUser) ? ((self.attributes.UserID) ? false : 'User is required.') : false;
         },
         TaskID: function() {
           return (
