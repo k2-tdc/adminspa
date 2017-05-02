@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone, _ */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -7,9 +7,14 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.CreateUserRoleMember = Backbone.Model.extend({
 
-    url: '',
-
-    initialize: function() {},
+    initialize: function() {
+      var self = this;
+      this.isInvalid = {
+        UserID: function() {
+          return (self.attributes.UserID) ? false : 'User is required.';
+        }
+      };
+    },
 
     defaults: {
       Role: '',
@@ -25,11 +30,31 @@ Hktdc.Models = Hktdc.Models || {};
       ExpiryDate: ''
     },
 
-    validate: function(attrs, options) {},
+    validate: function(attrs, options) {
+      // *** valid => return false;
+      // *** invalid => return true;
+
+      // for single validate
+      if (options.field && !_.isArray(options.field)) {
+        if (this.isInvalid[options.field] && this.isInvalid[options.field]()) {
+          console.log('invalid: ', options.field, '>> ', this.isInvalid[options.field]());
+          options.onInvalid({ message: this.isInvalid[options.field]() });
+          return true;
+        } else {
+          this.trigger('valid', { field: options.field });
+          return false;
+        }
+
+      // validate the whole form
+      } else {
+        return !(
+          !this.isInvalid.UserID()
+        );
+      }
+    },
 
     parse: function(response, options) {
       return response;
     }
   });
-
 })();

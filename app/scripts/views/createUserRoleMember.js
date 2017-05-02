@@ -18,9 +18,19 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     initialize: function() {
+      var self = this;
       console.info('init create user role member');
       // this.listenTo(this.model, 'change', this.render);
+
       this.model.on('change:User', this.onUserChange);
+      self.model.on('invalid', function(model, invalidObject) {
+        utils.toggleInvalidMessage(self.el, invalidObject.field, true);
+      });
+
+      self.listenTo(self.model, 'valid', function(validObj) {
+        // console.log('is valid', validObj);
+        utils.toggleInvalidMessage(self.el, validObj.field, false);
+      });
     },
 
     render: function() {
