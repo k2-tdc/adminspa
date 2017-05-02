@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, _ */
+/* global Hktdc, Backbone, JST, Q, utils, $, _, sprintf, dialogMessage */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -70,9 +70,8 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'Runtime Error'
+            message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown'),
+            title: 'Error'
           });
         });
     },
@@ -91,11 +90,21 @@ Hktdc.Views = Hktdc.Views || {};
               utils.getAccessToken(function() {
                 doFetch();
               }, function(err) {
-                deferred.reject(err);
+                deferred.reject({
+                  request_id: false,
+                  error: err
+                });
               });
             } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting process');
+              try {
+                deferred.reject(JSON.parse(response.responseText));
+              } catch (e) {
+                console.error(response.responseText);
+                deferred.reject({
+                  request_id: false,
+                  error: 'error on getting process'
+                });
+              }
             }
           }
         });
@@ -113,16 +122,26 @@ Hktdc.Views = Hktdc.Views || {};
           success: function() {
             deferred.resolve(profileUserCollection);
           },
-          error: function(collectoin, response) {
+          error: function(collection, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doFetch();
               }, function(err) {
-                deferred.reject(err);
+                deferred.reject({
+                  request_id: false,
+                  error: err
+                });
               });
             } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting profile users.');
+              try {
+                deferred.reject(JSON.parse(response.responseText));
+              } catch (e) {
+                console.error(response.responseText);
+                deferred.reject({
+                  request_id: false,
+                  error: 'error on getting profile users.'
+                });
+              }
             }
           }
         });
@@ -146,11 +165,21 @@ Hktdc.Views = Hktdc.Views || {};
               utils.getAccessToken(function() {
                 doFetch();
               }, function(err) {
-                deferred.reject(err);
+                deferred.reject({
+                  error: err,
+                  request_id: false
+                });
               });
             } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting steps.');
+              try {
+                deferred.reject(JSON.parse(response.responseText));
+              } catch (e) {
+                console.error(response.responseText);
+                deferred.reject({
+                  request_id: false,
+                  error: 'error on getting steps.'
+                });
+              }
             }
           }
         });
@@ -247,9 +276,8 @@ Hktdc.Views = Hktdc.Views || {};
       this.doSaveProfile()
         .then(function(response) {
           Hktdc.Dispatcher.trigger('openAlert', {
-            type: 'success',
-            title: 'Confirmation',
-            message: 'You have saved'
+            title: 'Information',
+            message: dialogMessage.emailProfile.save.success
           });
           window.history.back();
           // Backbone.history.navigate('emailprofile', {
@@ -258,9 +286,8 @@ Hktdc.Views = Hktdc.Views || {};
         })
         .catch(function(err) {
           Hktdc.Dispatcher.trigger('openAlert', {
-            type: 'error',
-            title: 'Confirmation',
-            message: err
+            title: 'Error',
+            message: sprintf(dialogMessage.emailProfile.save.fail, err.request_id || 'unknown')
           });
         });
     },
@@ -294,7 +321,6 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log(err);
         Hktdc.Dispatcher.trigger('openAlert', {
           message: err,
-          type: 'error',
           title: 'Error'
         });
       });
@@ -311,7 +337,10 @@ Hktdc.Views = Hktdc.Views || {};
               if (response.Success === '1' || response.Success === 1) {
                 deferred.resolve(response);
               } else {
-                deferred.reject('save failed');
+                deferred.reject({
+                  error: 'save failed',
+                  request_id: false
+                });
               }
             },
             error: function(model, response) {
@@ -319,11 +348,21 @@ Hktdc.Views = Hktdc.Views || {};
                 utils.getAccessToken(function() {
                   doSave();
                 }, function(err) {
-                  deferred.reject(err);
+                  deferred.reject({
+                    request_id: false,
+                    error: err
+                  });
                 });
               } else {
-                console.error(response.responseText);
-                deferred.reject('Save profile error');
+                try {
+                  deferred.reject(JSON.parse(response.responseText));
+                } catch (e) {
+                  console.error(response.responseText);
+                  deferred.reject({
+                    request_id: false,
+                    error: 'Save profile error'
+                  });
+                }
               }
             }
           });
@@ -337,25 +376,23 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'confirmation',
-        message: 'Are you sure to delete the profile?',
+        message: dialogMessage.emailProfile.delete.confirm,
         onConfirm: function() {
           self.doDeleteProfile(self.model.toJSON().ProfileId)
             .then(function() {
               Hktdc.Dispatcher.trigger('openAlert', {
-                type: 'success',
-                title: 'confirmation',
-                message: 'You have deleted the record!'
+                title: 'Information',
+                message: dialogMessage.emailProfile.delete.success
               });
               Hktdc.Dispatcher.trigger('closeConfirm');
               Backbone.history.navigate('emailprofile', {
                 trigger: true
               });
             })
-            .catch(function() {
+            .catch(function(err) {
               Hktdc.Dispatcher.trigger('openAlert', {
-                type: 'error',
-                title: 'error',
-                message: 'Error on deleting record.'
+                title: 'Error',
+                message: sprintf(dialogMessage.emailProfile.delete.fail, err.request_id || 'unknown')
               });
             });
         }
@@ -381,11 +418,21 @@ Hktdc.Views = Hktdc.Views || {};
               utils.getAccessToken(function() {
                 doSave();
               }, function(err) {
-                deferred.reject(err);
+                deferred.reject({
+                  request_id: false,
+                  error: err
+                });
               });
             } else {
-              console.error(response.responseText);
-              deferred.reject('error on deleting profile');
+              try {
+                deferred.reject(JSON.parse(response.responseText));
+              } catch (e) {
+                console.error(response.responseText);
+                deferred.reject({
+                  request_id: false,
+                  error: 'error on deleting profile'
+                });
+              }
             }
           }
         });

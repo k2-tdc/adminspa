@@ -134,7 +134,7 @@ Hktdc.Views = Hktdc.Views || {};
           success: function() {
             deferred.resolve(userCollection);
           },
-          error: function(collectoin, response) {
+          error: function(collection, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doFetch();
@@ -163,7 +163,7 @@ Hktdc.Views = Hktdc.Views || {};
           success: function() {
             deferred.resolve(sharingUserCollection);
           },
-          error: function(collectoin, response) {
+          error: function(collection, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doFetch();
@@ -191,7 +191,7 @@ Hktdc.Views = Hktdc.Views || {};
           success: function() {
             deferred.resolve(sharingPermissionCollection);
           },
-          error: function(collectoin, response) {
+          error: function(collection, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doFetch();
@@ -542,7 +542,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'confirmation',
-        message: 'Are you sure to delete the sharing?',
+        message: dialogMessage.sharing.delete.confirm,
         onConfirm: function() {
           self.doDeleteSharing()
             .then(function() {

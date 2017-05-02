@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, Q, utils */
+/* global Hktdc, Backbone, JST, $, Q, utils, dialogMessage */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -247,7 +247,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'confirmation',
-        message: 'Are you sure to Delete?',
+        message: dialogMessage.emailTemplate.delete.confirm,
         onConfirm: function() {
           self.doDeleteTemplate()
             .then(function(response) {

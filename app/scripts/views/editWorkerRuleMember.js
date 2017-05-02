@@ -1151,7 +1151,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
-        message: 'Are you sure to delete?',
+        message: dialogMessage.workerRuleMember.delete.confirm,
         onConfirm: function() {
           var delMemberModel = new Hktdc.Models.DeleteWorkerRuleMember();
           delMemberModel.url = delMemberModel.url(self.model.toJSON().WorkerSettingId);

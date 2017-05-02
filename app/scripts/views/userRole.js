@@ -253,7 +253,7 @@ Hktdc.Views = Hktdc.Views || {};
             Hktdc.Dispatcher.trigger('openAlert', {
               type: 'success',
               title: 'Confirmation',
-              message: 'Delegation is saved.'
+              message: 'User role is saved.'
             });
             Backbone.history.navigate('userrole/' + response.Msg, {trigger: true});
             // Backbone.history.navigate('userrole', {trigger: true});
@@ -297,7 +297,7 @@ Hktdc.Views = Hktdc.Views || {};
           beforeSend: utils.setAuthHeader,
           type: self.model.toJSON().saveType,
           success: function(model, response) {
-            if (self.model.toJSON().saveType === 'POST' && response.Msg) {
+            if (response.Msg) {
               deferred.resolve(response);
             } else {
               deferred.reject('save failed');
@@ -373,8 +373,8 @@ Hktdc.Views = Hktdc.Views || {};
     deleteButtonHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
-        message: 'Are you sure to delete?',
+        title: 'Alert',
+        message: dialogMessage.userRole.delete.confirm,
         onConfirm: function() {
           var saveUserRoleModel = new Hktdc.Models.SaveUserRole();
           saveUserRoleModel.clear();
@@ -453,7 +453,7 @@ Hktdc.Views = Hktdc.Views || {};
       };
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
-        message: 'Are you sure to remove this member?',
+        message: dialogMessage.userRoleMember.batchDelete.confirm,
         onConfirm: function() {
           Q.all(_.map(self.model.toJSON().selectedMember, function(memberGUID) {
             return removeSingleMember(memberGUID);

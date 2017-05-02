@@ -396,7 +396,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
-        message: 'Are you sure to delete?',
+        message: dialogMessage.workerRule.delete.confirm,
         onConfirm: function() {
           // console.log(self.model.toJSON().selectedWorker);
           var delWorkerRuleModel = new Hktdc.Models.DeleteWorkerRule();
@@ -506,7 +506,7 @@ Hktdc.Views = Hktdc.Views || {};
       }
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
-        message: 'Are you sure to remove the members?',
+        message: dialogMessage.workerRuleMember.batchDelete.confirm,
         onConfirm: function() {
           Q.all(_.map(self.model.toJSON().selectedMember, function(settingId) {
             return removeSingleMember(settingId);

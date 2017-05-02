@@ -344,7 +344,7 @@ Hktdc.Views = Hktdc.Views || {};
       var deletePermission = [];
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'confirmation',
-        message: 'Are you sure to Delete?',
+        message: dialogMessage.rolePermission.delete.confirm,
         onConfirm: function() {
           self.model.toJSON().permissionCollection.each(function(permission) {
             // console.log(permission);

@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, Q, utils, _ */
+/* global Hktdc, Backbone, JST, $, Q, utils, _, moment, sprintf, dialogMessage */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -46,9 +46,9 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
+            message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown'),
             type: 'error',
-            title: 'Runtime Error'
+            title: 'Error'
           });
         });
     },
@@ -62,17 +62,18 @@ Hktdc.Views = Hktdc.Views || {};
           success: function() {
             deferred.resolve(userCollection);
           },
-          error: function(collectoin, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting full user list. ');
-            }
+          error: function(collection, response) {
+            utils.apiErrorHandling({
+              apiName: 'get full user list',
+              response: response,
+              apiRequest: doFetch,
+              onError: function(errObj) {
+                deferred.reject({
+                  error: errObj.error,
+                  request_id: errObj.request_id
+                });
+              }
+            });
           }
         });
       };
@@ -132,10 +133,16 @@ Hktdc.Views = Hktdc.Views || {};
                 self.delegationDataTable.ajax.url(self.getAjaxURL()).load();
               });
             } else {
-              console.error(xhr.responseText);
+              var requestId;
+              try {
+                requestId = JSON.parse(xhr.responseText).request_id;
+              } catch (e) {
+                console.error('Error on getting delegation list.');
+                console.error(xhr.responseText);
+                requestId = 'unknown';
+              }
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Error on getting delegation list.',
-                type: 'error',
+                message: sprintf(dialogMessage.common.serverError.fail, requestId || 'unknown'),
                 title: 'Error'
               });
             }
@@ -236,40 +243,6 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    deleteProfile: function(tId) {
-      var self = this;
-      var deferred = Q.defer();
-      var DeleteProfileModel = Backbone.Model.extend({
-        url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-profiles/' + tId
-      });
-      var DeleteProfiletance = new DeleteProfileModel();
-      var doSave = function() {
-        DeleteProfiletance.save(null, {
-          type: 'DELETE',
-          beforeSend: utils.setAuthHeader,
-          success: function(model, response) {
-            self.delegationDataTable.ajax.reload();
-            // Hktdc.Dispatcher.trigger('reloadMenu');
-            deferred.resolve();
-          },
-          error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on deleting profile');
-            }
-          }
-        });
-      };
-      doSave();
-      return deferred.promise;
-    },
-
     goToCreatePage: function() {
       Backbone.history.navigate('delegation/new', {
         trigger: true
@@ -313,19 +286,38 @@ Hktdc.Views = Hktdc.Views || {};
               if (String(response.Success) === '1') {
                 deferred.resolve();
               } else {
-                deferred.reject(response.Msg);
+                deferred.reject({
+                  request_id: false,
+                  error: response.Msg
+                });
               }
             },
             error: function(model, response) {
+              utils.apiErrorHandling({
+                apiName: 'delete delegation',
+                response: response,
+                apiRequest:
+                onError
+              })
               if (response.status === 401) {
                 utils.getAccessToken(function() {
                   doSave();
                 }, function(err) {
-                  deferred.reject(err);
+                  deferred.reject({
+                    request_id: false,
+                    error: err
+                  });
                 });
               } else {
-                console.error(response.responseText);
-                deferred.reject('error on deleting delegation.');
+                try {
+                  deferred.reject(JSON.parse(response.responseText));
+                } catch (e) {
+                  console.error(response.responseText);
+                  deferred.reject({
+                    request_id: false,
+                    error: 'error on deleting delegation.'
+                  });
+                }
               }
             }
           });
@@ -335,7 +327,7 @@ Hktdc.Views = Hktdc.Views || {};
       };
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
-        message: 'Are you sure to remove this delegation?',
+        message: dialogMessage.delegation.batchDelete.confirm,
         onConfirm: function() {
           Q.all(_.map(self.model.toJSON().selectedDelegation, function(sharingId) {
             return removeSingleDelegation(sharingId);
@@ -343,17 +335,15 @@ Hktdc.Views = Hktdc.Views || {};
           .then(function() {
             Hktdc.Dispatcher.trigger('closeConfirm');
             Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'deleted',
-              type: 'confirmation',
-              title: 'confirmation'
+              message: dialogMessage.delegation.batchDelete.success,
+              title: 'Information'
             });
             self.doSearch();
           })
           .fail(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              message: err,
-              type: 'error',
-              title: 'error on deleting delegation'
+              message: sprintf(dialogMessage.delegation.batchDelete.fail, err.request_id || 'unknown'),
+              title: 'Error'
             });
           });
         }
