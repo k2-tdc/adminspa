@@ -21,8 +21,14 @@ var dialogMessage = {
     }
   },
   userRoleMember: {
+    save: {
+      success: 'User Role Member is saved.',
+      fail: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %s'
+    },
     delete: {
-      confirm: 'Do you want to delete this user role member?'
+      confirm: 'Do you want to delete this user role member?',
+      fail: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %s',
+      success: 'User role memeber is deleted.'
     },
     batchDelete: {
       confirm: 'Do you want to delete the selected user role member(s)?'
@@ -77,6 +83,9 @@ var dialogMessage = {
     }
   },
   common: {
+    invalid: {
+      form: 'Input is invalid.'
+    },
     serverError: {
       fail: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %s'
     }

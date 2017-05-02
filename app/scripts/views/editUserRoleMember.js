@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, _, moment */
+/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -13,12 +13,22 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {
       'click .deleteBtn': 'deleteButtonHandler',
-      'click .saveBtn': 'saveButtonHandler'
+      'click .saveBtn': 'saveButtonHandler',
+      'blur .formTextField': 'updateFormModel'
     },
 
     initialize: function() {
+      var self = this;
       console.info('init edit user role member');
       // this.listenTo(this.model, 'change', this.render);
+      self.model.on('invalid', function(model, invalidObject) {
+        self.toggleInvalidMessage(invalidObject.field, true);
+      });
+
+      self.listenTo(self.model, 'valid', function(validObj) {
+        // console.log('is valid', validObj);
+        self.toggleInvalidMessage(validObj.field, false);
+      });
     },
 
     render: function() {
@@ -31,16 +41,25 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var createDateFromView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
+          field: 'ExpiryDate',
           placeholder: 'Expiry Date',
           value: (self.model.toJSON().ExpiryDate)
             ? moment(self.model.toJSON().ExpiryDate).format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
-          self.model.set({
+          var saveValue = {
             ExpiryDate: (moment(val, 'YYYY-MM-DD').isValid())
               ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
               : ''
+          };
+          self.model.set(saveValue);
+          self.model.set(saveValue, {
+            validate: true,
+            field: 'ExpiryDate',
+            onInvalid: function(invalidObject) {
+              self.toggleInvalidMessage('ExpiryDate', invalidObject.message, true);
+            }
           });
         }
       });
@@ -98,9 +117,8 @@ Hktdc.Views = Hktdc.Views || {};
               success: function() {
                 Hktdc.Dispatcher.trigger('closeConfirm');
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  message: 'Deleted',
-                  type: 'confirmation',
-                  title: 'Confirmation'
+                  title: 'Information',
+                  message: dialogMessage.userRoleMember.delete.success
                 });
                 Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
               },
@@ -113,9 +131,8 @@ Hktdc.Views = Hktdc.Views || {};
                   console.error(response.responseText);
 
                   Hktdc.Dispatcher.trigger('openAlert', {
-                    message: 'error on deleting user role member.',
-                    type: 'error',
-                    title: 'error on saving user role'
+                    message: dialogMessage.userRoleMember.delete.fail,
+                    title: 'Error'
                   });
                 }
               }
@@ -127,6 +144,36 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     saveButtonHandler: function() {
+      var self = this;
+      self.validateField();
+      if (self.model.isValid()) {
+        self.doSaveRoleMember()
+          .then(function(response) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              type: 'success',
+              title: 'Information',
+              message: dialogMessage.userRoleMember.save.success
+            });
+            Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
+          })
+          .catch(function(err) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              type: 'error',
+              title: 'Error',
+              message: sprintf(dialogMessage.userRoleMember.save.fail, err.request_id || err)
+            });
+          });
+      } else {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          type: 'error',
+          title: 'Alert',
+          message: dialogMessage.commom.invalid.form
+        });
+      }
+    },
+
+    doSaveRoleMember: function() {
+      var deferred = Q.defer();
       var self = this;
       var rawData = this.model.toJSON();
       var saveUserRoleMemberModel = new Hktdc.Models.SaveUserRoleMember();
@@ -143,33 +190,62 @@ Hktdc.Views = Hktdc.Views || {};
         saveUserRoleMemberModel.save(null, {
           beforeSend: utils.setAuthHeader,
           type: self.model.toJSON().saveType,
-          success: function() {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'saved',
-              type: 'confirmation',
-              title: 'Confirmation'
-            });
-
-            Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
+          success: function(model, response) {
+            deferred.resolve(response);
           },
           error: function(model, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doSave();
+              }, function(err) {
+                deferred.reject({
+                  request_id: false,
+                  error: err
+                });
               });
             } else {
               console.error(response.responseText);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'error on saving user role member',
-                type: 'error',
-                title: 'error on saving user role'
+              deferred.reject({
+                request_id: false,
+                error: 'error on saving user role member'
               });
             }
           }
         });
       };
       doSave();
-    }
 
+      return deferred.promise;
+    },
+
+    validateField: function() {
+      var self = this;
+      this.model.set({
+        ExpiryDate: this.model.toJSON().ExpiryDate
+      }, {
+        validate: true,
+        field: 'ExpiryDate',
+        onInvalid: function(invalidObject) {
+          self.toggleInvalidMessage('ExpiryDate', invalidObject.message, true);
+        }
+      });
+    },
+
+    toggleInvalidMessage: function(field, message, isShow) {
+      var self = this;
+      var $target = $('[field=' + field + ']', self.el);
+      var $errorContainer = ($target.parents('.container').find('.error-message').length)
+        ? $target.parents('.container').find('.error-message')
+        : $target.parents().siblings('.error-message');
+      if (isShow) {
+        $errorContainer.removeClass('hidden');
+        $errorContainer.html(message);
+        $target.addClass('error-input');
+      } else {
+        $errorContainer.addClass('hidden');
+        $errorContainer.empty();
+        $target.removeClass('error-input');
+      }
+    }
   });
 })();
