@@ -19,7 +19,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       var self = this;
-      self.$el.html(self.template());
+      self.$el.html(self.template({field: self.field}));
       try {
         // console.log(self.users);
         var pickedUsersCollection = new Hktdc.Collections.UserPicker();

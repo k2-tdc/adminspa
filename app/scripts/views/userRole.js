@@ -351,7 +351,7 @@ Hktdc.Views = Hktdc.Views || {};
           utils.toggleInvalidMessage(self.el, 'ProcessId', invalidObject.message, true);
         }
       });
-    }
+    },
 
     deleteButtonHandler: function() {
       var self = this;

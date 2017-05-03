@@ -17,9 +17,9 @@ Hktdc.Models = Hktdc.Models || {};
       this.isInvalid = {
         ExpiryDate: function() {
           if (!self.attributes.ExpiryDate) {
-            return 'End date is required';
+            return 'Expiry date is required';
           } else if (moment(self.attributes.ExpiryDate, 'YYYY-MM-DD HH:mm').unix() < moment(today).unix()) {
-            return 'and should be greater than today.';
+            return 'Expiry Date should be greater than today.';
           } else {
             return false;
           }

@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, _ */
+/* global Hktdc, Backbone, _, moment*/
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -9,9 +9,30 @@ Hktdc.Models = Hktdc.Models || {};
 
     initialize: function() {
       var self = this;
+      var today = new Date();
       this.isInvalid = {
-        UserID: function() {
-          return (self.attributes.UserID) ? false : 'User is required.';
+        member: function() {
+          // console.log(self.attributes.User, self.attributes.Query, self.attributes.Dept);
+          console.log('User: ', self.attributes.User, (self.attributes.User && self.attributes.User.length));
+          console.log('Query: ', self.attributes.Query, (self.attributes.Query && self.attributes.Query !== ''));
+          console.log('Dept: ', self.attributes.Dept, (self.attributes.Dept !== '0' && self.attributes.Dept !== 0 && self.attributes.Dept !== ''));
+          console.log('final: ', (self.attributes.User && self.attributes.User.length) ||
+          (self.attributes.Query && self.attributes.Query !== '') ||
+          (self.attributes.Dept !== '0' && self.attributes.Dept !== 0 && self.attributes.Dept !== ''));
+          return (
+            (self.attributes.User && self.attributes.User.length) ||
+            (self.attributes.Query && self.attributes.Query !== '') ||
+            (self.attributes.Dept !== '0' && self.attributes.Dept !== 0 && self.attributes.Dept !== '')
+          ) ? false : 'Either User/Query/Department is required.';
+        },
+        ExpiryDate: function() {
+          if (!self.attributes.ExpiryDate) {
+            return 'Expiry date is required';
+          } else if (moment(self.attributes.ExpiryDate, 'YYYY-MM-DD HH:mm').unix() < moment(today).unix()) {
+            return 'Expiry date should be greater than today.';
+          } else {
+            return false;
+          }
         }
       };
     },
@@ -41,14 +62,19 @@ Hktdc.Models = Hktdc.Models || {};
           options.onInvalid({ message: this.isInvalid[options.field]() });
           return true;
         } else {
-          this.trigger('valid', { field: options.field });
+          var field = options.field;
+          if (options.field === 'User' || options.field === 'Query' || options.field === 'Dept') {
+            field = 'member';
+          }
+          this.trigger('valid', { field: field });
           return false;
         }
 
       // validate the whole form
       } else {
         return !(
-          !this.isInvalid.UserID()
+          !this.isInvalid.member() &&
+          !this.isInvalid.ExpiryDate()
         );
       }
     },

@@ -53,9 +53,9 @@ Hktdc.Views = Hktdc.Views || {};
       // self.model.on('change:delegationUserCollection', function() {
       //   self.renderDelegationUserSelect();
       // });
-      self.model.on('invalid', function(model, invalidObject) {
-        utils.toggleInvalidMessage(self.el, invalidObject.field, true);
-      });
+      // self.model.on('invalid', function(model, invalidObject) {
+      //   utils.toggleInvalidMessage(self.el, invalidObject.field, true);
+      // });
 
       self.listenTo(self.model, 'valid', function(validObj) {
         // console.log('is valid', validObj);
@@ -729,7 +729,7 @@ Hktdc.Views = Hktdc.Views || {};
             if (response.Success) {
               deferred.resolve(response);
             } else {
-              deferred.reject('save failed');
+              deferred.reject();
             }
           },
           error: function(model, response) {
@@ -741,7 +741,7 @@ Hktdc.Views = Hktdc.Views || {};
               });
             } else {
               console.error(response.responseText);
-              deferred.reject('Save Delegation Error');
+              deferred.reject();
             }
           }
         });
