@@ -53,13 +53,13 @@ Hktdc.Views = Hktdc.Views || {};
       // self.model.on('change:delegationUserCollection', function() {
       //   self.renderDelegationUserSelect();
       // });
-      self.model.on('invalid', function(model, invalidObject) {
-        self.toggleInvalidMessage(invalidObject.field, true);
-      });
+      // self.model.on('invalid', function(model, invalidObject) {
+      //   utils.toggleInvalidMessage(self.el, invalidObject.field, true);
+      // });
 
       self.listenTo(self.model, 'valid', function(validObj) {
         // console.log('is valid', validObj);
-        self.toggleInvalidMessage(validObj.field, false);
+        utils.toggleInvalidMessage(self.el, validObj.field, false);
       });
     },
 
@@ -393,7 +393,7 @@ Hktdc.Views = Hktdc.Views || {};
             validate: true,
             field: 'TaskID',
             onInvalid: function(invalidObject) {
-              self.toggleInvalidMessage('TaskID', invalidObject.message, true);
+              utils.toggleInvalidMessage(self.el, 'TaskID', invalidObject.message, true);
             }
           });
         }
@@ -423,7 +423,7 @@ Hktdc.Views = Hktdc.Views || {};
             validate: true,
             field: 'UserID',
             onInvalid: function(invalidObject) {
-              self.toggleInvalidMessage('UserID', invalidObject.message, true);
+              utils.toggleInvalidMessage(self.el, 'UserID', invalidObject.message, true);
             }
           });
         }
@@ -456,7 +456,7 @@ Hktdc.Views = Hktdc.Views || {};
             validate: true,
             field: 'StartDate',
             onInvalid: function(invalidObject) {
-              self.toggleInvalidMessage('StartDate', invalidObject.message, true);
+              utils.toggleInvalidMessage(self.el, 'StartDate', invalidObject.message, true);
             }
           });
         }
@@ -480,7 +480,7 @@ Hktdc.Views = Hktdc.Views || {};
             validate: true,
             field: 'EndDate',
             onInvalid: function(invalidObject) {
-              self.toggleInvalidMessage('EndDate', invalidObject.message, true);
+              utils.toggleInvalidMessage(self.el, 'EndDate', invalidObject.message, true);
             }
           });
         }
@@ -506,7 +506,7 @@ Hktdc.Views = Hktdc.Views || {};
               validate: true,
               field: 'Dept',
               onInvalid: function(invalidObject) {
-                self.toggleInvalidMessage('Dept', invalidObject.message, true);
+                utils.toggleInvalidMessage(self.el, 'Dept', invalidObject.message, true);
               }
             });
             // self.loadDelegationUser(departmentId)
@@ -542,7 +542,7 @@ Hktdc.Views = Hktdc.Views || {};
               validate: true,
               field: 'Action',
               onInvalid: function(invalidObject) {
-                self.toggleInvalidMessage('Action', invalidObject.message, true);
+                utils.toggleInvalidMessage(self.el, 'Action', invalidObject.message, true);
               }
             });
           }
@@ -571,7 +571,7 @@ Hktdc.Views = Hktdc.Views || {};
             validate: true,
             field: 'DelegateUserID',
             onInvalid: function(invalidObject) {
-              self.toggleInvalidMessage('DelegateUserID', invalidObject.message, true);
+              utils.toggleInvalidMessage(self.el, 'DelegateUserID', invalidObject.message, true);
             }
           });
         }
@@ -599,7 +599,7 @@ Hktdc.Views = Hktdc.Views || {};
         validate: true,
         field: targetField,
         onInvalid: function(invalidObject) {
-          self.toggleInvalidMessage(targetField, invalidObject.message, true);
+          utils.toggleInvalidMessage(self.el, targetField, invalidObject.message, true);
         }
       });
     },
@@ -640,7 +640,7 @@ Hktdc.Views = Hktdc.Views || {};
         validate: true,
         field: 'UserID',
         onInvalid: function(invalidObject) {
-          self.toggleInvalidMessage('UserID', invalidObject.message, true);
+          utils.toggleInvalidMessage(self.el, 'UserID', invalidObject.message, true);
         }
       });
       this.model.set({
@@ -649,7 +649,7 @@ Hktdc.Views = Hktdc.Views || {};
         validate: true,
         field: 'TaskID',
         onInvalid: function(invalidObject) {
-          self.toggleInvalidMessage('TaskID', invalidObject.message, true);
+          utils.toggleInvalidMessage(self.el, 'TaskID', invalidObject.message, true);
         }
       });
       this.model.set({
@@ -658,7 +658,7 @@ Hktdc.Views = Hktdc.Views || {};
         validate: true,
         field: 'Dept',
         onInvalid: function(invalidObject) {
-          self.toggleInvalidMessage('Dept', invalidObject.message, true);
+          utils.toggleInvalidMessage(self.el, 'Dept', invalidObject.message, true);
         }
       });
       this.model.set({
@@ -667,7 +667,7 @@ Hktdc.Views = Hktdc.Views || {};
         validate: true,
         field: 'DelegateUserID',
         onInvalid: function(invalidObject) {
-          self.toggleInvalidMessage('DelegateUserID', invalidObject.message, true);
+          utils.toggleInvalidMessage(self.el, 'DelegateUserID', invalidObject.message, true);
         }
       });
       this.model.set({
@@ -676,7 +676,7 @@ Hktdc.Views = Hktdc.Views || {};
         validate: true,
         field: 'StartDate',
         onInvalid: function(invalidObject) {
-          self.toggleInvalidMessage('StartDate', invalidObject.message, true);
+          utils.toggleInvalidMessage(self.el, 'StartDate', invalidObject.message, true);
         }
       });
       this.model.set({
@@ -685,7 +685,7 @@ Hktdc.Views = Hktdc.Views || {};
         validate: true,
         field: 'EndDate',
         onInvalid: function(invalidObject) {
-          self.toggleInvalidMessage('EndDate', invalidObject.message, true);
+          utils.toggleInvalidMessage(self.el, 'EndDate', invalidObject.message, true);
         }
       });
       this.model.set({
@@ -694,7 +694,7 @@ Hktdc.Views = Hktdc.Views || {};
         validate: true,
         field: 'Action',
         onInvalid: function(invalidObject) {
-          self.toggleInvalidMessage('Action', invalidObject.message, true);
+          utils.toggleInvalidMessage(self.el, 'Action', invalidObject.message, true);
         }
       });
     },
@@ -731,7 +731,7 @@ Hktdc.Views = Hktdc.Views || {};
             if (response.Success) {
               deferred.resolve(response);
             } else {
-              deferred.reject('save failed');
+              deferred.reject();
             }
           },
           error: function(model, response) {
@@ -743,7 +743,7 @@ Hktdc.Views = Hktdc.Views || {};
               });
             } else {
               console.error(response.responseText);
-              deferred.reject('Save Delegation Error');
+              deferred.reject();
             }
           }
         });
@@ -824,23 +824,6 @@ Hktdc.Views = Hktdc.Views || {};
       };
       doSave();
       return deferred.promise;
-    },
-
-    toggleInvalidMessage: function(field, message, isShow) {
-      var self = this;
-      var $target = $('[field=' + field + ']', self.el);
-      var $errorContainer = ($target.parents('.container').find('.error-message').length)
-        ? $target.parents('.container').find('.error-message')
-        : $target.parents().siblings('.error-message');
-      if (isShow) {
-        $errorContainer.removeClass('hidden');
-        $errorContainer.html(message);
-        $target.addClass('error-input');
-      } else {
-        $errorContainer.addClass('hidden');
-        $errorContainer.empty();
-        $target.removeClass('error-input');
-      }
     }
   });
 })();

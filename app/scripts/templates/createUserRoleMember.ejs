@@ -21,7 +21,10 @@
       <div class="col-sm-3">
         <div class="form-label text-right">Expiry Date</div>
       </div>
-      <div class="col-md-9 expiryDatePicker"></div>
+      <div class="col-md-9 container">
+        <div class="expiryDatePicker"></div>
+        <div class="error-message hidden"></div>
+      </div>
     </div>
 
     <!-- User -->
@@ -29,7 +32,10 @@
       <div class="col-sm-3">
         <div class="form-label text-right">User</div>
       </div>
-      <div class="col-md-9 userPicker"></div>
+      <div class="col-md-9 container">
+        <div class="userPicker"></div>
+        <div class="error-message hidden"></div>
+      </div>
     </div>
 
     <!-- Department -->
@@ -37,7 +43,9 @@
       <div class="col-md-3">
         <div class="form-label text-right">Department</div>
       </div>
-      <div class="col-md-9 departmentContainer">
+      <div class="col-md-9 container">
+        <div class="departmentContainer"></div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -48,8 +56,9 @@
       <div class="col-md-3">
         <div class="form-label text-right">Query</div>
       </div>
-      <div class="col-md-9">
-        <textarea name="Query" class="formTextField form-control" rows="6"></textarea>
+      <div class="col-md-9 container">
+        <textarea name="Query" field="Query" class="formTextField form-control" rows="6"></textarea>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
