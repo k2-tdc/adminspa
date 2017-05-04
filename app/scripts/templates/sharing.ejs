@@ -10,7 +10,10 @@
         <div class="col-md-4">
           <div class="form-label text-right">User</div>
         </div>
-        <div class="col-md-8 userContainer"></div>
+        <div class="col-md-8 container">
+          <div class="userContainer"></div>
+          <div class="error-message hidden"></div>
+        </div>
       </div>
       <div class="sep-space"></div>
 
@@ -20,7 +23,10 @@
       <div class="col-md-4">
         <div class="form-label text-right">Workflow</div>
       </div>
-      <div class="col-md-8 workflowContainer"></div>
+      <div class="col-md-8 container">
+        <div class="workflowContainer"></div>
+        <div class="error-message hidden"></div>
+      </div>
     </div>
     <div class="sep-space"></div>
 
@@ -28,10 +34,13 @@
       <div class="col-md-4">
         <div class="form-label text-right">Task</div>
       </div>
-      <div class="col-md-8 stepContainer">
-        <select class="form-control">
-          <option value="">-- Select --</option>
-        </select>
+      <div class="col-md-8 container">
+        <div class="">
+          <select class="form-control" name="TaskID" field="TaskID">
+            <option value="">-- Select --</option>
+          </select>
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -41,7 +50,10 @@
       <div class="col-md-4">
         <div class="form-label text-right">Applicant Department</div>
       </div>
-      <div class="col-md-8 departmentContainer"></div>
+      <div class="col-md-8 container">
+        <div class="departmentContainer"></div>
+        <div class="error-message hidden"></div>
+      </div>
     </div>
     <div class="sep-space"></div>
 
@@ -49,10 +61,14 @@
       <div class="col-md-4">
         <div class="form-label text-right">Share To</div>
       </div>
-      <div class="col-md-8 sharingUserContainer">
-        <select class="form-control">
-          <option value="">-- Select --</option>
-        </select>
+      <div class="col-md-8 container">
+        <div class="sharingUserContainer">
+          <select class="form-control">
+            <option value="">-- Select --</option>
+          </select>
+        </div>
+
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -63,7 +79,10 @@
       </div>
       <div class="col-md-8">
         <div class="row">
-          <div class="col-md-8 fromDatePicker"></div>
+          <div class="col-md-8 container">
+            <div class="fromDatePicker"></div>
+            <div class="error-message hidden"></div>
+          </div>
           <div class="col-md-4">
             <input type="time" name="StartTime" step="300" class="form-control formTextField" value="<%= StartTime %>">
           </div>
@@ -78,7 +97,10 @@
       </div>
       <div class="col-md-8">
         <div class="row">
-          <div class="col-md-8 toDatePicker"></div>
+          <div class="col-md-8 container">
+            <div class="toDatePicker"></div>
+            <div class="error-message hidden"></div>
+          </div>
           <div class="col-md-4">
             <input type="time" name="EndTime" step="300" class="form-control formTextField" value="<%= EndTime%>">
           </div>
@@ -91,7 +113,10 @@
       <div class="col-md-4">
         <div class="form-label text-right">Permission</div>
       </div>
-      <div class="col-md-8 permissionContainer"></div>
+      <div class="col-md-8 container">
+        <div class="permissionContainer"></div>
+        <div class="error-message hidden"></div>
+      </div>
     </div>
     <div class="sep-space"></div>
 
@@ -99,8 +124,11 @@
       <div class="col-md-4">
         <div class="form-label text-right">Remark</div>
       </div>
-      <div class="col-md-8">
-        <textarea name="Remark" class="form-control formTextField" cols="30" rows="6"><%= Remark %></textarea>
+      <div class="col-md-8 container">
+        <div class="">
+          <textarea name="Remark" class="form-control formTextField" cols="30" rows="6"><%= Remark %></textarea>
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>

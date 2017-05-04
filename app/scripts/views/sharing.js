@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, _, moment */
+/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -36,7 +36,7 @@ Hktdc.Views = Hktdc.Views || {};
           }
         });
       }
-      /*if (self.model.toJSON().Dept) {
+      /* if (self.model.toJSON().Dept) {
         setTimeout(function() {
           self.loadSharingUser(self.model.toJSON().Dept)
             .then(function(sharingUserCollection) {
@@ -45,14 +45,16 @@ Hktdc.Views = Hktdc.Views || {};
               });
             });
         });
-      }*/
+      } */
 
       self.model.on('change:stepCollection', function(model, stepCol) {
         self.renderTaskSelect();
       });
-      /*self.model.on('change:sharingUserCollection', function() {
-        self.renderSharingUserSelect();
-      });*/
+
+      self.listenTo(self.model, 'valid', function(validObj) {
+        // console.log('is valid', validObj);
+        utils.toggleInvalidMessage(self.el, validObj.field, false);
+      });
     },
 
     render: function() {
@@ -91,9 +93,8 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'Runtime Error'
+            title: 'Error',
+            message: sprintf(dialogMessage.common.scriptError.fail, 'unknown')
           });
         });
     },
@@ -272,6 +273,7 @@ Hktdc.Views = Hktdc.Views || {};
       var processSelectView = new Hktdc.Views.ProcessSelect({
         collection: self.model.toJSON().processCollection,
         selectedProcess: self.model.toJSON().ProcessID,
+        attributes: { field: 'ProcessID', name: 'ProcessID'},
         onSelected: function(process) {
           self.model.set({
             ProcessID: process.ProcessID,
@@ -302,9 +304,19 @@ Hktdc.Views = Hktdc.Views || {};
       var stepSelectView = new Hktdc.Views.StepSelect({
         collection: self.model.toJSON().stepCollection,
         selectedStep: self.model.toJSON().TaskID,
+        attributes: { field: 'TaskID', name: 'TaskID'},
         onSelected: function(taskId) {
           self.model.set({
             TaskID: taskId
+          });
+          self.model.set({
+            TaskID: taskId
+          }, {
+            validate: true,
+            field: 'TaskID',
+            onInvalid: function(invalidObject) {
+              utils.toggleInvalidMessage(self.el, 'TaskID', invalidObject.message, true);
+            }
           });
         }
       });
@@ -320,10 +332,21 @@ Hktdc.Views = Hktdc.Views || {};
       userView = new Hktdc.Views.UserSelect({
         collection: self.model.toJSON().userCollection,
         selectedUser: self.model.toJSON().UserID,
+        attributes: { field: 'UserID', name: 'UserID'},
         onSelected: function(selectedUser) {
           var userId = selectedUser.UserID;
           self.model.set({
             UserID: userId
+          });
+
+          self.model.set({
+            UserID: userId
+          }, {
+            validate: true,
+            field: 'UserID',
+            onInvalid: function(invalidObject) {
+              utils.toggleInvalidMessage(self.el, 'UserID', invalidObject.message, true);
+            }
           });
         }
       });
@@ -338,30 +361,49 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(moment(self.model.toJSON().DateFrom).format('DD MMM YYYY'));
       var fromDateView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
+          field: 'StartDate',
           value: (self.model.toJSON().StartDate)
             ? moment(self.model.toJSON().StartDate).format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
-          self.model.set({
+          var saveValue = {
             StartDate: (moment(val, 'YYYY-MM-DD').isValid())
               ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
               : ''
+          };
+          self.model.set(saveValue);
+
+          self.model.set(saveValue, {
+            validate: true,
+            field: 'StartDate',
+            onInvalid: function(invalidObject) {
+              utils.toggleInvalidMessage(self.el, 'StartDate', invalidObject.message, true);
+            }
           });
         }
       });
 
       var toDateView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
+          field: 'EndDate',
           value: (self.model.toJSON().EndDate)
             ? moment(self.model.toJSON().EndDate).format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
-          self.model.set({
+          var saveValue = {
             EndDate: (moment(val, 'YYYY-MM-DD').isValid())
-              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
-              : ''
+            ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+            : ''
+          };
+          self.model.set(saveValue);
+          self.model.set(saveValue, {
+            validate: true,
+            field: 'EndDate',
+            onInvalid: function(invalidObject) {
+              utils.toggleInvalidMessage(self.el, 'EndDate', invalidObject.message, true);
+            }
           });
         }
       });
@@ -379,17 +421,31 @@ Hktdc.Views = Hktdc.Views || {};
         var departmentSelectView = new Hktdc.Views.DepartmentSelect({
           collection: departmentCollection,
           selectedDepartment: self.model.toJSON().Dept,
+          attributes: { field: 'Dept', name: 'Dept' },
           onSelect: function(departmentId) {
             self.model.set({
               Dept: departmentId
             });
-            /*self.loadSharingUser(departmentId)
+
+            self.model.set({
+              Dept: departmentId
+            }, {
+              validate: true,
+              field: 'Dept',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'Dept', invalidObject.message, true);
+              }
+            });
+
+            /*
+              self.loadSharingUser(departmentId)
               .then(function(sharingUserCollection) {
                 self.model.set({
                   DelegateUserID: null,
                   sharingUserCollection: sharingUserCollection
                 });
-              });*/
+              });
+            */
           }
         });
         departmentSelectView.render();
@@ -405,9 +461,19 @@ Hktdc.Views = Hktdc.Views || {};
         var actionSelectView = new Hktdc.Views.SharingPermissionSelect({
           collection: actionCollection,
           selectedSharingPermission: self.model.toJSON().Permission,
+          attributes: { field: 'Permission', name: 'Permission' },
           onSelect: function(permissionId) {
             self.model.set({
               Permission: permissionId
+            });
+            self.model.set({
+              Permission: permissionId
+            }, {
+              validate: true,
+              field: 'Permission',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'Permission', invalidObject.message, true);
+              }
             });
           }
         });
@@ -423,9 +489,19 @@ Hktdc.Views = Hktdc.Views || {};
       var SharingUserView = new Hktdc.Views.SharingUserSelect({
         collection: self.model.toJSON().userCollection,
         selectedSharingUser: self.model.toJSON().DelegateUserID,
+        attributes: { field: 'DelegateUserID', name: 'DelegateUserID' },
         onSelected: function(sharingUserId) {
           self.model.set({
             DelegateUserID: sharingUserId
+          });
+          self.model.set({
+            DelegateUserID: sharingUserId
+          }, {
+            validate: true,
+            field: 'DelegateUserID',
+            onInvalid: function(invalidObject) {
+              utils.toggleInvalidMessage(self.el, 'DelegateUserID', invalidObject.message, true);
+            }
           });
         }
       });
@@ -435,6 +511,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     updateFormModel: function(ev) {
+      var self = this;
       var updateObject = {};
       var $target = $(ev.target);
       var targetField = $target.attr('name');
@@ -443,34 +520,43 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         updateObject[targetField] = $target.val();
       }
-      this.model.set(updateObject);
+      self.model.set(updateObject);
 
-      // this.model.set(updateObject, {
-      // validate: true,
-      // field: targetField
-      // });
       // double set is to prevent invalid value bypass the set model process
       // because if saved the valid model, then set the invalid model will not success and the model still in valid state
+      self.model.set(updateObject, {
+        validate: true,
+        field: targetField,
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, targetField, invalidObject.message, true);
+        }
+      });
     },
 
     saveSharing: function() {
       // console.log(this.model.toJSON());
-      this.doSaveSharing()
-        .then(function(response) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            type: 'success',
-            title: 'Confirmation',
-            message: 'Sharing is saved.'
+      this.validateField();
+      if (this.model.isValid()) {
+        this.doSaveSharing()
+          .then(function(response) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              title: 'Information',
+              message: dialogMessage.sharing.save.success
+            });
+            window.history.back();
+          })
+          .catch(function(err) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              title: 'Error',
+              message: sprintf(dialogMessage.sharing.save.fail, err.request_id || err)
+            });
           });
-          window.history.back();
-        })
-        .catch(function(err) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            type: 'error',
-            title: 'Confirmation',
-            message: err
-          });
+      } else {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          title: 'Error',
+          message: dialogMessage.common.invalid.form
         });
+      }
     },
 
     doSaveSharing: function() {
@@ -495,14 +581,14 @@ Hktdc.Views = Hktdc.Views || {};
       if (rawData.saveType === 'PUT') {
         saveSharingModel.url = saveSharingModel.url(parseInt(rawData.DelegationID));
       }
-      saveSharingModel.on('invalid', function(model, err) {
-        Hktdc.Dispatcher.trigger('openAlert', {
-          message: err,
-          type: 'error',
-          title: 'Error'
-        });
-      });
-      console.log(data);
+      // saveSharingModel.on('invalid', function(model, err) {
+      //   Hktdc.Dispatcher.trigger('openAlert', {
+      //     message: err,
+      //     type: 'error',
+      //     title: 'Error'
+      //   });
+      // });
+      // console.log(data);
       // console.log('is valid: ', saveSharingModel.isValid());
       if (saveSharingModel.isValid()) {
         var doSave = function() {
@@ -511,7 +597,7 @@ Hktdc.Views = Hktdc.Views || {};
             type: rawData.saveType,
             success: function(mymodel, response) {
               // console.log(response);
-              if (response.Success === "1" || response.Success === 1) {
+              if (response.Success === '1' || response.Success === 1) {
                 deferred.resolve(response);
               } else {
                 deferred.reject(response.Msg);
@@ -547,9 +633,8 @@ Hktdc.Views = Hktdc.Views || {};
           self.doDeleteSharing()
             .then(function() {
               Hktdc.Dispatcher.trigger('openAlert', {
-                type: 'success',
-                title: 'confirmation',
-                message: 'You have deleted the record!'
+                title: 'Information',
+                message: dialogMessage.delegation.save.success
               });
               Hktdc.Dispatcher.trigger('closeConfirm');
               window.history.back();
@@ -557,9 +642,8 @@ Hktdc.Views = Hktdc.Views || {};
             .catch(function(err) {
               console.error(err);
               Hktdc.Dispatcher.trigger('openAlert', {
-                type: 'error',
-                title: 'error',
-                message: 'Error on deleting record.'
+                title: 'Error',
+                message: sprintf(dialogMessage.delegation.save.fail, err.request_id || err)
               });
             });
         }
@@ -597,7 +681,79 @@ Hktdc.Views = Hktdc.Views || {};
       };
       doSave();
       return deferred.promise;
-    }
+    },
 
+    validateField: function() {
+      var self = this;
+      this.model.set({
+        UserID: this.model.toJSON().UserID
+      }, {
+        validate: true,
+        field: 'UserID',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'UserID', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        TaskID: this.model.toJSON().TaskID
+      }, {
+        validate: true,
+        field: 'TaskID',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'TaskID', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Dept: this.model.toJSON().Dept
+      }, {
+        validate: true,
+        field: 'Dept',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Dept', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        DelegateUserID: this.model.toJSON().DelegateUserID
+      }, {
+        validate: true,
+        field: 'DelegateUserID',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'DelegateUserID', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        StartDate: this.model.toJSON().StartDate
+      }, {
+        validate: true,
+        field: 'StartDate',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'StartDate', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        EndDate: this.model.toJSON().EndDate
+      }, {
+        validate: true,
+        field: 'EndDate',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'EndDate', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Permission: this.model.toJSON().Permission
+      }, {
+        validate: true,
+        field: 'Permission',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Permission', invalidObject.message, true);
+        }
+      });
+    }
   });
 })();

@@ -627,7 +627,7 @@ Hktdc.Views = Hktdc.Views || {};
         Hktdc.Dispatcher.trigger('openAlert', {
           type: 'error',
           title: 'Alert',
-          message: 'Input is invalid.'
+          message: dialogMessage.common.invalid.form
         });
       }
     },
@@ -719,7 +719,7 @@ Hktdc.Views = Hktdc.Views || {};
         data.DelegationID = rawData.DelegationID;
         saveDelegationModel.url = saveDelegationModel.url(parseInt(rawData.DelegationID));
       }
-     
+
       saveDelegationModel.set(data);
 
       var doSave = function() {
