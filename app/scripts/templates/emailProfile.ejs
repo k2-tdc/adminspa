@@ -10,7 +10,10 @@
         <div class="col-md-2">
           <div class="form-label text-right">Profile of: </div>
         </div>
-        <div class="col-md-10 profileUserContainer"></div>
+        <div class="col-md-10 container">
+          <div class="profileUserContainer"></div>
+          <div class="error-message hidden"></div>
+        </div>
       </div>
       <div class="sep-space"></div>
 
@@ -20,7 +23,10 @@
       <div class="col-md-2">
         <div class="form-label text-right">Process</div>
       </div>
-      <div class="col-md-10 processContainer"></div>
+      <div class="col-md-10 container">
+        <div class="processContainer"></div>
+        <div class="error-message hidden"></div>
+      </div>
     </div>
     <div class="sep-space"></div>
 
@@ -28,10 +34,13 @@
       <div class="col-md-2">
         <div class="form-label text-right">Notification</div>
       </div>
-      <div class="col-md-10 stepContainer">
-        <select class="form-control">
-          <option value="">Please select the process first</option>
-        </select>
+      <div class="col-md-10 container">
+        <div class="stepContainer">
+          <select class="form-control" field="StepID" name="StepID">
+            <option value="">Please select the process first</option>
+          </select>
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -41,34 +50,37 @@
       <div class="col-md-2">
         <div class="form-label text-right">Time</div>
       </div>
-      <div class="col-md-10">
-        <select class="form-control" name="TimeSlot">
-          <!-- <option value="0" <% if (String(TimeSlot) === '0') { %>selected<%}%>> -- Select --</option> -->
-          <option value="1" <% if (String(TimeSlot) === '1') { %>selected<%}%>>00:00 - 00:59</option>
-          <option value="2" <% if (String(TimeSlot) === '2') { %>selected<%}%>>01:00 - 01:59</option>
-          <option value="3" <% if (String(TimeSlot) === '3') { %>selected<%}%>>02:00 - 02:59</option>
-          <option value="4" <% if (String(TimeSlot) === '4') { %>selected<%}%>>03:00 - 03:59</option>
-          <option value="5" <% if (String(TimeSlot) === '5') { %>selected<%}%>>04:00 - 04:59</option>
-          <option value="6" <% if (String(TimeSlot) === '6') { %>selected<%}%>>05:00 - 05:59</option>
-          <option value="7" <% if (String(TimeSlot) === '7') { %>selected<%}%>>06:00 - 06:59</option>
-          <option value="8" <% if (String(TimeSlot) === '8') { %>selected<%}%>>07:00 - 07:59</option>
-          <option value="9" <% if (String(TimeSlot) === '9') { %>selected<%}%>>08:00 - 08:59</option>
-          <option value="10" <% if (String(TimeSlot) === '10') { %>selected<%}%>>09:00 - 09:59</option>
-          <option value="11" <% if (String(TimeSlot) === '11') { %>selected<%}%>>10:00 - 10:59</option>
-          <option value="12" <% if (String(TimeSlot) === '12') { %>selected<%}%>>11:00 - 11:59</option>
-          <option value="13" <% if (String(TimeSlot) === '13') { %>selected<%}%>>12:00 - 12:59</option>
-          <option value="14" <% if (String(TimeSlot) === '14') { %>selected<%}%>>13:00 - 13:59</option>
-          <option value="15" <% if (String(TimeSlot) === '15') { %>selected<%}%>>14:00 - 14:59</option>
-          <option value="16" <% if (String(TimeSlot) === '16') { %>selected<%}%>>15:00 - 15:59</option>
-          <option value="17" <% if (String(TimeSlot) === '17') { %>selected<%}%>>16:00 - 16:59</option>
-          <option value="18" <% if (String(TimeSlot) === '18') { %>selected<%}%>>17:00 - 17:59</option>
-          <option value="19" <% if (String(TimeSlot) === '19') { %>selected<%}%>>18:00 - 18:59</option>
-          <option value="20" <% if (String(TimeSlot) === '20') { %>selected<%}%>>19:00 - 19:59</option>
-          <option value="21" <% if (String(TimeSlot) === '21') { %>selected<%}%>>20:00 - 20:59</option>
-          <option value="21" <% if (String(TimeSlot) === '21') { %>selected<%}%>>21:00 - 21:59</option>
-          <option value="22" <% if (String(TimeSlot) === '22') { %>selected<%}%>>22:00 - 22:59</option>
-          <option value="23" <% if (String(TimeSlot) === '23') { %>selected<%}%>>23:00 - 23:59</option>
-        </select>
+      <div class="col-md-10 container">
+        <div class="">
+          <select class="form-control" name="TimeSlot">
+            <!-- <option value="0" <% if (String(TimeSlot) === '0') { %>selected<%}%>> -- Select --</option> -->
+            <option value="1" <% if (String(TimeSlot) === '1') { %>selected<%}%>>00:00 - 00:59</option>
+            <option value="2" <% if (String(TimeSlot) === '2') { %>selected<%}%>>01:00 - 01:59</option>
+            <option value="3" <% if (String(TimeSlot) === '3') { %>selected<%}%>>02:00 - 02:59</option>
+            <option value="4" <% if (String(TimeSlot) === '4') { %>selected<%}%>>03:00 - 03:59</option>
+            <option value="5" <% if (String(TimeSlot) === '5') { %>selected<%}%>>04:00 - 04:59</option>
+            <option value="6" <% if (String(TimeSlot) === '6') { %>selected<%}%>>05:00 - 05:59</option>
+            <option value="7" <% if (String(TimeSlot) === '7') { %>selected<%}%>>06:00 - 06:59</option>
+            <option value="8" <% if (String(TimeSlot) === '8') { %>selected<%}%>>07:00 - 07:59</option>
+            <option value="9" <% if (String(TimeSlot) === '9') { %>selected<%}%>>08:00 - 08:59</option>
+            <option value="10" <% if (String(TimeSlot) === '10') { %>selected<%}%>>09:00 - 09:59</option>
+            <option value="11" <% if (String(TimeSlot) === '11') { %>selected<%}%>>10:00 - 10:59</option>
+            <option value="12" <% if (String(TimeSlot) === '12') { %>selected<%}%>>11:00 - 11:59</option>
+            <option value="13" <% if (String(TimeSlot) === '13') { %>selected<%}%>>12:00 - 12:59</option>
+            <option value="14" <% if (String(TimeSlot) === '14') { %>selected<%}%>>13:00 - 13:59</option>
+            <option value="15" <% if (String(TimeSlot) === '15') { %>selected<%}%>>14:00 - 14:59</option>
+            <option value="16" <% if (String(TimeSlot) === '16') { %>selected<%}%>>15:00 - 15:59</option>
+            <option value="17" <% if (String(TimeSlot) === '17') { %>selected<%}%>>16:00 - 16:59</option>
+            <option value="18" <% if (String(TimeSlot) === '18') { %>selected<%}%>>17:00 - 17:59</option>
+            <option value="19" <% if (String(TimeSlot) === '19') { %>selected<%}%>>18:00 - 18:59</option>
+            <option value="20" <% if (String(TimeSlot) === '20') { %>selected<%}%>>19:00 - 19:59</option>
+            <option value="21" <% if (String(TimeSlot) === '21') { %>selected<%}%>>20:00 - 20:59</option>
+            <option value="21" <% if (String(TimeSlot) === '21') { %>selected<%}%>>21:00 - 21:59</option>
+            <option value="22" <% if (String(TimeSlot) === '22') { %>selected<%}%>>22:00 - 22:59</option>
+            <option value="23" <% if (String(TimeSlot) === '23') { %>selected<%}%>>23:00 - 23:59</option>
+          </select>
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -79,16 +91,19 @@
       <div class="col-md-2">
         <div class="form-label text-right">Day of Week</div>
       </div>
-      <div class="col-md-10">
-        <select name="DayOfWeek" class="form-control" multiple style="height: 140px;">
-          <option value="7" <% if (WeekDay7) { %>selected<%}%> >SUN</option>
-          <option value="1" <% if (WeekDay1) { %>selected<%}%> >MON</option>
-          <option value="2" <% if (WeekDay2) { %>selected<%}%> >TUE</option>
-          <option value="3" <% if (WeekDay3) { %>selected<%}%> >WED</option>
-          <option value="4" <% if (WeekDay4) { %>selected<%}%> >THU</option>
-          <option value="5" <% if (WeekDay5) { %>selected<%}%> >FRI</option>
-          <option value="6" <% if (WeekDay6) { %>selected<%}%> >SAT</option>
-        </select>
+      <div class="col-md-10 container">
+        <div class="">
+          <select name="DayOfWeek" field="DayOfWeek" class="form-control" multiple style="height: 140px;">
+            <option value="7" <% if (WeekDay7) { %>selected<%}%> >SUN</option>
+            <option value="1" <% if (WeekDay1) { %>selected<%}%> >MON</option>
+            <option value="2" <% if (WeekDay2) { %>selected<%}%> >TUE</option>
+            <option value="3" <% if (WeekDay3) { %>selected<%}%> >WED</option>
+            <option value="4" <% if (WeekDay4) { %>selected<%}%> >THU</option>
+            <option value="5" <% if (WeekDay5) { %>selected<%}%> >FRI</option>
+            <option value="6" <% if (WeekDay6) { %>selected<%}%> >SAT</option>
+          </select>
+        </div>
+        <div class="hidden error-message"></div>
       </div>
     </div>
     <div class="sep-space"></div>
