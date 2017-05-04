@@ -12,7 +12,9 @@
       <% if (showRules) { %>
         <div class="col-md-9"><span class="form-data"><%= ProcessDisplayName %></span></div>
       <% } else { %>
-        <div class="col-md-9 processContainer">
+        <div class="col-md-9 container">
+          <div class="processContainer"></div>
+          <div class="error-message hidden"></div>
           <!-- status Select list here -->
         </div>
       <% } %>
@@ -26,8 +28,11 @@
       <% if (showRules) { %>
         <div class="col-md-9"><span class="form-data"><%= Code %></span></div>
       <% } else { %>
-        <div class="col-md-9">
-          <input type="text" class="form-control formTextField" name="Code" value="<%= Code %>">
+        <div class="col-md-9 container">
+          <div class="">
+            <input type="text" class="form-control formTextField" name="Code" field="Code" value="<%= Code %>">
+          </div>
+          <div class="error-message hidden"></div>
         </div>
       <% } %>
 
@@ -39,8 +44,11 @@
       <div class="col-md-3">
         <div class="form-label text-right"><span class="red">*</span> Worker</div>
       </div>
-      <div class="col-md-9">
-        <textarea name="Worker" class="form-control formTextField" rows="8" cols="80"><%= Worker %></textarea>
+      <div class="col-md-9 container">
+        <div class="">
+          <textarea name="Worker" field="Worker" class="form-control formTextField" rows="8" cols="80"><%= Worker %></textarea>
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -49,8 +57,11 @@
       <div class="col-md-3">
         <div class="form-label text-right"><span class="red">*</span> Worker Type</div>
       </div>
-      <div class="col-md-9">
-        <input type="text" class="form-control formTextField" name="WorkerType" value="<%= WorkerType %>">
+      <div class="col-md-9 container">
+        <div class="">
+          <input type="text" class="form-control formTextField" name="WorkerType" field="WorkerType" value="<%= WorkerType %>">
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -59,8 +70,11 @@
       <div class="col-md-3">
         <div class="form-label text-right">Summary</div>
       </div>
-      <div class="col-md-9">
-        <textarea name="Summary" class="form-control formTextField" rows="8" cols="80"><%= Summary %></textarea>
+      <div class="col-md-9 container">
+        <div class="">
+          <textarea name="Summary" field="Summary" class="form-control formTextField" rows="8" cols="80"><%= Summary %></textarea>
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -69,8 +83,11 @@
       <div class="col-md-3">
         <div class="form-label text-right">Remark</div>
       </div>
-      <div class="col-md-9">
-        <textarea name="Remark" class="form-control formTextField" rows="8" cols="80"><%= Remark %></textarea>
+      <div class="col-md-9 container">
+        <div class="">
+          <textarea name="Remark" field="Remark" class="form-control formTextField" rows="8" cols="80"><%= Remark %></textarea>
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -79,8 +96,11 @@
       <div class="col-md-3">
         <div class="form-label text-right"><span class="red">*</span> Score</div>
       </div>
-      <div class="col-md-9">
-        <input type="number" class="form-control formTextField" name="Score" value="<%= Score %>">
+      <div class="col-md-9 container">
+        <div class="">
+          <input type="number" class="form-control formTextField" name="Score" field="Score" value="<%= Score %>">
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>

@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, moment, _ */
+/* global Hktdc, Backbone, JST, Q, utils, $, moment, _, dialogMessage, sprintf*/
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -21,8 +21,13 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     initialize: function() {
+      var self = this;
       // this.listenTo(this.model, 'change', this.render);
-      console.log(this.model.toJSON());
+      // console.log(this.model.toJSON());
+      self.listenTo(self.model, 'valid', function(validObj) {
+        // console.log('is valid', validObj);
+        utils.toggleInvalidMessage(self.el, validObj.field, false);
+      });
     },
 
     render: function() {
@@ -125,9 +130,19 @@ Hktdc.Views = Hktdc.Views || {};
       var processSelectView = new Hktdc.Views.ProcessSelect({
         collection: self.model.toJSON().processCollection,
         selectedProcess: self.model.toJSON().ProcessId,
+        attributes: { field: 'ProcessId', name: 'ProcessId' },
         onSelected: function(process) {
           self.model.set({
             ProcessId: process.ProcessID
+          });
+          self.model.set({
+            ProcessId: process.ProcessID
+          }, {
+            validate: true,
+            field: 'ProcessId',
+            onInvalid: function(invalidObject) {
+              utils.toggleInvalidMessage(self.el, 'ProcessId', invalidObject.message, true);
+            }
           });
         }
       });
@@ -322,6 +337,39 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     saveButtonHandler: function() {
+      var self = this;
+      self.validateField();
+      if (self.model.isValid()) {
+        self.doSaveWorkerRule()
+          .then(function(response) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              type: 'success',
+              title: 'Information',
+              message: dialogMessage.workerRule.save.success
+            });
+            if (self.model.toJSON().saveType === 'POST' && response.Msg) {
+              Backbone.history.navigate('worker-rule/' + response.Msg, {
+                trigger: true
+              });
+            }
+          })
+          .catch(function(err) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              type: 'error',
+              title: 'Error',
+              message: sprintf(dialogMessage.workerRule.save.fail, err.request_id || err)
+            });
+          });
+      } else {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          title: 'Error',
+          message: dialogMessage.common.invalid.form
+        });
+      }
+    },
+
+    doSaveWorkerRule: function() {
+      var deferred = Q.defer();
       var rawData = this.model.toJSON();
       var self = this;
       var saveData = {
@@ -345,51 +393,34 @@ Hktdc.Views = Hktdc.Views || {};
           title: 'Error'
         });
       });
-
-      if (saveWorkerRuleModel.isValid()) {
-        saveWorkerRuleModel.url = saveWorkerRuleModel.url(self.model.toJSON().WorkerRuleId);
-        var doSave = function() {
-          saveWorkerRuleModel.save({}, {
-            beforeSend: utils.setAuthHeader,
-            type: self.model.toJSON().saveType,
-            success: function(model, response) {
-              if (String(response.Success) === '1') {
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: 'saved',
-                  type: 'confirmation',
-                  title: 'Confirmation'
-                });
-                if (self.model.toJSON().saveType === 'POST' && response.Msg) {
-                  Backbone.history.navigate('worker-rule/' + response.Msg, {
-                    trigger: true
-                  });
-                }
-              } else {
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: response.Msg || 'Error on saving.',
-                  type: 'error',
-                  title: 'Error'
-                });
-              }
-            },
-            error: function(model, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doSave();
-                });
-              } else {
-                console.error(response.responseText);
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: 'error on saving worker rule',
-                  type: 'error',
-                  title: 'Error'
-                });
-              }
+      saveWorkerRuleModel.url = saveWorkerRuleModel.url(self.model.toJSON().WorkerRuleId);
+      var doSave = function() {
+        saveWorkerRuleModel.save({}, {
+          beforeSend: utils.setAuthHeader,
+          type: self.model.toJSON().saveType,
+          success: function(model, response) {
+            if (String(response.Success) === '1') {
+              deferred.resolve(response);
+            } else {
+              deferred.reject();
             }
-          });
-        };
-        doSave();
-      }
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject();
+            }
+          }
+        });
+      };
+      doSave();
+      return deferred.promise;
     },
 
     deleteRuleButtonHandler: function() {
@@ -459,11 +490,22 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     updateFormModel: function(ev) {
+      var self = this;
       var updateObject = {};
       var $target = $(ev.target);
       var targetField = $target.attr('name');
       updateObject[targetField] = $target.val();
-      this.model.set(updateObject);
+      self.model.set(updateObject);
+
+      // double set is to prevent invalid value bypass the set model process
+      // because if saved the valid model, then set the invalid model will not success and the model still in valid state
+      self.model.set(updateObject, {
+        validate: true,
+        field: targetField,
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, targetField, invalidObject.message, true);
+        }
+      });
     },
 
     removeMemberButtonHandler: function() {
@@ -530,7 +572,59 @@ Hktdc.Views = Hktdc.Views || {};
           });
         }
       });
-    }
+    },
 
+    validateField: function() {
+      var self = this;
+      this.model.set({
+        ProcessId: this.model.toJSON().ProcessId
+      }, {
+        validate: true,
+        field: 'ProcessId',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'ProcessId', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Code: this.model.toJSON().Code
+      }, {
+        validate: true,
+        field: 'Code',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Code', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Worker: this.model.toJSON().Worker
+      }, {
+        validate: true,
+        field: 'Worker',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Worker', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        WorkerType: this.model.toJSON().WorkerType
+      }, {
+        validate: true,
+        field: 'WorkerType',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'WorkerType', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Score: this.model.toJSON().Score
+      }, {
+        validate: true,
+        field: 'Score',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Score', invalidObject.message, true);
+        }
+      });
+    }
   });
 })();
