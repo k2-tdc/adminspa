@@ -179,29 +179,34 @@ Hktdc.Views = Hktdc.Views || {};
         var pageGUID = menuObj.MenuId;
         var checkPagePermissionModel = new Hktdc.Models.Menu();
         checkPagePermissionModel.url = checkPagePermissionModel.url(pageGUID);
-        var doFetch = function() {
-          checkPagePermissionModel.fetch({
-            beforeSend: utils.setAuthHeader,
-            success: function(model, data) {
-              if (data.EmployeeNo) {
-                onSuccess();
-              } else {
-                onError();
-              }
-            },
-            error: function(model, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
+        if(Hktdc.Config.checkPermission) {
+            var doFetch = function () {
+                checkPagePermissionModel.fetch({
+                    beforeSend: utils.setAuthHeader,
+                    success: function (model, data) {
+                        if (data.EmployeeNo) {
+                            Hktdc.Config.checkPermission = false;
+                            onSuccess();
+                        } else {
+                            onError();
+                        }
+                    },
+                    error: function (model, response) {
+                        if (response.status === 401) {
+                            utils.getAccessToken(function () {
+                                doFetch();
+                            });
+                        } else {
+                            console.error(response.responseText);
+                            onError();
+                        }
+                    }
                 });
-              } else {
-                console.error(response.responseText);
-                onError();
-              }
-            }
-          });
-        };
-        doFetch();
+            };
+            doFetch();
+        } else {
+            onSuccess();
+        }
       }
     },
 
@@ -215,6 +220,7 @@ Hktdc.Views = Hktdc.Views || {};
       var currentRoute = Backbone.history.getHash();
       var isParentPath = (currentRoute.indexOf('/') === -1);
       var containQueryString = currentRoute.indexOf('?') >= 0;
+      Hktdc.Config.checkPermission = true;
       if (currentRoute.indexOf(pagePath) >= 0 && isParentPath) {
         if (containQueryString) {
           Backbone.history.navigate(pagePath, true);

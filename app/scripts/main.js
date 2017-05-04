@@ -24,6 +24,7 @@ window.Hktdc = {
     userID: '',
     userName: '',
     RuleCode: 'IT0008;IT0009',
+    checkPermission: true,
     environments: {
       // local host
       localDev: {
@@ -86,6 +87,7 @@ window.Hktdc = {
                 menuModel.set('activeTab', Backbone.history.getHash());
               });
               Backbone.history.start();
+              Hktdc.Config.checkPermission = false;
             });
           }, function(error) {
             console.log('Error on getting userID', error);
@@ -107,6 +109,7 @@ window.Hktdc = {
           });
 
           Backbone.history.start();
+          Hktdc.Config.checkPermission = false;
         });
       }
     } catch (e) {
