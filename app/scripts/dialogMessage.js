@@ -84,7 +84,8 @@ var dialogMessage = {
   },
   common: {
     invalid: {
-      form: 'Input is invalid.'
+      form: 'Input is invalid.',
+      required: '%s is required.'
     },
     serverError: {
       fail: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %s'

@@ -38,6 +38,11 @@ Hktdc.Views = Hktdc.Views || {};
         console.log('change step collection');
         self.renderStepSelect();
       });
+
+      self.listenTo(self.model, 'valid', function(validObj) {
+        console.log('is valid', validObj);
+        utils.toggleInvalidMessage(self.el, validObj.field, false);
+      });
     },
 
     render: function() {
@@ -188,15 +193,60 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
+    renderProfileUserSelect: function() {
+      var self = this;
+      var ProfileUserView;
+      if (Hktdc.Config.isAdmin) {
+        ProfileUserView = new Hktdc.Views.ProfileUserSelect({
+          collection: self.model.toJSON().profileUserCollection,
+          selectedProfileUser: self.model.toJSON().UserId,
+          attributes: { name: 'UserId', field: 'UserId' },
+          onSelected: function(profileUserId) {
+            self.model.set({
+              UserId: profileUserId
+            });
+            self.model.set({
+              UserId: profileUserId
+            }, {
+              validate: true,
+              field: 'UserId',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'UserId', invalidObject.message, true);
+              }
+            });
+          }
+        });
+
+        ProfileUserView.render();
+        // } else {
+        //   ProfileUserView = new Hktdc.Views.ProfileUserLabel({
+        //     model: new Hktdc.Models.EmailProfile({FullName: Hktdc.Config.userName})
+        //   });
+        $('.profileUserContainer', self.el).html(ProfileUserView.el);
+      }
+
+      // console.log(ProfileUserView.el);
+    },
+
     renderProcessSelect: function() {
       var self = this;
       var processSelectView = new Hktdc.Views.ProcessSelect({
         collection: self.model.toJSON().processCollection,
         selectedProcess: self.model.toJSON().ProcessID,
+        attributes: { name: 'ProcessID', field: 'ProcessID' },
         onSelected: function(process) {
           self.model.set({
             ProcessID: process.ProcessID,
             ProcessName: process.ProcessName
+          });
+          self.model.set({
+            ProcessID: process.ProcessID
+          }, {
+            validate: true,
+            field: 'ProcessID',
+            onInvalid: function(invalidObject) {
+              utils.toggleInvalidMessage(self.el, 'ProcessID', invalidObject.message, true);
+            }
           });
           self.loadStep()
             .then(function(stepCollection) {
@@ -216,9 +266,20 @@ Hktdc.Views = Hktdc.Views || {};
       var stepSelectView = new Hktdc.Views.StepSelect({
         collection: self.model.toJSON().stepCollection,
         selectedStep: self.model.toJSON().StepID,
+        attributes: { name: 'StepID', field: 'StepID' },
         onSelected: function(stepId) {
           self.model.set({
             StepID: stepId
+          });
+
+          self.model.set({
+            StepID: stepId
+          }, {
+            validate: true,
+            field: 'StepID',
+            onInvalid: function(invalidObject) {
+              utils.toggleInvalidMessage(self.el, 'StepID', invalidObject.message, true);
+            }
           });
         }
       });
@@ -228,32 +289,8 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    renderProfileUserSelect: function() {
-      var self = this;
-      var ProfileUserView;
-      if (Hktdc.Config.isAdmin) {
-        ProfileUserView = new Hktdc.Views.ProfileUserSelect({
-          collection: self.model.toJSON().profileUserCollection,
-          selectedProfileUser: self.model.toJSON().UserId,
-          onSelected: function(profileUserId) {
-            self.model.set({
-              UserId: profileUserId
-            });
-          }
-        });
-
-        ProfileUserView.render();
-      // } else {
-      //   ProfileUserView = new Hktdc.Views.ProfileUserLabel({
-      //     model: new Hktdc.Models.EmailProfile({FullName: Hktdc.Config.userName})
-      //   });
-        $('.profileUserContainer', self.el).html(ProfileUserView.el);
-      }
-
-      // console.log(ProfileUserView.el);
-    },
-
     updateFormModel: function(ev) {
+      var self = this;
       var updateObject = {};
       var $target = $(ev.target);
       var targetField = $target.attr('name');
@@ -262,18 +299,23 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         updateObject[targetField] = $target.val();
       }
-      this.model.set(updateObject);
+      self.model.set(updateObject);
 
-      // this.model.set(updateObject, {
-      // validate: true,
-      // field: targetField
-      // });
       // double set is to prevent invalid value bypass the set model process
       // because if saved the valid model, then set the invalid model will not success and the model still in valid state
+      self.model.set(updateObject, {
+        validate: true,
+        field: targetField,
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, targetField, invalidObject.message, true);
+        }
+      });
     },
 
     saveProfile: function() {
-      this.doSaveProfile()
+      this.validateField();
+      if (this.model.isValid()) {
+        this.doSaveProfile()
         .then(function(response) {
           Hktdc.Dispatcher.trigger('openAlert', {
             title: 'Information',
@@ -290,6 +332,13 @@ Hktdc.Views = Hktdc.Views || {};
             message: sprintf(dialogMessage.emailProfile.save.fail, err.request_id || 'unknown')
           });
         });
+      } else {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          type: 'error',
+          title: 'Alert',
+          message: dialogMessage.common.invalid.form
+        });
+      }
     },
 
     doSaveProfile: function() {
@@ -439,7 +488,59 @@ Hktdc.Views = Hktdc.Views || {};
       };
       doSave();
       return deferred.promise;
-    }
+    },
 
+    validateField: function() {
+      var self = this;
+      this.model.set({
+        UserId: this.model.toJSON().UserId
+      }, {
+        validate: true,
+        field: 'UserId',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'UserId', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        ProcessID: this.model.toJSON().ProcessID
+      }, {
+        validate: true,
+        field: 'ProcessID',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'ProcessID', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        StepID: this.model.toJSON().StepID
+      }, {
+        validate: true,
+        field: 'StepID',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'StepID', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        DayOfWeek: this.model.toJSON().DayOfWeek
+      }, {
+        validate: true,
+        field: 'DayOfWeek',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'DayOfWeek', invalidObject.message, true);
+        }
+      });
+
+      // this.model.set({
+      //   TimeSlot: this.model.toJSON().UserID
+      // }, {
+      //   validate: true,
+      //   field: 'UserID',
+      //   onInvalid: function(invalidObject) {
+      //     utils.toggleInvalidMessage(self.el, 'UserID', invalidObject.message, true);
+      //   }
+      // });
+    }
   });
 })();
