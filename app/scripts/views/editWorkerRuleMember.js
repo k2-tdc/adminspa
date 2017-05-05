@@ -1292,7 +1292,7 @@ Hktdc.Views = Hktdc.Views || {};
             console.error(err);
             Hktdc.Dispatcher.trigger('openAlert', {
               title: 'Error',
-              message: sprintf(dialogMessage.workerRuleMember.save.fail, err.request_id || err)
+              message: sprintf(dialogMessage.workerRuleMember.save.fail, err.request_id || err.error || err)
             });
           });
       } else {
@@ -1497,7 +1497,7 @@ Hktdc.Views = Hktdc.Views || {};
                 responseObj = JSON.parse(response.responseText);
               } catch (e) {
                 responseObj = {
-                  request_id: false,
+                  request_id: 'unknown error code',
                   error: 'unknown server error'
                 };
               }

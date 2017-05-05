@@ -727,9 +727,11 @@ Hktdc.Routers = Hktdc.Routers || {};
               collection: subheaderMenuListCollection,
               currentPageName: 'WORKER RULE SETTING'
             });
-            subheaderMenuListView.render();
 
-            $('.subheader-menu-container').html(subheaderMenuListView.el);
+            setTimeout(function() {
+              subheaderMenuListView.render();
+              $('.subheader-menu-container').html(subheaderMenuListView.el);
+            });
           };
           // var renderUserRoleMember = function(userRole) {
 
