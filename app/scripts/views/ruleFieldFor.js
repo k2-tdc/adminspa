@@ -33,9 +33,28 @@ Hktdc.Views = Hktdc.Views || {};
       self.$el.html(self.template());
 
       try {
+        var fieldName = '';
+        switch (self.type) {
+          case 'user':
+            fieldName = 'UserId2';
+            break;
+          case 'team':
+            fieldName = 'Team';
+            break;
+          case 'group':
+            fieldName = 'GroupID1';
+            break;
+          case 'department':
+            fieldName = 'Department';
+            break;
+          default:
+            fieldName = 'UserId2';
+        }
+
         var gradeFromSelectView = new Hktdc.Views.RuleFieldForSelect({
           collection: self.collection,
           selectedFor: self.selectedFor,
+          attributes: { name: fieldName, field: fieldName },
           onSelected: self.onSelected
         });
         gradeFromSelectView.render();

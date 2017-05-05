@@ -943,16 +943,36 @@ Hktdc.Views = Hktdc.Views || {};
         if (type === 'grade') {
           gradeView = new Hktdc.Views.RuleFieldRemoveGrade({
             collection: removeCollection,
+            fieldFrom: 'Grade1',
+            fieldTo: 'Grade2',
             selectedGradeFrom: self.model.toJSON().Grade1 || 0,
             selectedGradeTo: self.model.toJSON().Grade2 || 0,
             onSelectedFrom: function(grade) {
               self.model.set({
                 Grade1: grade.Grade
               });
+              self.model.set({
+                Grade1: grade.Grade
+              }, {
+                validate: true,
+                field: 'Grade1',
+                onInvalid: function(invalidObject) {
+                  utils.toggleInvalidMessage(self.el, 'Grade1', invalidObject.message, true);
+                }
+              });
             },
             onSelectedTo: function(grade) {
               self.model.set({
                 Grade2: grade.Grade
+              });
+              self.model.set({
+                Grade2: grade.Grade
+              }, {
+                validate: true,
+                field: 'Grade2',
+                onInvalid: function(invalidObject) {
+                  utils.toggleInvalidMessage(self.el, 'Grade2', invalidObject.message, true);
+                }
               });
             }
           });
@@ -970,18 +990,44 @@ Hktdc.Views = Hktdc.Views || {};
               }
             }(),
             onSelected: function(selectedData) {
-              console.log(selectedData);
               if (type === 'user') {
                 self.model.set({
                   UserId1: selectedData.UserID
+                });
+                self.model.set({
+                  UserId1: selectedData.UserId1
+                }, {
+                  validate: true,
+                  field: 'UserId1',
+                  onInvalid: function(invalidObject) {
+                    utils.toggleInvalidMessage(self.el, 'UserId1', invalidObject.message, true);
+                  }
                 });
               } else if (type === 'level') {
                 self.model.set({
                   LevelNo: selectedData.LevelNo
                 });
+                self.model.set({
+                  LevelNo: selectedData.LevelNo
+                }, {
+                  validate: true,
+                  field: 'LevelNo',
+                  onInvalid: function(invalidObject) {
+                    utils.toggleInvalidMessage(self.el, 'LevelNo', invalidObject.message, true);
+                  }
+                });
               } else if (type === 'group') {
                 self.model.set({
                   GroupID: selectedData.GroupID
+                });
+                self.model.set({
+                  GroupID: selectedData.GroupID
+                }, {
+                  validate: true,
+                  field: 'GroupID',
+                  onInvalid: function(invalidObject) {
+                    utils.toggleInvalidMessage(self.el, 'GroupID', invalidObject.message, true);
+                  }
                 });
               }
             }
@@ -1014,22 +1060,57 @@ Hktdc.Views = Hktdc.Views || {};
             }
           }(),
           onSelected: function(selectedData) {
-            console.log(selectedData);
             if (type === 'user') {
               self.model.set({
                 UserId2: selectedData.UserID
+              });
+              self.model.set({
+                UserId2: selectedData.UserID
+              }, {
+                validate: true,
+                field: 'UserId2',
+                onInvalid: function(invalidObject) {
+                  utils.toggleInvalidMessage(self.el, 'UserId2', invalidObject.message, true);
+                }
               });
             } else if (type === 'team') {
               self.model.set({
                 Team: selectedData.Code
               });
+              self.model.set({
+                Team: selectedData.Code
+              }, {
+                validate: true,
+                field: 'Team',
+                onInvalid: function(invalidObject) {
+                  utils.toggleInvalidMessage(self.el, 'Team', invalidObject.message, true);
+                }
+              });
             } else if (type === 'group') {
               self.model.set({
                 GroupID1: selectedData.GroupID
               });
+              self.model.set({
+                GroupID1: selectedData.GroupID
+              }, {
+                validate: true,
+                field: 'GroupID1',
+                onInvalid: function(invalidObject) {
+                  utils.toggleInvalidMessage(self.el, 'GroupID1', invalidObject.message, true);
+                }
+              });
             } else {
               self.model.set({
                 Department: selectedData.DeptCode
+              });
+              self.model.set({
+                Department: selectedData.DeptCode
+              }, {
+                validate: true,
+                field: 'Department',
+                onInvalid: function(invalidObject) {
+                  utils.toggleInvalidMessage(self.el, 'Department', invalidObject.message, true);
+                }
               });
             }
           }
@@ -1047,10 +1128,20 @@ Hktdc.Views = Hktdc.Views || {};
       try {
         var teamFilterSelectView = new Hktdc.Views.RuleFieldForTeamFilterSelect({
           collection: teamCollection,
+          attributes: { field: 'TeamFilter', name: 'TeamFilter' },
           selectedFor: self.model.toJSON().TeamFilter || 0,
           onSelected: function(selected) {
             self.model.set({
               TeamFilter: selected.FilterID
+            });
+            self.model.set({
+              TeamFilter: selected.FilterID
+            }, {
+              validate: true,
+              field: 'TeamFilter',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'TeamFilter', invalidObject.message, true);
+              }
             });
           }
         });

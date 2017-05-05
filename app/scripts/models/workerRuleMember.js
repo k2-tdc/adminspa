@@ -20,64 +20,60 @@ Hktdc.Models = Hktdc.Models || {};
           : false;
         },
         Nature: function() {
-          return (!self.attributes.Nature || String(self.attributes.Nature) === 0)
+          return (!self.attributes.Nature || String(self.attributes.Nature) === '0')
             ? '"Nature" must be filled.'
             : false;
         },
         Score: function() {
-          console.log(self.attributes.Score);
           if (String(self.attributes.Score) === '0' || !self.attributes.Score) {
-            console.log('c 1');
             return '"Score" must be filled and larger than zero.';
           } else if (isNaN(self.attributes.Score)) {
-            console.log('c 2');
             return '"Score" must be a number.';
           }
-          console.log('c 3');
           return false;
         },
         UserId1: function() {
-          return (!self.attributes.UserId1 || String(self.attributes.UserId1) === 0)
+          return (!self.attributes.UserId1 || String(self.attributes.UserId1) === '0')
             ? '"Set" / "Remove" must be filled.'
             : false;
         },
         UserId2: function() {
-          return (!self.attributes.UserId2 || String(self.attributes.UserId2) === 0)
+          return (!self.attributes.UserId2 || String(self.attributes.UserId2) === '0')
             ? '"For" must be filled.'
             : false;
         },
         LevelNo: function() {
-          return (!self.attributes.LevelNo || String(self.attributes.LevelNo) === 0)
+          return (!self.attributes.LevelNo || String(self.attributes.LevelNo) === '0')
             ? '"Set" / "Remove" must be filled.'
             : false;
         },
         GroupID: function() {
-          return (!self.attributes.GroupID || String(self.attributes.GroupID) === 0)
+          return (!self.attributes.GroupID || String(self.attributes.GroupID) === '0')
             ? '"Set" / "Remove" must be filled.'
             : false;
         },
         GroupID1: function() {
-          return (!self.attributes.GroupID1 || String(self.attributes.GroupID1) === 0)
+          return (!self.attributes.GroupID1 || String(self.attributes.GroupID1) === '0')
             ? '"For" must be filled.'
             : false;
         },
         Grade1: function() {
-          return (!self.attributes.Grade1 || String(self.attributes.Grade1) === 0 || self.attributes.Grade1 !== 'undefined')
-            ? '"Set" must be filled.'
+          return (!self.attributes.Grade1 || String(self.attributes.Grade1) === '0' || self.attributes.Grade1 !== 'undefined')
+            ? '"Set" / "Remove" must be filled.'
             : false;
         },
         Grade2: function() {
-          return (!self.attributes.Grade2 || String(self.attributes.Grade2) === 0 || self.attributes.Grade2 !== 'undefined')
-            ? '"Set" must be filled.'
+          return (!self.attributes.Grade2 || String(self.attributes.Grade2) === '0' || self.attributes.Grade2 !== 'undefined')
+            ? '"Set" / "Remove" must be filled.'
             : false;
         },
         Team: function() {
-          return (!self.attributes.Team || String(self.attributes.Team) === 0)
+          return (!self.attributes.Team || String(self.attributes.Team) === '0')
             ? '"For" must be filled.'
             : false;
         },
         TeamFilter: function() {
-          return (!self.attributes.TeamFilter || String(self.attributes.TeamFilter) === 0)
+          return (!self.attributes.TeamFilter || String(self.attributes.TeamFilter) === '0')
             ? '"For" must be filled.'
             : false;
         },
@@ -87,17 +83,17 @@ Hktdc.Models = Hktdc.Models || {};
             : false;
         },
         Grade3: function() {
-          return (!self.attributes.Grade3 || String(self.attributes.Grade3) === 0)
+          return (!self.attributes.Grade3 || String(self.attributes.Grade3) === '0')
             ? '"Of" must be filled.'
             : false;
         },
         Grade4: function() {
-          return (!self.attributes.Grade4 || String(self.attributes.Grade4) === 0)
+          return (!self.attributes.Grade4 || String(self.attributes.Grade4) === '0')
             ? '"Of" must be filled.'
             : false;
         },
         Department: function() {
-          return (!self.attributes.Department || String(self.attributes.Department) === 0)
+          return (!self.attributes.Department || String(self.attributes.Department) === '0')
             ? '"For" must be filled.'
             : false;
         }
@@ -160,21 +156,20 @@ Hktdc.Models = Hktdc.Models || {};
 
     validate: function(attrs, options) {
       var rule = (this.rules && this.rules[attrs.Rule]) ? this.rules[attrs.Rule] : false;
-      console.log(rule);
       // console.log(attrs.Rule);
 
       // *** valid => return false;
       // *** invalid => return true;
 
       // for single validate
-      console.log('field: ', options.field);
+      // console.log('field: ', options.field);
       if (options.field && !_.isArray(options.field)) {
-        if (this.isInvalid[options.field] && this.isInvalid[options.field]()) {
-          console.log('invalid: ', options.field, '>> ', this.isInvalid[options.field]());
+        if (rule[options.field] && this.isInvalid[options.field] && this.isInvalid[options.field]()) {
+          // console.log('invalid: ', options.field, '>> ', this.isInvalid[options.field]());
           options.onInvalid({ message: this.isInvalid[options.field]() });
           return true;
         } else {
-          console.log('valid: ', options.field);
+          // console.log('valid: ', options.field);
           this.trigger('valid', { field: options.field });
           return false;
         }
@@ -187,13 +182,15 @@ Hktdc.Models = Hktdc.Models || {};
           formIsInvalid = true;
         } else {
           _.each(rule, function(needValidate, ruleName) {
-            if (self.isInvalid[ruleName] && self.isInvalid[ruleName]()) {
-              formIsInvalid = true;
+            if (needValidate) {
+              if (self.isInvalid[ruleName] && self.isInvalid[ruleName]()) {
+                formIsInvalid = true;
+              }
             }
           });
         }
 
-        console.log('formIsInvalid: ', formIsInvalid);
+        // console.log('formIsInvalid: ', formIsInvalid);
         return formIsInvalid;
       }
     },

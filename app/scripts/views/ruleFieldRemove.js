@@ -6,7 +6,7 @@ Hktdc.Views = Hktdc.Views || {};
   'use strict';
   Hktdc.Views.RuleFieldRemoveGrade = Backbone.View.extend({
     className: 'row',
-    
+
     template: JST['app/scripts/templates/ruleFieldRemoveGrade.ejs'],
 
     initialize: function(opts) {
@@ -24,11 +24,13 @@ Hktdc.Views = Hktdc.Views || {};
         var gradeFromSelectView = new Hktdc.Views.RuleFieldRemoveSelect({
           collection: self.collection,
           selectedRemove: self.selectedGradeFrom,
+          attributes: { field: self.fieldFrom, name: self.fieldFrom },
           onSelected: self.onSelectedFrom
         });
         var ofToSelectView = new Hktdc.Views.RuleFieldRemoveSelect({
           collection: self.collection,
           selectedRemove: self.selectedGradeTo,
+          attributes: { field: self.fieldTo, name: self.fieldTo },
           onSelected: self.onSelectedTo
         });
         gradeFromSelectView.render();
@@ -66,9 +68,25 @@ Hktdc.Views = Hktdc.Views || {};
       this.$el.html(this.template());
       var self = this;
       try {
+        var fieldName = '';
+        switch (self.type) {
+          case 'user':
+            fieldName = 'UserId1';
+            break;
+          case 'level':
+            fieldName = 'LevelNo';
+            break;
+          case 'group':
+            fieldName = 'GroupID';
+            break;
+          default:
+            fieldName = 'UserId1';
+        };
+
         var gradeFromSelectView = new Hktdc.Views.RuleFieldRemoveSelect({
           collection: self.collection,
           selectedRemove: self.selected,
+          attributes: { field: fieldName, name: fieldName },
           onSelected: self.onSelected
         });
         gradeFromSelectView.render();
