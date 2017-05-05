@@ -42,7 +42,8 @@ Hktdc.Views = Hktdc.Views || {};
         self.loadNature()
           .then(function(natureCollection) {
             return self.renderNature(natureCollection);
-          }).catch(function(e) {
+          })
+          .catch(function(e) {
             console.error(e);
           });
       }
@@ -51,7 +52,8 @@ Hktdc.Views = Hktdc.Views || {};
         self.loadUsers()
           .then(function(userCollection) {
             return self.renderPer(userCollection);
-          }).catch(function(e) {
+          })
+          .catch(function(e) {
             console.error(e);
           });
       }
@@ -60,7 +62,8 @@ Hktdc.Views = Hktdc.Views || {};
         self.loadPriority()
           .then(function(priorityCollection) {
             return self.renderAs(priorityCollection);
-          }).catch(function(e) {
+          })
+          .catch(function(e) {
             console.error(e);
           });
       }
@@ -69,7 +72,8 @@ Hktdc.Views = Hktdc.Views || {};
         self.loadCriteria()
           .then(function(criteriaCollection) {
             return self.renderCheckbox(criteriaCollection);
-          }).catch(function(e) {
+          })
+          .catch(function(e) {
             console.error(e);
           });
       }
@@ -78,7 +82,8 @@ Hktdc.Views = Hktdc.Views || {};
         self.loadGrading()
           .then(function(gradingCollection) {
             return self.renderOf(gradingCollection);
-          }).catch(function(e) {
+          })
+          .catch(function(e) {
             console.error(e);
           });
       }

@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, _ */
+/* global Hktdc, Backbone, _, validateMessage */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -18,14 +18,13 @@ Hktdc.Models = Hktdc.Models || {};
       var self = this;
       this.isInvalid = {
         Role: function() {
-          return (self.attributes.Role) ? false : 'Role is required.';
+          return (self.attributes.Role) ? false : validateMessage.required;
         },
         Desc: function() {
-          return (self.attributes.Desc) ? false : 'Description is required.';
+          return (self.attributes.Desc) ? false : validateMessage.required;
         },
         ProcessId: function() {
-          console.log(self.attributes.ProcessId);
-          return (String(self.attributes.ProcessId) !== '0' && !!self.attributes.ProcessId) ? false : 'Process is required.';
+          return (String(self.attributes.ProcessId) !== '0' && !!self.attributes.ProcessId) ? false : validateMessage.required;
         }
       };
     },

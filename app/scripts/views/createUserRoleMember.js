@@ -215,7 +215,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.model.set({
               User: users
             });
-            
+
             self.model.set({
               member: false
             }, {
@@ -293,9 +293,8 @@ Hktdc.Views = Hktdc.Views || {};
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          type: 'error',
-          title: 'Alert',
-          message: 'Input is invalid.'
+          title: 'Warning',
+          message: dialogMessage.common.invalid.form
         });
       }
     },

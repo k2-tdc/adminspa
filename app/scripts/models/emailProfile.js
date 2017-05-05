@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone */
+/* global Hktdc, Backbone, validateMessage */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -15,16 +15,16 @@ Hktdc.Models = Hktdc.Models || {};
       var self = this;
       this.isInvalid = {
         ProcessID: function() {
-          return (self.attributes.ProcessID && String(self.attributes.ProcessID) !== '0') ? false : 'Process is required.';
+          return (self.attributes.ProcessID && String(self.attributes.ProcessID) !== '0') ? false : validateMessage.required;
         },
         StepID: function() {
-          return (self.attributes.StepID && String(self.attributes.StepID) !== '0') ? false : 'Notification is required.';
+          return (self.attributes.StepID && String(self.attributes.StepID) !== '0') ? false : validateMessage.required;
         },
         DayOfWeek: function() {
-          return (self.attributes.DayOfWeek && self.attributes.DayOfWeek.length) ? false : 'Day of Week is required';
+          return (self.attributes.DayOfWeek && self.attributes.DayOfWeek.length) ? false : validateMessage.required;
         },
         UserId: function() {
-          return (self.attributes.UserId && String(self.attributes.UserId) !== '0') ? false : 'User is required.';
+          return (self.attributes.UserId && String(self.attributes.UserId) !== '0') ? false : validateMessage.required;
         }
       };
     },

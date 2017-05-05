@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, utils, Q, $, _, moment */
+/* global Hktdc, Backbone, JST, utils, Q, $, _, moment, dialogMessage */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -268,9 +268,8 @@ Hktdc.Views = Hktdc.Views || {};
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          type: 'error',
-          title: 'Alert',
-          message: 'Input is invalid.'
+          title: 'Warning',
+          message: dialogMessage.common.invalid.form
         });
       }
     },

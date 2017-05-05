@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, _ */
+/* global Hktdc, Backbone, _, validateMessage */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -16,17 +16,17 @@ Hktdc.Models = Hktdc.Models || {};
       this.isInvalid = {
         Rule: function() {
           return !self.attributes.Rule
-          ? '"Rule" must be filled.'
+          ? validateMessage.required
           : false;
         },
         Nature: function() {
           return (!self.attributes.Nature || String(self.attributes.Nature) === '0')
-            ? '"Nature" must be filled.'
+            ? validateMessage.required
             : false;
         },
         Score: function() {
           if (String(self.attributes.Score) === '0' || !self.attributes.Score) {
-            return '"Score" must be filled and larger than zero.';
+            return validateMessage.required;
           } else if (isNaN(self.attributes.Score)) {
             return '"Score" must be a number.';
           }
@@ -34,67 +34,67 @@ Hktdc.Models = Hktdc.Models || {};
         },
         UserId1: function() {
           return (!self.attributes.UserId1 || String(self.attributes.UserId1) === '0')
-            ? '"Set" / "Remove" must be filled.'
+            ? validateMessage.required
             : false;
         },
         UserId2: function() {
           return (!self.attributes.UserId2 || String(self.attributes.UserId2) === '0')
-            ? '"For" must be filled.'
+            ? validateMessage.required
             : false;
         },
         LevelNo: function() {
           return (!self.attributes.LevelNo || String(self.attributes.LevelNo) === '0')
-            ? '"Set" / "Remove" must be filled.'
+            ? validateMessage.required
             : false;
         },
         GroupID: function() {
           return (!self.attributes.GroupID || String(self.attributes.GroupID) === '0')
-            ? '"Set" / "Remove" must be filled.'
+            ? validateMessage.required
             : false;
         },
         GroupID1: function() {
           return (!self.attributes.GroupID1 || String(self.attributes.GroupID1) === '0')
-            ? '"For" must be filled.'
+            ? validateMessage.required
             : false;
         },
         Grade1: function() {
           return (!self.attributes.Grade1 || String(self.attributes.Grade1) === '0' || self.attributes.Grade1 !== 'undefined')
-            ? '"Set" / "Remove" must be filled.'
+            ? validateMessage.required
             : false;
         },
         Grade2: function() {
           return (!self.attributes.Grade2 || String(self.attributes.Grade2) === '0' || self.attributes.Grade2 !== 'undefined')
-            ? '"Set" / "Remove" must be filled.'
+            ? validateMessage.required
             : false;
         },
         Team: function() {
           return (!self.attributes.Team || String(self.attributes.Team) === '0')
-            ? '"For" must be filled.'
+            ? validateMessage.required
             : false;
         },
         TeamFilter: function() {
           return (!self.attributes.TeamFilter || String(self.attributes.TeamFilter) === '0')
-            ? '"For" must be filled.'
+            ? validateMessage.required
             : false;
         },
         Priority: function() {
           return isNaN(self.attributes.Priority)
-            ? '"As" must be filled.'
+            ? validateMessage.required
             : false;
         },
         Grade3: function() {
           return (!self.attributes.Grade3 || String(self.attributes.Grade3) === '0')
-            ? '"Of" must be filled.'
+            ? validateMessage.required
             : false;
         },
         Grade4: function() {
           return (!self.attributes.Grade4 || String(self.attributes.Grade4) === '0')
-            ? '"Of" must be filled.'
+            ? validateMessage.required
             : false;
         },
         Department: function() {
           return (!self.attributes.Department || String(self.attributes.Department) === '0')
-            ? '"For" must be filled.'
+            ? validateMessage.required
             : false;
         }
       };

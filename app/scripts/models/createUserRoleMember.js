@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, _, moment*/
+/* global Hktdc, Backbone, _, moment, sprintf, validateMessage */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -12,24 +12,17 @@ Hktdc.Models = Hktdc.Models || {};
       var today = new Date();
       this.isInvalid = {
         member: function() {
-          // console.log(self.attributes.User, self.attributes.Query, self.attributes.Dept);
-          console.log('User: ', self.attributes.User, (self.attributes.User && self.attributes.User.length));
-          console.log('Query: ', self.attributes.Query, (self.attributes.Query && self.attributes.Query !== ''));
-          console.log('Dept: ', self.attributes.Dept, (self.attributes.Dept !== '0' && self.attributes.Dept !== 0 && self.attributes.Dept !== ''));
-          console.log('final: ', (self.attributes.User && self.attributes.User.length) ||
-          (self.attributes.Query && self.attributes.Query !== '') ||
-          (self.attributes.Dept !== '0' && self.attributes.Dept !== 0 && self.attributes.Dept !== ''));
           return (
             (self.attributes.User && self.attributes.User.length) ||
             (self.attributes.Query && self.attributes.Query !== '') ||
             (self.attributes.Dept !== '0' && self.attributes.Dept !== 0 && self.attributes.Dept !== '')
-          ) ? false : 'Either User/Query/Department is required.';
+          ) ? false : sprintf(validateMessage.eitherRequired, 'User/Query/Department');
         },
         ExpiryDate: function() {
           if (!self.attributes.ExpiryDate) {
-            return 'Expiry date is required';
+            return validateMessage.required;
           } else if (moment(self.attributes.ExpiryDate, 'YYYY-MM-DD HH:mm').unix() < moment(today).unix()) {
-            return 'Expiry date should be greater than today.';
+            return sprintf(validateMessage.gt, 'today');
           } else {
             return false;
           }

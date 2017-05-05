@@ -72,6 +72,10 @@ var dialogMessage = {
     }
   },
   emailTemplate: {
+    save: {
+      success: 'Delegation is saved.',
+      fail: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %s'
+    },
     delete: {
       confirm: 'Do you want to delete the email template?'
     },
@@ -94,8 +98,7 @@ var dialogMessage = {
   },
   common: {
     invalid: {
-      form: 'Input is invalid.',
-      required: '%s is required.'
+      form: 'Input is missing/incorrect.'
     },
     serverError: {
       fail: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %s'
@@ -104,4 +107,11 @@ var dialogMessage = {
       fail: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %s'
     }
   }
+};
+
+var validateMessage = {
+  required: 'Please fill up this field',
+  gt: 'Should be greater than %s',
+  eitherRequired: 'Either %s is required.',
+  conditionalRequired: '%s is required if %s'
 };

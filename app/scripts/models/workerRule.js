@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, _ */
+/* global Hktdc, Backbone, _, validateMessage */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -16,19 +16,19 @@ Hktdc.Models = Hktdc.Models || {};
       var self = this;
       this.isInvalid = {
         ProcessId: function() {
-          return (self.attributes.ProcessId && String(self.attributes.ProcessId) !== '0') ? false : 'User is required.';
+          return (self.attributes.ProcessId && String(self.attributes.ProcessId) !== '0') ? false : validateMessage.required;
         },
         Code: function() {
-          return (self.attributes.Code) ? false : 'Code is required.';
+          return (self.attributes.Code) ? false : validateMessage.required;
         },
         Worker: function() {
-          return (String(self.attributes.Worker) !== '0' && !!self.attributes.Worker) ? false : 'Worker is required.';
+          return (String(self.attributes.Worker) !== '0' && !!self.attributes.Worker) ? false : validateMessage.required;
         },
         WorkerType: function() {
-          return (String(self.attributes.WorkerType) !== '0' && !!self.attributes.WorkerType) ? false : 'Worker Type is required.';
+          return (String(self.attributes.WorkerType) !== '0' && !!self.attributes.WorkerType) ? false : validateMessage.required;
         },
         Score: function() {
-          return (String(self.attributes.Score) !== '0' && !!self.attributes.Score) ? false : 'Score is required.';
+          return (String(self.attributes.Score) !== '0' && !!self.attributes.Score) ? false : validateMessage.required;
         }
       };
     },

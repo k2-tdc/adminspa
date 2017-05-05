@@ -24,30 +24,6 @@ Hktdc.Models = Hktdc.Models || {};
       Score: 0
     },
 
-    validate: function(attrs, options) {
-      var errors = [];
-      if (!attrs.ProcessId) {
-        errors.push('ProcessId is required.');
-      }
-      if (!attrs.Code) {
-        errors.push('Code is required.');
-      }
-      if (!attrs.Worker) {
-        errors.push('Worker is required.');
-      }
-      if (!attrs.WorkerType) {
-        errors.push('WorkerType is required.');
-      }
-      if (!attrs.Score) {
-        errors.push('Score is required.');
-      }
-
-      if (errors.length) {
-        return errors.join('<br>');
-      }
-      return false;
-    },
-
     parse: function(response, options) {
       return response;
     }

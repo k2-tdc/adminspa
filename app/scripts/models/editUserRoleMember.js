@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, _, moment */
+/* global Hktdc, Backbone, _, moment, validateMessage, sprintf */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -17,9 +17,9 @@ Hktdc.Models = Hktdc.Models || {};
       this.isInvalid = {
         ExpiryDate: function() {
           if (!self.attributes.ExpiryDate) {
-            return 'Expiry date is required';
+            return validateMessage.required;
           } else if (moment(self.attributes.ExpiryDate, 'YYYY-MM-DD HH:mm').unix() < moment(today).unix()) {
-            return 'Expiry Date should be greater than today.';
+            return sprintf(validateMessage.gt, 'today');
           } else {
             return false;
           }
