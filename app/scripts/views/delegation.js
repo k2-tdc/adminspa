@@ -610,7 +610,6 @@ Hktdc.Views = Hktdc.Views || {};
         this.doSaveDelegation()
           .then(function(response) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              type: 'success',
               title: 'Information',
               message: dialogMessage.delegation.save.success
             });
@@ -618,14 +617,12 @@ Hktdc.Views = Hktdc.Views || {};
           })
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              type: 'error',
               title: 'Error',
               message: sprintf(dialogMessage.delegation.save.fail, err.request_id || err)
             });
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          type: 'error',
           title: 'Alert',
           message: dialogMessage.common.invalid.form
         });
@@ -761,7 +758,6 @@ Hktdc.Views = Hktdc.Views || {};
           self.doDeleteDelegation(self.model.toJSON().DelegationId)
             .then(function() {
               Hktdc.Dispatcher.trigger('openAlert', {
-                type: 'success',
                 title: 'Information',
                 message: dialogMessage.delegation.delete.success
               });
@@ -771,7 +767,6 @@ Hktdc.Views = Hktdc.Views || {};
             .catch(function(err) {
               console.error(err);
               Hktdc.Dispatcher.trigger('openAlert', {
-                type: 'error',
                 title: 'Error',
                 message: sprintf(dialogMessage.delegation.delete.fail, err.request_id || err.error || err)
               });

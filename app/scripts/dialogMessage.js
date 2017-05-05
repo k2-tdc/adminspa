@@ -45,7 +45,13 @@ var dialogMessage = {
   },
   workerRuleMember: {
     delete: {
-      confirm: 'Do you want to delete this rule?'
+      confirm: 'Do you want to delete this rule settings?',
+      success: 'Rule setting is deleted.',
+      fail: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %s'
+    },
+    save: {
+      success: 'Rule setting is saved.',
+      fail: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %s'
     },
     batchDelete: {
       confirm: 'Do you want to delete the selected rule?'

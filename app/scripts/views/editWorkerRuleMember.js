@@ -1282,24 +1282,22 @@ Hktdc.Views = Hktdc.Views || {};
           })
           .then(function() {
             Hktdc.Dispatcher.trigger('openAlert', {
-              message: dialogMessage.workerRuleMember.save.success,
-              type: 'confirmation',
-              title: 'Confirmation'
+              title: 'Information',
+              message: dialogMessage.workerRuleMember.save.success
             });
 
             Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, { trigger: true });
           })
           .catch(function(err) {
-            console.log(err);
+            console.error(err);
             Hktdc.Dispatcher.trigger('openAlert', {
-              message: dialogMessage.workerRuleMember.save.fail,
-              title: 'Error'
+              title: 'Error',
+              message: sprintf(dialogMessage.workerRuleMember.save.fail, err.request_id || err)
             });
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          type: 'error',
-          title: 'Alert',
+          title: 'Error',
           message: dialogMessage.common.invalid.form
         });
       }
@@ -1415,9 +1413,18 @@ Hktdc.Views = Hktdc.Views || {};
                     doSave();
                   });
                 } else {
+                  var responseObj;
+                  try {
+                    responseObj = JSON.parse(response.responseText);
+                  } catch (e) {
+                    responseObj = {
+                      request_id: false,
+                      error: 'error on deleting delegation.'
+                    };
+                  }
                   console.error(response.responseText);
                   Hktdc.Dispatcher.trigger('openAlert', {
-                    message: dialogMessage.workerRuleMember.delete.fail,
+                    message: sprintf(dialogMessage.workerRuleMember.delete.fail, responseObj.request_id),
                     title: 'Error'
                   });
                 }
@@ -1466,6 +1473,9 @@ Hktdc.Views = Hktdc.Views || {};
       };
       saveRuleMemberModel.set(data);
 
+      if (self.model.toJSON().saveType === 'PUT') {
+        saveRuleMemberModel.url = saveRuleMemberModel.url(self.model.toJSON().WorkerSettingId);
+      }
       var doSave = function() {
         saveRuleMemberModel.save(null, {
           type: rawData.saveType,
@@ -1482,7 +1492,17 @@ Hktdc.Views = Hktdc.Views || {};
               });
             } else {
               console.error(response.responseText);
-              deferred.reject('error on saving rule member.');
+              var responseObj;
+              try {
+                responseObj = JSON.parse(response.responseText);
+              } catch (e) {
+                responseObj = {
+                  request_id: false,
+                  error: 'unknown server error'
+                };
+              }
+
+              deferred.reject(responseObj);
             }
           }
         });
