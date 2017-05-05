@@ -22,11 +22,13 @@ Hktdc.Views = Hktdc.Views || {};
 
       try {
         var gradeFromSelectView = new Hktdc.Views.RuleFieldSetSelect({
+          attributes: { field: self.fieldFrom, name: self.fieldFrom },
           collection: self.collection,
           selectedSet: self.selectedGradeFrom,
           onSelected: self.onSelectedFrom
         });
         var ofToSelectView = new Hktdc.Views.RuleFieldSetSelect({
+          attributes: { field: self.fieldTo, name: self.fieldTo },
           collection: self.collection,
           selectedSet: self.selectedGradeTo,
           onSelected: self.onSelectedTo
@@ -66,9 +68,24 @@ Hktdc.Views = Hktdc.Views || {};
       this.$el.html(this.template());
       var self = this;
       try {
+        var fieldName = '';
+        switch (self.type) {
+          case 'user':
+            fieldName = 'UserId1';
+            break;
+          case 'level':
+            fieldName = 'LevelNo';
+            break;
+          case 'group':
+            fieldName = 'GroupID';
+            break;
+          default:
+            fieldName = 'UserId1';
+        }
         var commonSelectView = new Hktdc.Views.RuleFieldSetSelect({
           collection: self.collection,
           selectedSet: self.selected,
+          attributes: { field: fieldName, name: fieldName },
           onSelected: self.onSelected
         });
         commonSelectView.render();

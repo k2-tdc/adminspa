@@ -41,7 +41,10 @@
       <div class="col-md-3">
         <div class="form-label text-right">Rule</div>
       </div>
-      <div class="col-md-9 ruleContainer"></div>
+      <div class="col-md-9 container">
+        <div class="ruleContainer"></div>
+        <div class="error-message hidden"></div>
+      </div>
     </div>
     <div class="sep-space"></div>
 
@@ -50,7 +53,10 @@
         <div class="col-md-3">
           <div class="form-label text-right">Nature</div>
         </div>
-        <div class="col-md-9 natureContainer"></div>
+        <div class="col-md-9 container">
+          <div class="natureContainer"></div>
+          <div class="error-message hidden"></div>
+        </div>
       </div>
       <div class="sep-space"></div>
     <% } // endif %>
@@ -60,8 +66,11 @@
         <div class="col-md-3">
           <div class="form-label text-right">Score</div>
         </div>
-        <div class="col-md-9">
-          <input type="number" class="form-control formTextField" name="Score" value="<%= Score %>">
+        <div class="col-md-9 container">
+          <div class="">
+            <input type="number" class="form-control formTextField" name="Score" field="Score" value="<%= Score %>">
+          </div>
+          <div class="error-message hidden"></div>
         </div>
       </div>
       <div class="sep-space"></div>
@@ -72,7 +81,10 @@
         <div class="col-md-3">
           <div class="form-label text-right">Per</div>
         </div>
-        <div class="col-md-7 perContainer"></div>
+        <div class="col-md-7 container">
+          <div class="perContainer"></div>
+          <div class="error-message hidden"></div>
+        </div>
         <div class="col-md-2 form-label">instruction</div>
       </div>
       <div class="sep-space"></div>
@@ -83,7 +95,7 @@
         <div class="col-md-3">
           <div class="form-label text-right">Set</div>
         </div>
-        <div class="col-md-9 setContainer"></div>
+        <div class="col-md-9 setContainer container"></div>
       </div>
       <div class="sep-space"></div>
     <% } // endif %>
@@ -93,7 +105,10 @@
         <div class="col-md-3">
           <div class="form-label text-right">Remove</div>
         </div>
-        <div class="col-md-9 removeContainer"></div>
+        <div class="col-md-9 container">
+          <div class="removeContainer"></div>
+          <div class="error-message hidden"></div>
+        </div>
       </div>
       <div class="sep-space"></div>
     <% } // endif %>
@@ -103,7 +118,10 @@
         <div class="col-md-3">
           <div class="form-label text-right">As</div>
         </div>
-        <div class="col-md-9 asContainer"></div>
+        <div class="col-md-9 container">
+          <div class="asContainer"></div>
+          <div class="error-message hidden"></div>
+        </div>
       </div>
       <div class="sep-space"></div>
     <% } // endif %>
@@ -115,9 +133,15 @@
         </div>
         <div class="col-md-9">
           <div class="row">
-            <div class="col-md-4 ofFromContainer"></div>
+            <div class="col-md-4 container">
+              <div class="ofFromContainer"></div>
+              <div class="error-message hidden"></div>
+            </div>
             <div class="col-md-2 text-center" style="padding:0"><span class="form-label">To</span></div>
-            <div class="col-md-4 ofToContainer"></div>
+            <div class="col-md-4 container">
+              <div class="ofToContainer"></div>
+              <div class="error-message hidden"></div>
+            </div>
             <div class="col-md-2 text-right" style="padding-left:0"><span class="form-label">User</span></div>
           </div>
         </div>
@@ -130,8 +154,14 @@
         <div class="col-md-3">
           <div class="form-label text-right">For</div>
         </div>
-        <div class="col-md-5 forContainer"></div>
-        <div class="col-md-4 forTeamFilterContainer"></div>
+        <div class="col-md-5 container">
+          <div class="forContainer"></div>
+          <div class="error-message hidden"></div>
+        </div>
+        <div class="col-md-4 container">
+          <div class="forTeamFilterContainer"></div>
+          <div class="error-message hidden"></div>
+        </div>
       </div>
       <div class="sep-space"></div>
     <% } else if (showFor){ %>
@@ -139,7 +169,10 @@
         <div class="col-md-3">
           <div class="form-label text-right">For</div>
         </div>
-        <div class="col-md-9 forContainer"></div>
+        <div class="col-md-9 container">
+          <div class="forContainer"></div>
+          <div class="error-message hidden"></div>
+        </div>
       </div>
       <div class="sep-space"></div>
     <% }// endif %>
@@ -149,16 +182,25 @@
         <div class="col-md-3">
           <div class="form-label text-right">From</div>
         </div>
-        <div class="col-md-4 fromDatePicker"></div>
+        <div class="col-md-4 container">
+          <div class="fromDatePicker"></div>
+          <div class="error-message hidden"></div>
+        </div>
         <div class="col-md-1"><span class="form-label">To</span></div>
-        <div class="col-md-4 toDatePicker"></div>
+        <div class="col-md-4 container">
+          <div class="toDatePicker"></div>
+          <div class="error-message hidden"></div>
+        </div>
       </div>
       <div class="sep-space"></div>
     <% } // endif %>
 
     <% if (showCheckbox) { %>
       <div>
-        <div class="checkboxContainer"></div>
+        <div class="container">
+          <div class="checkboxContainer"></div>
+          <div class="error-message hidden"></div>
+        </div>
       </div>
       <div class="sep-space"></div>
     <% } // endif %>
@@ -168,8 +210,11 @@
       <div class="col-md-3">
         <div class="form-label text-right">Remark</div>
       </div>
-      <div class="col-md-9 remarkContainer">
-        <textarea name="Remark" class="form-control formTextField" rows="10"><%= Remark %></textarea>
+      <div class="col-md-9 container">
+        <div class="remarkContainer">
+          <textarea name="Remark" class="form-control formTextField" rows="10"><%= Remark %></textarea>
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -180,7 +225,10 @@
       <div class="col-md-3">
         <div class="form-label text-right">Reference</div>
       </div>
-      <div class="col-md-9 attachmentContainer"></div>
+      <div class="col-md-9 container">
+        <div class="attachmentContainer"></div>
+        <div class="error-message hidden"></div>
+      </div>
     </div>
     <div class="sep-space"></div>
     <% } // endif %>

@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, _, moment */
+/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -18,7 +18,11 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
-      // console.log(this.model.toJSON());
+      var self = this;
+      self.listenTo(self.model, 'valid', function(validObj) {
+        // console.log('is valid', validObj);
+        utils.toggleInvalidMessage(self.el, validObj.field, false);
+      });
     },
 
     render: function() {
@@ -588,6 +592,7 @@ Hktdc.Views = Hktdc.Views || {};
         var ruleSelectView = new Hktdc.Views.RuleSelect({
           collection: ruleCollection,
           selectedRule: self.model.toJSON().Rule,
+          attributes: { field: 'Rule', name: 'Rule' },
           onSelected: function(rule) {
             self.model.set({
               Rule: rule.TemplateID,
@@ -612,6 +617,15 @@ Hktdc.Views = Hktdc.Views || {};
               Criteria: '',
               Remark: ''
 
+            });
+            self.model.set({
+              Rule: rule.TemplateID
+            }, {
+              validate: true,
+              field: 'Rule',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'Rule', invalidObject.message, true);
+              }
             });
             self.renderField(rule.TemplateID);
           }
@@ -681,14 +695,23 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderNature: function(natureCollection) {
       var self = this;
-      console.log(self.model.toJSON());
       try {
         var natureSelectView = new Hktdc.Views.RuleFieldNatureSelect({
           collection: natureCollection,
           selectedNature: self.model.toJSON().Nature || 0,
+          attributes: { field: 'Nature', name: 'Nature' },
           onSelected: function(rule) {
             self.model.set({
               Nature: rule.NatureID
+            });
+            self.model.set({
+              Nature: rule.NatureID
+            }, {
+              validate: true,
+              field: 'Nature',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'Nature', invalidObject.message, true);
+              }
             });
           }
         });
@@ -705,9 +728,19 @@ Hktdc.Views = Hktdc.Views || {};
         var natureSelectView = new Hktdc.Views.RuleFieldPerSelect({
           collection: perCollection,
           selectedPerUser: self.model.toJSON().UserId || 0,
+          attributes: { field: 'UserId', name: 'UserId' },
           onSelected: function(user) {
             self.model.set({
               UserId: user.UserID
+            });
+            self.model.set({
+              UserId: user.UserID
+            }, {
+              validate: true,
+              field: 'UserId',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'UserId', invalidObject.message, true);
+              }
             });
           }
         });
@@ -724,9 +757,19 @@ Hktdc.Views = Hktdc.Views || {};
         var natureSelectView = new Hktdc.Views.RuleFieldAsSelect({
           collection: priorityCollection,
           selectedPriority: self.model.toJSON().Priority || 0,
+          attributes: { field: 'Priority', name: 'Priority' },
           onSelected: function(selectedItem) {
             self.model.set({
               Priority: parseInt(selectedItem.PriorityID) || 0
+            });
+            self.model.set({
+              Priority: parseInt(selectedItem.PriorityID) || 0
+            }, {
+              validate: true,
+              field: 'Priority',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'Priority', invalidObject.message, true);
+              }
             });
           }
         });
@@ -743,18 +786,38 @@ Hktdc.Views = Hktdc.Views || {};
         var ofFromSelectView = new Hktdc.Views.RuleFieldOfSelect({
           collection: ofCollection,
           selectedGrade: self.model.toJSON().Grade3 || 0,
+          attributes: { field: 'Grade3', name: 'Grade3' },
           onSelected: function(grade) {
             self.model.set({
               Grade3: grade.Grade
+            });
+            self.model.set({
+              Grade3: grade.Grade
+            }, {
+              validate: true,
+              field: 'Grade3',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'Grade3', invalidObject.message, true);
+              }
             });
           }
         });
         var ofToSelectView = new Hktdc.Views.RuleFieldOfSelect({
           collection: ofCollection,
+          attributes: { field: 'Grade4', name: 'Grade4' },
           selectedGrade: self.model.toJSON().Grade4 || 0,
           onSelected: function(grade) {
             self.model.set({
               Grade4: grade.Grade
+            });
+            self.model.set({
+              Grade4: grade.Grade
+            }, {
+              validate: true,
+              field: 'Grade4',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'Grade4', invalidObject.message, true);
+              }
             });
           }
         });
@@ -774,16 +837,36 @@ Hktdc.Views = Hktdc.Views || {};
         if (type === 'grade') {
           gradeView = new Hktdc.Views.RuleFieldSetGrade({
             collection: setCollection,
+            fieldFrom: 'Grade1',
+            fieldTo: 'Grade2',
             selectedGradeFrom: self.model.toJSON().Grade1 || 0,
             selectedGradeTo: self.model.toJSON().Grade2 || 0,
             onSelectedFrom: function(grade) {
               self.model.set({
                 Grade1: grade.Grade
               });
+              self.model.set({
+                Grade1: grade.Grade
+              }, {
+                validate: true,
+                field: 'Grade1',
+                onInvalid: function(invalidObject) {
+                  utils.toggleInvalidMessage(self.el, 'Grade1', invalidObject.message, true);
+                }
+              });
             },
             onSelectedTo: function(grade) {
               self.model.set({
                 Grade2: grade.Grade
+              });
+              self.model.set({
+                Grade2: grade.Grade
+              }, {
+                validate: true,
+                field: 'Grade2',
+                onInvalid: function(invalidObject) {
+                  utils.toggleInvalidMessage(self.el, 'Grade2', invalidObject.message, true);
+                }
               });
             }
           });
@@ -806,13 +889,40 @@ Hktdc.Views = Hktdc.Views || {};
                 self.model.set({
                   UserId1: selectedData.UserID
                 });
+                self.model.set({
+                  UserId1: selectedData.UserID
+                }, {
+                  validate: true,
+                  field: 'UserId1',
+                  onInvalid: function(invalidObject) {
+                    utils.toggleInvalidMessage(self.el, 'UserId1', invalidObject.message, true);
+                  }
+                });
               } else if (type === 'level') {
                 self.model.set({
                   LevelNo: selectedData.LevelNo
                 });
+                self.model.set({
+                  LevelNo: selectedData.LevelNo
+                }, {
+                  validate: true,
+                  field: 'LevelNo',
+                  onInvalid: function(invalidObject) {
+                    utils.toggleInvalidMessage(self.el, 'LevelNo', invalidObject.message, true);
+                  }
+                });
               } else if (type === 'group') {
                 self.model.set({
                   GroupID: selectedData.GroupID
+                });
+                self.model.set({
+                  GroupID: selectedData.GroupID
+                }, {
+                  validate: true,
+                  field: 'GroupID',
+                  onInvalid: function(invalidObject) {
+                    utils.toggleInvalidMessage(self.el, 'GroupID', invalidObject.message, true);
+                  }
                 });
               }
             }
@@ -957,30 +1067,52 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(moment(self.model.toJSON().DateFrom).format('DD MMM YYYY'));
       var fromDateView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
+          field: 'DateFrom',
           value: (self.model.toJSON().DateFrom)
             ? moment(self.model.toJSON().DateFrom).format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
+          var dateVal = (moment(val, 'YYYY-MM-DD').isValid())
+            ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+            : '';
           self.model.set({
-            DateFrom: (moment(val, 'YYYY-MM-DD').isValid())
-              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
-              : ''
+            DateFrom: dateVal
+          });
+          self.model.set({
+            DateFrom: dateVal
+          }, {
+            validate: true,
+            field: 'DateFrom',
+            onInvalid: function(invalidObject) {
+              utils.toggleInvalidMessage(self.el, 'DateFrom', invalidObject.message, true);
+            }
           });
         }
       });
 
       var toDateView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
+          field: 'DateTo',
           value: (self.model.toJSON().DateTo)
             ? moment(self.model.toJSON().DateTo).format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
+          var dateVal = (moment(val, 'YYYY-MM-DD').isValid())
+            ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+            : '';
           self.model.set({
-            DateTo: (moment(val, 'YYYY-MM-DD').isValid())
-              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
-              : ''
+            DateTo: dateVal
+          });
+          self.model.set({
+            DateTo: dateVal
+          }, {
+            validate: true,
+            field: 'DateTo',
+            onInvalid: function(invalidObject) {
+              utils.toggleInvalidMessage(self.el, 'DateTo', invalidObject.message, true);
+            }
           });
         }
       });
@@ -1027,40 +1159,60 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     updateFormModel: function(ev) {
+      var self = this;
       var updateObject = {};
       var $target = $(ev.target);
       var targetField = $target.attr('name');
       updateObject[targetField] = $target.val();
-      this.model.set(updateObject);
+      self.model.set(updateObject);
+
+      // double set is to prevent invalid value bypass the set model process
+      // because if saved the valid model, then set the invalid model will not success and the model still in valid state
+      self.model.set(updateObject, {
+        validate: true,
+        field: targetField,
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, targetField, invalidObject.message, true);
+        }
+      });
     },
 
     saveButtonHandler: function() {
       var self = this;
-      this.saveRuleSetting()
-        .then(function(response) {
-          var ruleSettingId = response.Msg;
-          return self.sendAttachment(
-            ruleSettingId,
-            self.model.toJSON().selectedAttachmentCollection
-          );
-        })
-        .then(function() {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'saved',
-            type: 'confirmation',
-            title: 'Confirmation'
-          });
+      self.validateField();
+      if (self.model.isValid()) {
+        self.saveRuleSetting()
+          .then(function(response) {
+            var ruleSettingId = response.Msg;
+            return self.sendAttachment(
+              ruleSettingId,
+              self.model.toJSON().selectedAttachmentCollection
+            );
+          })
+          .then(function() {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'saved',
+              type: 'confirmation',
+              title: 'Confirmation'
+            });
 
-          Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, { trigger: true });
-        })
-        .catch(function(err) {
-          console.log(err);
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Error on saving user role',
-            type: 'error',
-            title: 'Error'
+            Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, { trigger: true });
+          })
+          .catch(function(err) {
+            console.log(err);
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'Error on saving user role',
+              type: 'error',
+              title: 'Error'
+            });
           });
+      } else {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          type: 'error',
+          title: 'Alert',
+          message: dialogMessage.common.invalid.form
         });
+      }
     },
 
     previewButtonHandler: function() {
@@ -1316,7 +1468,170 @@ Hktdc.Views = Hktdc.Views || {};
       };
       doSave();
       return deferred.promise;
-    }
+    },
 
+    validateField: function() {
+      var self = this;
+
+      this.model.set({
+        Rule: this.model.toJSON().Rule
+      }, {
+        validate: true,
+        field: 'Rule',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Rule', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Nature: this.model.toJSON().Nature
+      }, {
+        validate: true,
+        field: 'Nature',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Nature', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Score: this.model.toJSON().Score
+      }, {
+        validate: true,
+        field: 'Score',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Score', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        UserId1: this.model.toJSON().UserId1
+      }, {
+        validate: true,
+        field: 'UserId1',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'UserId1', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        UserId2: this.model.toJSON().UserId2
+      }, {
+        validate: true,
+        field: 'UserId2',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'UserId2', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        LevelNo: this.model.toJSON().LevelNo
+      }, {
+        validate: true,
+        field: 'LevelNo',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'LevelNo', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        GroupID: this.model.toJSON().GroupID
+      }, {
+        validate: true,
+        field: 'GroupID',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'GroupID', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        GroupID1: this.model.toJSON().GroupID1
+      }, {
+        validate: true,
+        field: 'GroupID1',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'GroupID1', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Grade1: this.model.toJSON().Grade1
+      }, {
+        validate: true,
+        field: 'Grade1',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Grade1', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Grade2: this.model.toJSON().Grade2
+      }, {
+        validate: true,
+        field: 'Grade2',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Grade2', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Team: this.model.toJSON().Team
+      }, {
+        validate: true,
+        field: 'Team',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Team', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        TeamFilter: this.model.toJSON().TeamFilter
+      }, {
+        validate: true,
+        field: 'TeamFilter',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'TeamFilter', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Priority: this.model.toJSON().Priority
+      }, {
+        validate: true,
+        field: 'Priority',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Priority', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Grade3: this.model.toJSON().Grade3
+      }, {
+        validate: true,
+        field: 'Grade3',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Grade3', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Grade4: this.model.toJSON().Grade4
+      }, {
+        validate: true,
+        field: 'Grade4',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Grade4', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Department: this.model.toJSON().Department
+      }, {
+        validate: true,
+        field: 'Department',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Department', invalidObject.message, true);
+        }
+      });
+    }
   });
 })();
