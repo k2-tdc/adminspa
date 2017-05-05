@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, Q, utils, dialogMessage */
+/* global Hktdc, Backbone, JST, $, Q, utils, dialogMessage, sprintf */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -34,6 +34,10 @@ Hktdc.Views = Hktdc.Views || {};
       self.model.on('change:stepCollection', function() {
         console.log('change step collection');
         self.renderStepSelect();
+      });
+      self.listenTo(self.model, 'valid', function(validObj) {
+        // console.log('is valid', validObj);
+        utils.toggleInvalidMessage(self.el, validObj.field, false);
       });
     },
 
@@ -121,11 +125,23 @@ Hktdc.Views = Hktdc.Views || {};
       var processSelectView = new Hktdc.Views.ProcessSelect({
         collection: self.model.toJSON().processCollection,
         selectedProcess: self.model.toJSON().ProcessId,
+        attributes: { field: 'ProcessId', name: 'ProcessId' },
         onSelected: function(process) {
           self.model.set({
             ProcessId: process.ProcessID,
             ProcessName: process.ProcessName
           });
+
+          self.model.set({
+            ProcessId: process.ProcessID
+          }, {
+            validate: true,
+            field: 'ProcessId',
+            onInvalid: function(invalidObject) {
+              utils.toggleInvalidMessage(self.el, 'ProcessId', invalidObject.message, true);
+            }
+          });
+
           self.loadStep()
             .then(function(stepCollection) {
               self.model.set({
@@ -143,9 +159,19 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var stepSelectView = new Hktdc.Views.StepSelect({
         collection: self.model.toJSON().stepCollection,
+        attributes: { field: 'StepId', name: 'StepId' },
         selectedStep: self.model.toJSON().StepId,
         onSelected: function(stepId) {
           self.model.set({StepId: stepId});
+          self.model.set({
+            StepId: stepId
+          }, {
+            validate: true,
+            field: 'StepId',
+            onInvalid: function(invalidObject) {
+              utils.toggleInvalidMessage(self.el, 'StepId', invalidObject.message, true);
+            }
+          });
         }
       });
       stepSelectView.render();
@@ -155,6 +181,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     updateFormModel: function(ev) {
+      var self = this;
       var updateObject = {};
       var $target = $(ev.target);
       var targetField = $target.attr('name');
@@ -163,33 +190,43 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         updateObject[targetField] = $target.val();
       }
-      this.model.set(updateObject);
-      // this.model.set(updateObject, {
-      // validate: true,
-      // field: targetField
-      // });
+      self.model.set(updateObject);
+
       // double set is to prevent invalid value bypass the set model process
       // because if saved the valid model, then set the invalid model will not success and the model still in valid state
+      self.model.set(updateObject, {
+        validate: true,
+        field: targetField,
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, targetField, invalidObject.message, true);
+        }
+      });
     },
 
     saveTemplate: function() {
-      this.doSaveTemplate()
-        .then(function(response) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            type: 'success',
-            title: 'Confirmation',
-            message: 'You have saved'
+      this.validateField();
+      if (this.model.isValid()) {
+        this.doSaveTemplate()
+          .then(function(response) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              title: 'Information',
+              message: dialogMessage.emailTemplate.save.success
+            });
+            window.history.back();
+            // Backbone.history.navigate('emailtemplate', {trigger: true});
+          })
+          .catch(function(err) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              title: 'Error',
+              message: sprintf(dialogMessage.emailTemplate.save.fail, err.request_id || err.error || err)
+            });
           });
-          window.history.back();
-          // Backbone.history.navigate('emailtemplate', {trigger: true});
-        })
-        .catch(function(err) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            type: 'success',
-            title: 'Confirmation',
-            message: err
-          });
+      } else {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          title: 'Warning',
+          message: dialogMessage.common.invalid.form
         });
+      }
     },
 
     doSaveTemplate: function() {
@@ -207,12 +244,12 @@ Hktdc.Views = Hktdc.Views || {};
         Enabled: (this.model.toJSON().Enabled) ? 1 : 0
       });
 
+      var method = 'POST';
       if (sendEmailTemplateModel.toJSON().TemplateId) {
-        var method = 'PUT';
+        method = 'PUT';
         sendEmailTemplateModel.url = sendEmailTemplateModel.url(parseInt(this.model.toJSON().TemplateId));
-      } else {
-        var method = 'POST';
       }
+      
       var doSave = function() {
         sendEmailTemplateModel.save({}, {
           beforeSend: utils.setAuthHeader,
@@ -295,7 +332,49 @@ Hktdc.Views = Hktdc.Views || {};
         }
       });
       return deferred.promise;
-    }
+    },
 
+    validateField: function() {
+      var self = this;
+      this.model.set({
+        ProcessId: this.model.toJSON().ProcessId
+      }, {
+        validate: true,
+        field: 'ProcessId',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'ProcessId', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        StepId: this.model.toJSON().StepId
+      }, {
+        validate: true,
+        field: 'StepId',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'StepId', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Subject: this.model.toJSON().Subject
+      }, {
+        validate: true,
+        field: 'Subject',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Subject', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        Body: this.model.toJSON().Body
+      }, {
+        validate: true,
+        field: 'Body',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'Body', invalidObject.message, true);
+        }
+      });
+    }
   });
 })();

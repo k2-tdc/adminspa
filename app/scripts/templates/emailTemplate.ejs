@@ -10,7 +10,10 @@
       <div class="col-md-3">
         <div class="form-label text-right">Process</div>
       </div>
-      <div class="col-md-9 processContainer"></div>
+      <div class="col-md-9 container">
+        <div class="processContainer"></div>
+        <div class="error-message hidden"></div>
+      </div>
     </div>
     <div class="sep-space"></div>
 
@@ -18,10 +21,13 @@
       <div class="col-md-3">
         <div class="form-label text-right">Activity Group</div>
       </div>
-      <div class="col-md-9 stepContainer">
-        <select class="form-control">
-          <option value="">Please select the process first</option>
-        </select>
+      <div class="col-md-9 container">
+        <div class="stepContainer">
+          <select class="form-control" field="StepId" name="StepId">
+            <option value="">Please select the process first</option>
+          </select>
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -32,8 +38,11 @@
       <div class="col-md-3">
         <div class="form-label text-right">Subject</div>
       </div>
-      <div class="col-md-9">
-        <textarea class="form-control formTextField" rows="6" name="Subject"><%= Subject %></textarea>
+      <div class="col-md-9 container">
+        <div class="">
+          <textarea class="form-control formTextField" rows="6" name="Subject" field="Subject"><%= Subject %></textarea>
+        </div>
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -42,8 +51,12 @@
       <div class="col-md-3">
         <div class="form-label text-right">Body</div>
       </div>
-      <div class="col-md-9">
-        <textarea class="form-control formTextField" name="Body" rows="6"><%= Body %></textarea>
+      <div class="col-md-9 container">
+        <div class="">
+          <textarea class="form-control formTextField" name="Body" field="Body" rows="6"><%= Body %></textarea>
+        </div>
+
+        <div class="error-message hidden"></div>
       </div>
     </div>
     <div class="sep-space"></div>
