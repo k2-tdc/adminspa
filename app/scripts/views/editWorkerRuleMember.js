@@ -1282,7 +1282,7 @@ Hktdc.Views = Hktdc.Views || {};
           })
           .then(function() {
             Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'saved',
+              message: dialogMessage.workerRuleMember.save.success,
               type: 'confirmation',
               title: 'Confirmation'
             });
@@ -1292,8 +1292,7 @@ Hktdc.Views = Hktdc.Views || {};
           .catch(function(err) {
             console.log(err);
             Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'Error on saving user role',
-              type: 'error',
+              message: dialogMessage.workerRuleMember.save.fail,
               title: 'Error'
             });
           });
@@ -1405,9 +1404,8 @@ Hktdc.Views = Hktdc.Views || {};
               success: function() {
                 Hktdc.Dispatcher.trigger('closeConfirm');
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  message: 'Deleted',
-                  type: 'confirmation',
-                  title: 'Confirmation'
+                  message: dialogMessage.workerRuleMember.delete.success,
+                  title: 'Information'
                 });
                 Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
               },
@@ -1419,9 +1417,8 @@ Hktdc.Views = Hktdc.Views || {};
                 } else {
                   console.error(response.responseText);
                   Hktdc.Dispatcher.trigger('openAlert', {
-                    message: 'error on deleting worker rule member.',
-                    type: 'error',
-                    title: 'error on saving user role'
+                    message: dialogMessage.workerRuleMember.delete.fail,
+                    title: 'Error'
                   });
                 }
               }
@@ -1469,42 +1466,28 @@ Hktdc.Views = Hktdc.Views || {};
       };
       saveRuleMemberModel.set(data);
 
-      saveRuleMemberModel.on('invalid', function(model, err) {
-        Hktdc.Dispatcher.trigger('openAlert', {
-          message: err,
-          type: 'error',
-          title: 'Error'
-        });
-      });
-
-      if (saveRuleMemberModel.isValid()) {
-        console.log('saveModel: ', saveRuleMemberModel.toJSON());
-          if (self.model.toJSON().saveType === 'PUT') {
-              saveRuleMemberModel.url = saveRuleMemberModel.url(self.model.toJSON().WorkerSettingId);
-          }
-        var doSave = function() {
-          saveRuleMemberModel.save(null, {
-            type: rawData.saveType,
-            beforeSend: utils.setAuthHeader,
-            success: function(model, response) {
-              deferred.resolve(response);
-            },
-            error: function(model, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doSave();
-                }, function(err) {
-                  deferred.reject(err);
-                });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on saving rule member.');
-              }
+      var doSave = function() {
+        saveRuleMemberModel.save(null, {
+          type: rawData.saveType,
+          beforeSend: utils.setAuthHeader,
+          success: function(model, response) {
+            deferred.resolve(response);
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on saving rule member.');
             }
-          });
-        };
-        doSave();
-      }
+          }
+        });
+      };
+      doSave();
 
       return deferred.promise;
     },
