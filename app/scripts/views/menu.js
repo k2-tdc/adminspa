@@ -119,7 +119,7 @@ Hktdc.Views = Hktdc.Views || {};
       $('nav#menu').mmenu({
         // options
         slidingSubmenus: false
-          // offCanvas: false
+        // offCanvas: false
       });
       // console.log($('nav#menu'));
       if ($(window).width() <= 991) {
@@ -179,29 +179,29 @@ Hktdc.Views = Hktdc.Views || {};
         var pageGUID = menuObj.MenuId;
         var checkPagePermissionModel = new Hktdc.Models.Menu();
         checkPagePermissionModel.url = checkPagePermissionModel.url(pageGUID);
-            var doFetch = function () {
-                checkPagePermissionModel.fetch({
-                    beforeSend: utils.setAuthHeader,
-                    success: function (model, data) {
-                        if (data.EmployeeNo) {
-                            onSuccess();
-                        } else {
-                            onError();
-                        }
-                    },
-                    error: function (model, response) {
-                        if (response.status === 401) {
-                            utils.getAccessToken(function () {
-                                doFetch();
-                            });
-                        } else {
-                            console.error(response.responseText);
-                            onError();
-                        }
-                    }
+        var doFetch = function() {
+          checkPagePermissionModel.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function(model, data) {
+              if (data.EmployeeNo) {
+                onSuccess();
+              } else {
+                onError();
+              }
+            },
+            error: function(model, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
                 });
-            };
-            doFetch();
+              } else {
+                console.error(response.responseText);
+                onError();
+              }
+            }
+          });
+        };
+        doFetch();
       }
     },
 
@@ -219,7 +219,9 @@ Hktdc.Views = Hktdc.Views || {};
         if (containQueryString) {
           Backbone.history.navigate(pagePath, true);
         } else {
-          Backbone.history.loadUrl(pagePath, { trigger: true });
+          Backbone.history.loadUrl(pagePath, {
+            trigger: true
+          });
         }
       } else {
         Backbone.history.navigate(pagePath, true);
