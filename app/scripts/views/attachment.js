@@ -187,7 +187,7 @@ Hktdc.Views = Hktdc.Views || {};
         Hktdc.Dispatcher.trigger('openAlert', {
           message: validateFilesObj.errorMessages.join(',<br />'),
           type: 'error',
-          title: 'Error'
+          title: dialogTitle.error
         });
       }
     },

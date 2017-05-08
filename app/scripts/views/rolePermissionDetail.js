@@ -310,7 +310,7 @@ Hktdc.Views = Hktdc.Views || {};
         Hktdc.Dispatcher.trigger('openAlert', {
           message: err,
           type: 'error',
-          title: 'Error'
+          title: dialogTitle.error
         });
       });
 
@@ -368,7 +368,7 @@ Hktdc.Views = Hktdc.Views || {};
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: 'error on delete',
                 type: 'error',
-                title: 'Error'
+                title: dialogTitle.error
               });
             });
         }
@@ -411,7 +411,7 @@ Hktdc.Views = Hktdc.Views || {};
           Hktdc.Dispatcher.trigger('openAlert', {
             message: 'error on save',
             type: 'error',
-            title: 'Error'
+            title: dialogTitle.error
           });
         });
     }

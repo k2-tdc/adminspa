@@ -76,7 +76,7 @@ Hktdc.Views = Hktdc.Views || {};
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
             message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown'),
-            title: 'Error'
+            title: dialogTitle.error
           });
         });
     },
@@ -328,7 +328,7 @@ Hktdc.Views = Hktdc.Views || {};
         })
         .catch(function(err) {
           Hktdc.Dispatcher.trigger('openAlert', {
-            title: 'Error',
+            title: dialogTitle.error,
             message: sprintf(dialogMessage.emailProfile.save.fail, err.request_id || 'unknown')
           });
         });
@@ -370,7 +370,7 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log(err);
         Hktdc.Dispatcher.trigger('openAlert', {
           message: err,
-          title: 'Error'
+          title: dialogTitle.error
         });
       });
       // console.log('is valid: ', saveEmailProfileModel.isValid());
@@ -440,7 +440,7 @@ Hktdc.Views = Hktdc.Views || {};
             })
             .catch(function(err) {
               Hktdc.Dispatcher.trigger('openAlert', {
-                title: 'Error',
+                title: dialogTitle.error,
                 message: sprintf(dialogMessage.emailProfile.delete.fail, err.request_id || 'unknown')
               });
             });

@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils, $, Q, _, moment */
+/* global Hktdc, Backbone, utils, $, Q, _, moment, dialogTitle, dialogMessage, sprintf */
 
 Hktdc.Routers = Hktdc.Routers || {};
 
@@ -122,18 +122,17 @@ Hktdc.Routers = Hktdc.Routers || {};
                   onSuccess();
                 },
                 error: function(model, response) {
-                  if (response.status === 401) {
-                    utils.getAccessToken(function() {
-                      doFetch();
-                    });
-                  } else {
-                    console.error(response.responseText);
-                    Hktdc.Dispatcher.trigger('openAlert', {
-                      message: 'Error on getting eamil template',
-                      type: 'error',
-                      title: 'Error'
-                    });
-                  }
+                  utils.errorHandling(response, {
+                    401: doFetch,
+                    unknown: dialogMessage.emailTemplate.loadDetail.error,
+                    error: function(errorObj) {
+                      console.error(response.responseText);
+                      Hktdc.Dispatcher.trigger('openAlert', {
+                        title: dialogTitle.error,
+                        message: sprintf(dialogMessage.common.systemError.fail, { code: errorObj.request_id, msg: errorObj.error })
+                      });
+                    }
+                  });
                 }
               });
             };
@@ -241,18 +240,17 @@ Hktdc.Routers = Hktdc.Routers || {};
                   onSuccess();
                 },
                 error: function(model, response) {
-                  if (response.status === 401) {
-                    utils.getAccessToken(function() {
-                      doFetch();
-                    });
-                  } else {
-                    console.error(response.responseText);
-                    Hktdc.Dispatcher.trigger('openAlert', {
-                      message: 'Error on getting email profile.',
-                      type: 'error',
-                      title: 'Error'
-                    });
-                  }
+                  utils.errorHandling(response, {
+                    401: doFetch,
+                    unknown: dialogMessage.emailProfile.loadDetail.error,
+                    error: function(errorObj) {
+                      console.error(response.responseText);
+                      Hktdc.Dispatcher.trigger('openAlert', {
+                        title: dialogTitle.error,
+                        message: sprintf(dialogMessage.common.systemError.fail, { code: errorObj.request_id, msg: errorObj.error })
+                      });
+                    }
+                  });
                 }
               });
             };
@@ -332,18 +330,17 @@ Hktdc.Routers = Hktdc.Routers || {};
                   onSuccess();
                 },
                 error: function(model, response) {
-                  if (response.status === 401) {
-                    utils.getAccessToken(function() {
-                      doFetch();
-                    });
-                  } else {
-                    console.error(response.responseText);
-                    Hktdc.Dispatcher.trigger('openAlert', {
-                      message: 'Error on getting user role.',
-                      type: 'error',
-                      title: 'Error'
-                    });
-                  }
+                  utils.errorHandling(response, {
+                    401: doFetch,
+                    unknown: dialogMessage.userRole.loadDetail.error,
+                    error: function(errorObj) {
+                      console.error(response.responseText);
+                      Hktdc.Dispatcher.trigger('openAlert', {
+                        title: dialogTitle.error,
+                        message: sprintf(dialogMessage.common.systemError.fail, { code: errorObj.request_id, msg: errorObj.error })
+                      });
+                    }
+                  });
                 }
               });
             };
@@ -378,16 +375,14 @@ Hktdc.Routers = Hktdc.Routers || {};
                   deferred.resolve(userRoleModel.toJSON());
                 },
                 error: function(model, response) {
-                  if (response.status === 401) {
-                    utils.getAccessToken(function() {
-                      doFetch();
-                    }, function(err) {
-                      deferred.reject(err);
-                    });
-                  } else {
-                    console.error(response.responseText);
-                    deferred.reject('Error on getting user rule.');
-                  }
+                  utils.errorHandling(response, {
+                    401: doFetch,
+                    unknown: dialogMessage.userRole.loadDetail.error,
+                    error: function(errorObj) {
+                      console.error(response.responseText);
+                      deferred.reject(errorObj);
+                    }
+                  });
                 }
               });
             };
@@ -447,9 +442,15 @@ Hktdc.Routers = Hktdc.Routers || {};
                 userRoleMemberView = new Hktdc.Views.CreateUserRoleMember({
                   model: userRoleMemberModel
                 });
-
                 onSuccess();
+              })
+              .catch(function(errorObj) {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  title: dialogTitle.error,
+                  message: sprintf(dialogMessage.common.systemError.fail, { code: errorObj.request_id, msg: errorObj.error })
+                });
               });
+
           }
         });
       } catch (e) {
@@ -661,7 +662,7 @@ Hktdc.Routers = Hktdc.Routers || {};
                     Hktdc.Dispatcher.trigger('openAlert', {
                       message: 'Error on getting worker rule.',
                       type: 'error',
-                      title: 'Error'
+                      title: dialogTitle.error
                     });
                   }
                 }
@@ -871,7 +872,7 @@ Hktdc.Routers = Hktdc.Routers || {};
                     Hktdc.Dispatcher.trigger('openAlert', {
                       message: 'Error on getting delegation',
                       type: 'error',
-                      title: 'Error'
+                      title: dialogTitle.error
                     });
                   }
                 }
@@ -963,7 +964,7 @@ Hktdc.Routers = Hktdc.Routers || {};
                     Hktdc.Dispatcher.trigger('openAlert', {
                       message: 'Error on getting sharing',
                       type: 'error',
-                      title: 'Error'
+                      title: dialogTitle.error
                     });
                   }
                 }

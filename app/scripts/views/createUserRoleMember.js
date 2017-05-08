@@ -287,7 +287,7 @@ Hktdc.Views = Hktdc.Views || {};
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
               type: 'error',
-              title: 'Error',
+              title: dialogTitle.error,
               message: sprintf(dialogMessage.userRoleMember.save.fail, err.request_id || err)
             });
           });

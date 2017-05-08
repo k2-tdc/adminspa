@@ -217,7 +217,7 @@ Hktdc.Views = Hktdc.Views || {};
           })
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              title: 'Error',
+              title: dialogTitle.error,
               message: sprintf(dialogMessage.emailTemplate.save.fail, err.request_id || err.error || err)
             });
           });
@@ -300,7 +300,7 @@ Hktdc.Views = Hktdc.Views || {};
               } else {
                 Hktdc.Dispatcher.trigger('openAlert', {
                   type: 'error',
-                  title: 'error',
+                  title: dialogTitle.error,
                   message: response.Msg
                 });
               }
@@ -308,7 +308,7 @@ Hktdc.Views = Hktdc.Views || {};
             .catch(function(err) {
               Hktdc.Dispatcher.trigger('openAlert', {
                 type: 'error',
-                title: 'error',
+                title: dialogTitle.error,
                 message: 'delete failed'
               });
               console.error(err);

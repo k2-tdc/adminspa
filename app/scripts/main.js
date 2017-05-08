@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils, _, $, Q, NProgress, alert */
+/* global Hktdc, Backbone, utils, _, $, Q, NProgress, alert, dialogTitle, sprintf, dialogMessage */
 
 window.Hktdc = {
   Models: {},
@@ -186,9 +186,8 @@ window.Hktdc = {
             })
             .catch(function(error) {
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: error,
-                type: 'error',
-                title: 'Error'
+                title: dialogTitle.error,
+                message: sprintf(dialogMessage.common.error.system, { code: error.request_id, msg: error.error })
               });
             });
         });
@@ -208,9 +207,8 @@ window.Hktdc = {
       })
       .catch(function(error) {
         Hktdc.Dispatcher.trigger('openAlert', {
-          message: error,
-          type: 'error',
-          title: 'Error'
+          title: dialogTitle.error,
+          message: sprintf(dialogMessage.common.error.system, { code: error.request_id, msg: error.error })
         });
       });
   },
@@ -227,16 +225,13 @@ window.Hktdc = {
           deferred.resolve(menuModel);
         },
         error: function(model, response) {
-          if (response.status === 401) {
-            utils.getAccessToken(function() {
-              doFetch();
-            }, function(err) {
-              deferred.reject(err);
-            });
-          } else {
-            console.error(response.responseText);
-            deferred.reject('error on rendering menu');
-          }
+          utils.errorHandling(response, {
+            401: doFetch,
+            unknown: dialogMessage.menu.load.error,
+            error: function(errorObj) {
+              deferred.reject(errorObj);
+            }
+          });
         }
       });
     };

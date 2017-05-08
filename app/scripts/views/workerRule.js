@@ -217,7 +217,7 @@ Hktdc.Views = Hktdc.Views || {};
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: 'Error on getting rule list.',
                 type: 'error',
-                title: 'Error'
+                title: dialogTitle.error
               });
             }
           }
@@ -356,13 +356,13 @@ Hktdc.Views = Hktdc.Views || {};
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
               type: 'error',
-              title: 'Error',
+              title: dialogTitle.error,
               message: sprintf(dialogMessage.workerRule.save.fail, err.request_id || err)
             });
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          title: 'Error',
+          title: dialogTitle.error,
           message: dialogMessage.common.invalid.form
         });
       }
@@ -390,7 +390,7 @@ Hktdc.Views = Hktdc.Views || {};
         Hktdc.Dispatcher.trigger('openAlert', {
           message: err,
           type: 'error',
-          title: 'Error'
+          title: dialogTitle.error
         });
       });
       saveWorkerRuleModel.url = saveWorkerRuleModel.url(self.model.toJSON().WorkerRuleId);
@@ -450,7 +450,7 @@ Hktdc.Views = Hktdc.Views || {};
                   Hktdc.Dispatcher.trigger('openAlert', {
                     message: response.Msg || 'Error on delete',
                     type: 'error',
-                    title: 'Error'
+                    title: dialogTitle.error
                   });
                 }
               },
@@ -464,7 +464,7 @@ Hktdc.Views = Hktdc.Views || {};
                   Hktdc.Dispatcher.trigger('openAlert', {
                     message: 'Error on saving user role',
                     type: 'error',
-                    title: 'Error'
+                    title: dialogTitle.error
                   });
                 }
               }

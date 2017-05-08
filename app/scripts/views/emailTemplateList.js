@@ -164,7 +164,7 @@ Hktdc.Views = Hktdc.Views || {};
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: 'Error on getting email template list.',
                 type: 'error',
-                title: 'Error'
+                title: dialogTitle.error
               });
             }
           }
@@ -395,7 +395,7 @@ Hktdc.Views = Hktdc.Views || {};
               } else {
                 Hktdc.Dispatcher.trigger('openAlert', {
                   type: 'error',
-                  title: 'error',
+                  title: dialogTitle.error,
                   message: response.Msg
                 });
               }
@@ -403,7 +403,7 @@ Hktdc.Views = Hktdc.Views || {};
             .catch(function(err) {
               Hktdc.Dispatcher.trigger('openAlert', {
                 type: 'error',
-                title: 'error',
+                title: dialogTitle.error,
                 message: 'delete failed'
               });
               console.error(err);

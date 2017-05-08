@@ -24,7 +24,7 @@ Hktdc.Views = Hktdc.Views || {};
         }, function() {
           Hktdc.Dispatcher.trigger('openAlert', {
             message: 'Permission denied for accessing this page',
-            title: 'error',
+            title: dialogTitle.error,
             type: 'error'
           });
         });

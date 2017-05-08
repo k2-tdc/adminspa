@@ -200,7 +200,7 @@ Hktdc.Views = Hktdc.Views || {};
               }
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: sprintf(dialogMessage.common.serverError.fail, requestId || 'unknown'),
-                title: 'Error'
+                title: dialogTitle.error
               });
             }
           }

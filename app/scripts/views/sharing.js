@@ -93,7 +93,7 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            title: 'Error',
+            title: dialogTitle.error,
             message: sprintf(dialogMessage.common.scriptError.fail, 'unknown')
           });
         });
@@ -547,13 +547,13 @@ Hktdc.Views = Hktdc.Views || {};
           })
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              title: 'Error',
+              title: dialogTitle.error,
               message: sprintf(dialogMessage.sharing.save.fail, err.request_id || err)
             });
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          title: 'Error',
+          title: dialogTitle.error,
           message: dialogMessage.common.invalid.form
         });
       }
@@ -585,7 +585,7 @@ Hktdc.Views = Hktdc.Views || {};
       //   Hktdc.Dispatcher.trigger('openAlert', {
       //     message: err,
       //     type: 'error',
-      //     title: 'Error'
+      //     title: dialogTitle.error
       //   });
       // });
       // console.log(data);
@@ -642,7 +642,7 @@ Hktdc.Views = Hktdc.Views || {};
             .catch(function(err) {
               console.error(err);
               Hktdc.Dispatcher.trigger('openAlert', {
-                title: 'Error',
+                title: dialogTitle.error,
                 message: sprintf(dialogMessage.delegation.save.fail, err.request_id || err)
               });
             });

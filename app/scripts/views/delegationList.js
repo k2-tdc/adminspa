@@ -48,7 +48,7 @@ Hktdc.Views = Hktdc.Views || {};
           Hktdc.Dispatcher.trigger('openAlert', {
             message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown'),
             type: 'error',
-            title: 'Error'
+            title: dialogTitle.error
           });
         });
     },
@@ -143,7 +143,7 @@ Hktdc.Views = Hktdc.Views || {};
               }
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: sprintf(dialogMessage.common.serverError.fail, requestId || 'unknown'),
-                title: 'Error'
+                title: dialogTitle.error
               });
             }
           }
@@ -343,7 +343,7 @@ Hktdc.Views = Hktdc.Views || {};
           .fail(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
               message: sprintf(dialogMessage.delegation.batchDelete.fail, err.request_id || 'unknown'),
-              title: 'Error'
+              title: dialogTitle.error
             });
           });
         }

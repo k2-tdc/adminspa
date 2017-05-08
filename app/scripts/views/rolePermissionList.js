@@ -111,7 +111,7 @@ Hktdc.Views = Hktdc.Views || {};
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: 'Error on getting role permission list.',
                 type: 'error',
-                title: 'Error'
+                title: dialogTitle.error
               });
             }
           }

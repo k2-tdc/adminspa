@@ -1,4 +1,4 @@
-/* global Hktdc, _, Cookies, $ */
+/* global Hktdc, _, Cookies, $, dialogTitle, dialogMessage, sprintf */
 /* all application level methods should be placed here */
 
 window.utils = {
@@ -88,7 +88,37 @@ window.utils = {
       }
     }
   },
-  // Asynchronously load templates located in separate .html files
+
+  errorHandling: function(response, handler) {
+    // return format: { request_id: xxx, error: xxxxxxx }
+    var returnObj;
+    try {
+      var responseObj = JSON.parse(response.responseText);
+      returnObj = (responseObj.request_id)
+        ? responseObj
+        : {
+          request_id: false,
+          error: sprintf(dialogMessage.common.error.unknown, handler.unknown)
+        };
+    } catch (e) {
+      returnObj = {
+        request_id: false,
+        error: sprintf(dialogMessage.common.error.unknown, handler.unknown)
+      };
+    }
+    if (response.status === 401) {
+      this.getAccessToken(function() {
+        handler[401]();
+      }, function(err) {
+        returnObj.error = err;
+        handler.error(returnObj);
+      });
+    } else if (response.status === 500) {
+      handler.error(returnObj);
+    } else {
+      handler.error(returnObj);
+    }
+  },
 
   toggleInvalidMessage: function(viewElement, field, message, isShow) {
     var $target = $('[field=' + field + ']', viewElement);
@@ -164,11 +194,10 @@ window.utils = {
   getAccessToken: function(onSuccess, onError) {
     var defaultError = function() {
       Hktdc.Dispatcher.trigger('openAlert', {
-        message: 'Error on getting access token',
-        type: 'error',
-        title: 'Error'
+        title: dialogTitle.error,
+        message: dialogMessage.common.auth.accessToken
       });
-    }
+    };
 
     if (!(Hktdc.Config.environment === 'uat' || Hktdc.Config.environment === 'chsw')) {
       var msg = 'in local env';

@@ -1296,13 +1296,13 @@ Hktdc.Views = Hktdc.Views || {};
           .catch(function(err) {
             console.error(err);
             Hktdc.Dispatcher.trigger('openAlert', {
-              title: 'Error',
+              title: dialogTitle.error,
               message: sprintf(dialogMessage.workerRuleMember.save.fail, err.request_id || err.error || err)
             });
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          title: 'Error',
+          title: dialogTitle.error,
           message: dialogMessage.common.invalid.form
         });
       }
@@ -1430,7 +1430,7 @@ Hktdc.Views = Hktdc.Views || {};
                   console.error(response.responseText);
                   Hktdc.Dispatcher.trigger('openAlert', {
                     message: sprintf(dialogMessage.workerRuleMember.delete.fail, responseObj.request_id),
-                    title: 'Error'
+                    title: dialogTitle.error
                   });
                 }
               }

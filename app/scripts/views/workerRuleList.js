@@ -136,7 +136,7 @@ Hktdc.Views = Hktdc.Views || {};
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: 'Error on getting worker rule list.',
                 type: 'error',
-                title: 'Error'
+                title: dialogTitle.error
               });
             }
           }
@@ -229,7 +229,7 @@ Hktdc.Views = Hktdc.Views || {};
                   Hktdc.Dispatcher.trigger('openAlert', {
                     message: 'error on saving user role',
                     type: 'error',
-                    title: 'Error'
+                    title: dialogTitle.error
                   });
                 }
               }

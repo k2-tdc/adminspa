@@ -110,7 +110,7 @@ Hktdc.Views = Hktdc.Views || {};
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: 'Error on getting user role list.',
                 type: 'error',
-                title: 'Error'
+                title: dialogTitle.error
               });
             }
           }
