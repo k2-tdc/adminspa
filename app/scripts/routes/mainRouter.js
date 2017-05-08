@@ -122,16 +122,9 @@ Hktdc.Routers = Hktdc.Routers || {};
                   onSuccess();
                 },
                 error: function(model, response) {
-                  utils.errorHandling(response, {
-                    401: doFetch,
-                    unknown: dialogMessage.emailTemplate.loadDetail.error,
-                    error: function(errorObj) {
-                      console.error(response.responseText);
-                      Hktdc.Dispatcher.trigger('openAlert', {
-                        title: dialogTitle.error,
-                        message: sprintf(dialogMessage.common.systemError.fail, { code: errorObj.request_id, msg: errorObj.error })
-                      });
-                    }
+                  utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.emailTemplate.loadDetail.error
                   });
                 }
               });
@@ -240,16 +233,9 @@ Hktdc.Routers = Hktdc.Routers || {};
                   onSuccess();
                 },
                 error: function(model, response) {
-                  utils.errorHandling(response, {
-                    401: doFetch,
-                    unknown: dialogMessage.emailProfile.loadDetail.error,
-                    error: function(errorObj) {
-                      console.error(response.responseText);
-                      Hktdc.Dispatcher.trigger('openAlert', {
-                        title: dialogTitle.error,
-                        message: sprintf(dialogMessage.common.systemError.fail, { code: errorObj.request_id, msg: errorObj.error })
-                      });
-                    }
+                  utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.emailProfile.loadDetail.error
                   });
                 }
               });
@@ -330,16 +316,9 @@ Hktdc.Routers = Hktdc.Routers || {};
                   onSuccess();
                 },
                 error: function(model, response) {
-                  utils.errorHandling(response, {
-                    401: doFetch,
-                    unknown: dialogMessage.userRole.loadDetail.error,
-                    error: function(errorObj) {
-                      console.error(response.responseText);
-                      Hktdc.Dispatcher.trigger('openAlert', {
-                        title: dialogTitle.error,
-                        message: sprintf(dialogMessage.common.systemError.fail, { code: errorObj.request_id, msg: errorObj.error })
-                      });
-                    }
+                  utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.userRole.loadDetail.error
                   });
                 }
               });
@@ -375,13 +354,9 @@ Hktdc.Routers = Hktdc.Routers || {};
                   deferred.resolve(userRoleModel.toJSON());
                 },
                 error: function(model, response) {
-                  utils.errorHandling(response, {
-                    401: doFetch,
-                    unknown: dialogMessage.userRole.loadDetail.error,
-                    error: function(errorObj) {
-                      console.error(response.responseText);
-                      deferred.reject(errorObj);
-                    }
+                  utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.userRole.loadDetail.error
                   });
                 }
               });
@@ -419,13 +394,10 @@ Hktdc.Routers = Hktdc.Routers || {};
                   onSuccess();
                 },
                 error: function(model, response) {
-                  if (response.status === 401) {
-                    utils.getAccessToken(function() {
-                      doFetch();
-                    });
-                  } else {
-                    console.error(response.responseText);
-                  }
+                  utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.userRoleMember.loadDetail.error
+                  });
                 }
               });
             };
@@ -447,10 +419,12 @@ Hktdc.Routers = Hktdc.Routers || {};
               .catch(function(errorObj) {
                 Hktdc.Dispatcher.trigger('openAlert', {
                   title: dialogTitle.error,
-                  message: sprintf(dialogMessage.common.systemError.fail, { code: errorObj.request_id, msg: errorObj.error })
+                  message: sprintf(dialogMessage.common.error.system, {
+                    code: errorObj.request_id || 'unknown',
+                    msg: errorObj.error || dialogMessage.userRole.loadDetail.error
+                  })
                 });
               });
-
           }
         });
       } catch (e) {
@@ -505,16 +479,10 @@ Hktdc.Routers = Hktdc.Routers || {};
                   deferred.resolve(permissionModel);
                 },
                 error: function(model, response) {
-                  if (response.status === 401) {
-                    utils.getAccessToken(function() {
-                      doFetch();
-                    }, function(err) {
-                      deferred.reject(err);
-                    });
-                  } else {
-                    console.error(response.responseText);
-                    deferred.reject('Error on getting role permission.');
-                  }
+                  utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.rolePermission.loadDetail.error
+                  });
                 }
               });
             };
@@ -653,18 +621,10 @@ Hktdc.Routers = Hktdc.Routers || {};
                   onSuccess();
                 },
                 error: function(model, response) {
-                  if (response.status === 401) {
-                    utils.getAccessToken(function() {
-                      doFetch();
-                    });
-                  } else {
-                    console.error(response.responseText);
-                    Hktdc.Dispatcher.trigger('openAlert', {
-                      message: 'Error on getting worker rule.',
-                      type: 'error',
-                      title: dialogTitle.error
-                    });
-                  }
+                  utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.workerRule.loadDetail.error
+                  });
                 }
               });
             };
@@ -698,16 +658,10 @@ Hktdc.Routers = Hktdc.Routers || {};
                   deferred.resolve(workerRuleModel.toJSON());
                 },
                 error: function(model, response) {
-                  if (response.status === 401) {
-                    utils.getAccessToken(function() {
-                      doFetch();
-                    }, function(err) {
-                      deferred.reject(err);
-                    });
-                  } else {
-                    console.error(response.responseText);
-                    deferred.reject('Error on getting worker rule');
-                  }
+                  utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.workerRule.loadDetail.error
+                  });
                 }
               });
             };
@@ -763,13 +717,10 @@ Hktdc.Routers = Hktdc.Routers || {};
                       onSuccess(workerRuleMemberModel.toJSON().Rule);
                     },
                     error: function(model, response) {
-                      if (response.status === 401) {
-                        utils.getAccessToken(function() {
-                          doFetch();
-                        });
-                      } else {
-                        console.error(response.responseText);
-                      }
+                      utils.apiErrorHandling(response, {
+                        // 401: doFetch,
+                        unknownMessage: dialogMessage.workerRuleMember.loadDetail.error
+                      });
                     }
                   });
                 };
@@ -863,18 +814,10 @@ Hktdc.Routers = Hktdc.Routers || {};
                   onSuccess();
                 },
                 error: function(model, response) {
-                  if (response.status === 401) {
-                    utils.getAccessToken(function() {
-                      doFetch();
-                    });
-                  } else {
-                    console.error(response.responseText);
-                    Hktdc.Dispatcher.trigger('openAlert', {
-                      message: 'Error on getting delegation',
-                      type: 'error',
-                      title: dialogTitle.error
-                    });
-                  }
+                  utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.delegation.loadDetail.error
+                  });
                 }
               });
             };
@@ -955,18 +898,10 @@ Hktdc.Routers = Hktdc.Routers || {};
                   onSuccess();
                 },
                 error: function(model, response) {
-                  if (response.status === 401) {
-                    utils.getAccessToken(function() {
-                      doFetch();
-                    });
-                  } else {
-                    console.error(response.responseText);
-                    Hktdc.Dispatcher.trigger('openAlert', {
-                      message: 'Error on getting sharing',
-                      type: 'error',
-                      title: dialogTitle.error
-                    });
-                  }
+                  utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.sharing.loadDetail.error
+                  });
                 }
               });
             };

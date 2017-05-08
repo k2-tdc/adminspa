@@ -225,12 +225,9 @@ window.Hktdc = {
           deferred.resolve(menuModel);
         },
         error: function(model, response) {
-          utils.errorHandling(response, {
-            401: doFetch,
-            unknown: dialogMessage.menu.load.error,
-            error: function(errorObj) {
-              deferred.reject(errorObj);
-            }
+          utils.apiErrorHandling(response, {
+            // 401: doFetch,
+            unknownMessage: dialogMessage.menu.load.error
           });
         }
       });

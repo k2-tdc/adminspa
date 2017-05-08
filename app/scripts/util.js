@@ -89,34 +89,55 @@ window.utils = {
     }
   },
 
-  errorHandling: function(response, handler) {
+  apiErrorHandling: function(response, handler) {
     // return format: { request_id: xxx, error: xxxxxxx }
-    var returnObj;
+    var errorObject;
+    var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
+
     try {
       var responseObj = JSON.parse(response.responseText);
-      returnObj = (responseObj.request_id)
+      errorObject = (responseObj.request_id)
         ? responseObj
         : {
-          request_id: false,
-          error: sprintf(dialogMessage.common.error.unknown, handler.unknown)
+          request_id: 'N/A',
+          error: sprintf(dialogMessage.common.error.unknown, handler.unknownMessage)
         };
     } catch (e) {
-      returnObj = {
-        request_id: false,
-        error: sprintf(dialogMessage.common.error.unknown, handler.unknown)
+      errorObject = {
+        request_id: 'N/A',
+        error: sprintf(dialogMessage.common.error.unknown, handler.unknownMessage)
       };
     }
     if (response.status === 401) {
-      this.getAccessToken(function() {
-        handler[401]();
-      }, function(err) {
-        returnObj.error = err;
-        handler.error(returnObj);
-      });
+      // this.getAccessToken(function() {
+      //   handler[401]();
+      // }, function(err) {
+      //   errorObject.error = err;
+      //   handler.error(errorObject);
+      // });
+      window.location.href = oauthUrl;
+    } else if (response.status === 403) {
+      console.error('403 error.');
+      // handler.error(errorObject);
     } else if (response.status === 500) {
-      handler.error(returnObj);
+      // handler['500error'](errorObject);
+      console.error(response.responseText);
+      Hktdc.Dispatcher.trigger('openAlert', {
+        title: dialogTitle.error,
+        message: sprintf(dialogMessage.common.error.system, {
+          code: errorObject.request_id,
+          msg: errorObject.error
+        })
+      });
     } else {
-      handler.error(returnObj);
+      console.error('Unknown status code');
+      Hktdc.Dispatcher.trigger('openAlert', {
+        title: dialogTitle.error,
+        message: sprintf(dialogMessage.common.error.system, {
+          code: errorObject.request_id || 'Unknown',
+          msg: errorObject.error || 'Unknown system error'
+        })
+      });
     }
   },
 
@@ -147,30 +168,6 @@ window.utils = {
     return text;
   },
 
-  apiErrorHandling: function(options) {
-    // options: response, apiRequest, onError, apiName
-    if (options.response.status === 401) {
-      this.getAccessToken(function() {
-        options.apiRequest();
-      }, function(err) {
-        options.onError({
-          error: err,
-          request_id: false
-        });
-      });
-    } else {
-      try {
-        options.onError(JSON.parse(options.response.responseText));
-      } catch (e) {
-        console.error(options.response.responseText);
-        options.onError({
-          error: options.apiName + ' error',
-          request_id: false
-        });
-      }
-    }
-  },
-
   /* =============================================>>>>>
   = OAuth Login =
   ===============================================>>>>> */
@@ -195,7 +192,7 @@ window.utils = {
     var defaultError = function() {
       Hktdc.Dispatcher.trigger('openAlert', {
         title: dialogTitle.error,
-        message: dialogMessage.common.auth.accessToken
+        message: dialogMessage.common.error.accessToken
       });
     };
 

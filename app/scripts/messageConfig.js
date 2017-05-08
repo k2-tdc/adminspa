@@ -12,9 +12,9 @@ var dialogMessage = {
     },
     error: {
       accessToken: 'Error on getting access token',
-      system: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: $(msg)s',
-      script: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: $(msg)s',
-      unknown: 'Unknown error: <br />%(msg)s'
+      system: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s',
+      script: 'Script error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s',
+      unknown: 'Unknown error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     }
   },
   menu: {
@@ -91,7 +91,36 @@ var dialogMessage = {
       confirm: 'Do you want to delete the role permission?'
     }
   },
+  workerRule: {
+    loadDetail: {
+      error: 'Error on getting worker rule detail'
+    },
+    delete: {
+      confirm: 'Do you want to delete this rule?'
+    },
+    save: {
+      success: 'Delegation is saved.'
+    }
+  },
+  workerRuleMember: {
+    loadDetail: {
+      error: 'Error on getting worker rule setting detail'
+    },
+    delete: {
+      confirm: 'Do you want to delete this rule settings?',
+      success: 'Rule setting is deleted.'
+    },
+    save: {
+      success: 'Rule setting is saved.'
+    },
+    batchDelete: {
+      confirm: 'Do you want to delete the selected rule?'
+    }
+  },
   delegation: {
+    loadDetail: {
+      error: 'Error on getting delegation detail'
+    },
     save: {
       success: 'Delegation is saved.'
     },
@@ -104,32 +133,36 @@ var dialogMessage = {
       success: 'Delegation is deleted.'
     }
   },
-  workerRule: {
-    delete: {
-      confirm: 'Do you want to delete this rule?'
-    },
-    save: {
-      success: 'Delegation is saved.'
-    }
-  },
-  workerRuleMember: {
-    delete: {
-      confirm: 'Do you want to delete this rule settings?',
-      success: 'Rule setting is deleted.'
-    },
-    save: {
-      success: 'Rule setting is saved.'
-    },
-    batchDelete: {
-      confirm: 'Do you want to delete the selected rule?'
-    }
-  },
   sharing: {
+    loadDetail: {
+      error: 'Error on getting delegation detail'
+    },
     delete: {
       confirm: 'Do you want to delete the sharing?'
     },
     batchDelete: {
       confirm: 'Do you want to delete the selected sharing?'
+    }
+  },
+
+  component: {
+    departmentList: {
+      error: 'Error on getting department.'
+    },
+    fullUserList: {
+      error: 'Error on getting full user list.'
+    },
+    processList: {
+      error: 'Error on getting process list'
+    },
+    delegationUserList: {
+      error: 'error on getting delegation users'
+    },
+    delegationActionList: {
+      error: 'error on getting delegation users'
+    },
+    stepList: {
+      error: 'Error on getting task.'
     }
   }
 };
