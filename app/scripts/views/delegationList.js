@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, Q, utils, _, moment, sprintf, dialogMessage */
+/* global Hktdc, Backbone, JST, $, Q, utils, _, moment, sprintf, dialogMessage, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -46,9 +46,8 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown'),
-            type: 'error',
-            title: dialogTitle.error
+            title: dialogTitle.error,
+            message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown')
           });
         });
     },
@@ -63,16 +62,9 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(userCollection);
           },
           error: function(collection, response) {
-            utils.apiErrorHandling({
-              apiName: 'get full user list',
-              response: response,
-              apiRequest: doFetch,
-              onError: function(errObj) {
-                deferred.reject({
-                  error: errObj.error,
-                  request_id: errObj.request_id
-                });
-              }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.fullUserList.error
             });
           }
         });

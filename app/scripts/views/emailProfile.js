@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, _, sprintf, dialogMessage */
+/* global Hktdc, Backbone, JST, Q, utils, $, _, sprintf, dialogMessage, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -75,8 +75,8 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown'),
-            title: dialogTitle.error
+            title: dialogTitle.error,
+            message: sprintf(dialogMessage.common.serverError.fail, { code: err.request_id, msg: 'unknown' })
           });
         });
     },
@@ -91,26 +91,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject({
-                  request_id: false,
-                  error: err
-                });
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  request_id: false,
-                  error: 'error on getting process'
-                });
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.processList.error
+            });
           }
         });
       };
@@ -128,26 +112,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(profileUserCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject({
-                  request_id: false,
-                  error: err
-                });
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  request_id: false,
-                  error: 'error on getting profile users.'
-                });
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.profileUserList.error
+            });
           }
         });
       };
@@ -166,26 +134,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(stpeCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject({
-                  error: err,
-                  request_id: false
-                });
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  request_id: false,
-                  error: 'error on getting steps.'
-                });
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.stepList.error
+            });
           }
         });
       };
@@ -329,7 +281,7 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           Hktdc.Dispatcher.trigger('openAlert', {
             title: dialogTitle.error,
-            message: sprintf(dialogMessage.emailProfile.save.fail, err.request_id || 'unknown')
+            message: sprintf(dialogMessage.emailProfile.save.fail, { code: err.request_id || 'unknown', msg: 'unknown' })
           });
         });
       } else {
@@ -369,8 +321,8 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log('invalid');
         // console.log(err);
         Hktdc.Dispatcher.trigger('openAlert', {
-          message: err,
-          title: dialogTitle.error
+          title: dialogTitle.error,
+          message: err
         });
       });
       // console.log('is valid: ', saveEmailProfileModel.isValid());
@@ -393,26 +345,10 @@ Hktdc.Views = Hktdc.Views || {};
               }
             },
             error: function(model, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doSave();
-                }, function(err) {
-                  deferred.reject({
-                    request_id: false,
-                    error: err
-                  });
-                });
-              } else {
-                try {
-                  deferred.reject(JSON.parse(response.responseText));
-                } catch (e) {
-                  console.error(response.responseText);
-                  deferred.reject({
-                    request_id: false,
-                    error: 'Save profile error'
-                  });
-                }
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.emailProfile.save.error
+              });
             }
           });
         };
@@ -463,26 +399,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve();
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject({
-                  request_id: false,
-                  error: err
-                });
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  request_id: false,
-                  error: 'error on deleting profile'
-                });
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.emailProfile.delete.error
+            });
           }
         });
       };

@@ -163,7 +163,40 @@ var dialogMessage = {
     },
     stepList: {
       error: 'Error on getting task.'
-    }
+    },
+    ruleList: {
+      error: 'error on getting rules'
+    },
+    natureList: {
+      error: 'error on getting nature list'
+    },
+    gradeList: {
+      error: 'error on getting grade list'
+    },
+    groupList: {
+      error: 'error on grade list'
+    },
+    levelList: {
+      error: 'error on getting level'
+    },
+    teamList: {
+      error: 'error on getting team list'
+    },
+    teamFilterList: {
+      error: 'error on getting team filter list'
+    },
+    fileRuleList: {
+      error: 'error on getting file type rules.'
+    },
+    criteriaList: {
+      error: 'error on getting criteria'
+    },
+    priorityList: {
+      error: 'error on getting priority'
+    },
+    profileUserList: {
+      error: 'error on getting profile users.'
+    },
   }
 };
 
