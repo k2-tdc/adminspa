@@ -44,17 +44,23 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     loadProcess: function() {
-      var deferred = Q.defer();
-      var processCollection = new Hktdc.Collections.Process();
-      processCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(processCollection);
-        },
-        error: function(collection, err) {
-          deferred.reject(err);
-        }
-      });
+        var deferred = Q.defer();
+        var processCollection = new Hktdc.Collections.Process();
+        var doFetch = function() {
+            processCollection.fetch({
+                beforeSend: utils.setAuthHeader,
+                success: function() {
+                    deferred.resolve(processCollection);
+                },
+                error: function(collection, response) {
+                    utils.apiErrorHandling(response, {
+                        // 401: doFetch,
+                        unknownMessage: dialogMessage.component.processList.error
+                    });
+                }
+            });
+        };
+        doFetch();
       return deferred.promise;
     },
 

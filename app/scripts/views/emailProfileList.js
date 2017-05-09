@@ -83,26 +83,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(profileUserCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject({
-                  error: err,
-                  request_id: false
-                });
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  error: 'error on getting profile users',
-                  request_id: false
-                });
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.profileUserList.error
+            });
           }
         });
       };
@@ -302,26 +286,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve();
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject({
-                  error: err,
-                  request_id: false
-                });
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.emailProfile.delete.error
               });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  error: 'error on deleting profile',
-                  request_id: false
-                });
-              }
-            }
           }
         });
       };

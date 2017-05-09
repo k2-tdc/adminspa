@@ -285,32 +285,10 @@ Hktdc.Views = Hktdc.Views || {};
               }
             },
             error: function(model, response) {
-              utils.apiErrorHandling({
-                apiName: 'delete delegation',
-                response: response,
-                apiRequest:
-                onError
-              })
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doSave();
-                }, function(err) {
-                  deferred.reject({
-                    request_id: false,
-                    error: err
-                  });
+                utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.delegation.delete.error
                 });
-              } else {
-                try {
-                  deferred.reject(JSON.parse(response.responseText));
-                } catch (e) {
-                  console.error(response.responseText);
-                  deferred.reject({
-                    request_id: false,
-                    error: 'error on deleting delegation.'
-                  });
-                }
-              }
             }
           });
         };

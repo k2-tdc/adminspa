@@ -75,16 +75,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting process');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.processList.error
+            });
           }
         });
       };
@@ -103,16 +97,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(stpeCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.stepList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting step');
-            }
           }
         });
       };
@@ -263,16 +251,10 @@ Hktdc.Views = Hktdc.Views || {};
             }
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.emailTemplate.save.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on saving email template.');
-            }
           }
         });
       };
@@ -321,16 +303,26 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var data = [{ TemplateId: this.model.toJSON().TemplateId }];
       var DeleteTemplateModel = new Hktdc.Models.DeleteEmailTemplate({data: data});
-      DeleteTemplateModel.save(null, {
-        type: 'POST',
-        beforeSend: utils.setAuthHeader,
-        success: function(model, response) {
-          deferred.resolve(response);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+        var doSave = function() {
+            DeleteTemplateModel.save({}, {
+                beforeSend: utils.setAuthHeader,
+                type: 'POST',
+                success: function(mymodel, response) {
+                    if (response.Success === '1' || response.Success === 1) {
+                        deferred.resolve();
+                    } else {
+                        deferred.reject(response.Msg);
+                    }
+                },
+                error: function(model, response) {
+                    utils.apiErrorHandling(response, {
+                        // 401: doFetch,
+                        unknownMessage: dialogMessage.emailTemplate.delete.error
+                    });
+                }
+            });
+        };
+        doSave();
       return deferred.promise;
     },
 

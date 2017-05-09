@@ -63,16 +63,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(userCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.fullUserList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting full user.');
-            }
           }
         });
       };
@@ -254,16 +248,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve();
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.sharing.delete.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on deleting profile');
-            }
           }
         });
       };
@@ -318,16 +306,10 @@ Hktdc.Views = Hktdc.Views || {};
               }
             },
             error: function(model, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doSave();
-                }, function(err) {
-                  deferred.reject(err);
+                utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.sharing.delete.error
                 });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on deleting sharing');
-              }
             }
           });
         };

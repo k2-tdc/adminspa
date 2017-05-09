@@ -123,18 +123,10 @@ Hktdc.Views = Hktdc.Views || {};
                 Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
               },
               error: function(model, response) {
-                if (response.status === 401) {
-                  utils.getAccessToken(function() {
-                    doSave();
+                  utils.apiErrorHandling(response, {
+                      // 401: doFetch,
+                      unknownMessage: dialogMessage.userRoleMember.delete.error
                   });
-                } else {
-                  console.error(response.responseText);
-
-                  Hktdc.Dispatcher.trigger('openAlert', {
-                    message: dialogMessage.userRoleMember.delete.fail,
-                    title: dialogTitle.error
-                  });
-                }
               }
             });
           };
@@ -194,22 +186,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(response);
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject({
-                  request_id: false,
-                  error: err
-                });
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.userRoleMember.save.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject({
-                request_id: false,
-                error: 'error on saving user role member'
-              });
-            }
           }
         });
       };

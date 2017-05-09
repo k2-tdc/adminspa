@@ -1341,26 +1341,10 @@ Hktdc.Views = Hktdc.Views || {};
                 Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
               },
               error: function(model, response) {
-                if (response.status === 401) {
-                  utils.getAccessToken(function() {
-                    doSave();
+                  utils.apiErrorHandling(response, {
+                      // 401: doFetch,
+                      unknownMessage: dialogMessage.workerRuleMember.delete.error
                   });
-                } else {
-                  var responseObj;
-                  try {
-                    responseObj = JSON.parse(response.responseText);
-                  } catch (e) {
-                    responseObj = {
-                      request_id: false,
-                      error: 'error on deleting delegation.'
-                    };
-                  }
-                  console.error(response.responseText);
-                  Hktdc.Dispatcher.trigger('openAlert', {
-                    message: sprintf(dialogMessage.workerRuleMember.delete.fail, responseObj.request_id),
-                    title: dialogTitle.error
-                  });
-                }
               }
             });
           };
@@ -1417,26 +1401,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(response);
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.workerRuleMember.save.error
               });
-            } else {
-              console.error(response.responseText);
-              var responseObj;
-              try {
-                responseObj = JSON.parse(response.responseText);
-              } catch (e) {
-                responseObj = {
-                  request_id: 'unknown error code',
-                  error: 'unknown server error'
-                };
-              }
-
-              deferred.reject(responseObj);
-            }
           }
         });
       };
@@ -1480,16 +1448,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve();
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.common.error.system
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('Submit File Error');
-            }
           }
         }));
       };

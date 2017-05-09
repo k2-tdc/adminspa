@@ -78,16 +78,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.processList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting process');
-            }
           }
         });
       };
@@ -106,16 +100,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(stepCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.stepList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting step');
-            }
           }
         });
       };
@@ -315,16 +303,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(response);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.emailTemplate.delete.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on deleting template');
-            }
           }
         });
       };

@@ -65,16 +65,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.processList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on loading process');
-            }
           }
         });
       };
@@ -220,18 +214,10 @@ Hktdc.Views = Hktdc.Views || {};
                 Backbone.history.navigate('userrole', {trigger: true});
               },
               error: function(model, response) {
-                if (response.status === 401) {
-                  utils.getAccessToken(function() {
-                    doSave();
+                  utils.apiErrorHandling(response, {
+                      // 401: doFetch,
+                      unknownMessage: dialogMessage.workerRule.delete.error
                   });
-                } else {
-                  console.error(response.responseText);
-                  Hktdc.Dispatcher.trigger('openAlert', {
-                    message: 'error on saving user role',
-                    type: 'error',
-                    title: dialogTitle.error
-                  });
-                }
               }
             });
           };

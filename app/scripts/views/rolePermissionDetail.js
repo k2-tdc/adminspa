@@ -90,16 +90,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(roleCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
+                utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.component.roleList.error
                 });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on getting role.');
-              }
             }
           });
         };
@@ -119,16 +113,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.processList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting process');
-            }
           }
         });
       };
@@ -152,16 +140,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(res);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
+                utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.component.permissionList.error
                 });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on getting process permission.');
-              }
             }
           });
         };
@@ -281,16 +263,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve();
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.rolePermission.delete.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on deleting permission.');
-            }
           }
         });
       };
@@ -322,16 +298,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve();
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.rolePermission.save.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on saving permission.');
-            }
           }
         });
       };

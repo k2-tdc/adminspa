@@ -76,16 +76,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.processList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting process.');
-            }
           }
         });
       };
@@ -107,16 +101,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(fullUserCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
+                utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.component.fullUserList.error
                 });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on loading full users');
-              }
             }
           });
         };
@@ -406,16 +394,10 @@ Hktdc.Views = Hktdc.Views || {};
             }
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.workerRule.save.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject();
-            }
           }
         });
       };
@@ -455,18 +437,10 @@ Hktdc.Views = Hktdc.Views || {};
                 }
               },
               error: function(model, response) {
-                if (response.status === 401) {
-                  utils.getAccessToken(function() {
-                    doSave();
+                  utils.apiErrorHandling(response, {
+                      // 401: doFetch,
+                      unknownMessage: dialogMessage.workerRule.delete.error
                   });
-                } else {
-                  console.error(response.responseText);
-                  Hktdc.Dispatcher.trigger('openAlert', {
-                    message: 'Error on saving user role',
-                    type: 'error',
-                    title: dialogTitle.error
-                  });
-                }
               }
             });
           };
@@ -522,16 +496,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve();
             },
             error: function(model, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doSave();
-                }, function(err) {
-                  deferred.reject(err);
+                utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.workerRuleMember.delete.error
                 });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on remove worker rule member');
-              }
             }
           });
         };
