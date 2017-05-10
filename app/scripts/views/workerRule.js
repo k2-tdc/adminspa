@@ -33,20 +33,30 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       var self = this;
       self.$el.html(self.template(self.model.toJSON()));
-      Q.all([
-        self.loadProcess(),
-        self.loadUsers()
-      ])
+      var loadResource = function() {
+        return (self.model.toJSON().saveType === 'POST')
+          ? Q.all([
+            self.loadUsers(),
+            self.loadProcess()
+          ])
+          : Q.all([
+            self.loadUsers()
+          ]);
+      };
+      loadResource()
         .then(function(results) {
-          var processCollection = results[0];
-          var userCollections = results[1];
+          var userCollections = results[0];
+          var processCollection = results[1];
           console.debug('[ emailTemplate.js ] - load all the remote resources');
-          self.model.set({
-            processCollection: processCollection
-          }, {
-            silent: true
-          });
-          self.renderProcessSelect();
+          if (self.model.toJSON().saveType === 'POST') {
+            self.model.set({
+              processCollection: processCollection
+            }, {
+              silent: true
+            });
+            self.renderProcessSelect();
+          }
+          
           self.renderUserSelect(userCollections);
         })
         .catch(function(err) {
