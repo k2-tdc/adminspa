@@ -187,16 +187,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(ruleCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
-                });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on getting rules');
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.ruleList.error
+              });
             }
           });
         };
@@ -223,16 +217,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(natureCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
-                });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on getting nature.');
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.natureList.error
+              });
             }
           });
         };
@@ -259,16 +247,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(fullUserCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
-                });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on getting full users.');
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.fullUserList.error
+              });
             }
           });
         };
@@ -296,16 +278,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(gradingCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
-                });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on gettin grades');
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.gradeList.error
+              });
             }
           });
         };
@@ -333,16 +309,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(groupCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
-                });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on getting group.');
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.groupList.error
+              });
             }
           });
         };
@@ -368,16 +338,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(levelCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
-                });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on getting level');
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.levelList.error
+              });
             }
           });
         };
@@ -404,16 +368,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(ruleDepartmentCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
-                });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on getting rule department');
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.departmentList.error
+              });
             }
           });
         };
@@ -439,16 +397,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(teamCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
-                });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on getting team');
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.teamList.error
+              });
             }
           });
         };
@@ -474,16 +426,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(teamFilterCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
-                });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on getting team filter.');
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.teamFilterList.error
+              });
             }
           });
         };
@@ -502,16 +448,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(fileRuleModel);
           },
           error: function(collcetion, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting file type rules.');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.fileRuleList.error
+            });
           }
         });
       };
@@ -537,16 +477,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(criteriaCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
-                });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on getting criteria');
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.criteriaList.error
+              });
             }
           });
         };
@@ -573,16 +507,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(priorityCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject(err);
-                });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on getting priority');
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.priorityList.error
+              });
             }
           });
         };
@@ -1296,13 +1224,13 @@ Hktdc.Views = Hktdc.Views || {};
           .catch(function(err) {
             console.error(err);
             Hktdc.Dispatcher.trigger('openAlert', {
-              title: 'Error',
+              title: dialogTitle.error,
               message: sprintf(dialogMessage.workerRuleMember.save.fail, err.request_id || err.error || err)
             });
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          title: 'Error',
+          title: dialogTitle.error,
           message: dialogMessage.common.invalid.form
         });
       }
@@ -1387,6 +1315,11 @@ Hktdc.Views = Hktdc.Views || {};
             document.body.appendChild(anchorLink);
             anchorLink.click();
           }
+        } else {
+          utils.apiErrorHandling(xhr, {
+            // 401: doFetch,
+            unknownMessage: dialogMessage.download.workerRulePreview.error
+          });
         }
       };
       xhr.send(formData);
@@ -1413,26 +1346,10 @@ Hktdc.Views = Hktdc.Views || {};
                 Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
               },
               error: function(model, response) {
-                if (response.status === 401) {
-                  utils.getAccessToken(function() {
-                    doSave();
+                  utils.apiErrorHandling(response, {
+                      // 401: doFetch,
+                      unknownMessage: dialogMessage.workerRuleMember.delete.error
                   });
-                } else {
-                  var responseObj;
-                  try {
-                    responseObj = JSON.parse(response.responseText);
-                  } catch (e) {
-                    responseObj = {
-                      request_id: false,
-                      error: 'error on deleting delegation.'
-                    };
-                  }
-                  console.error(response.responseText);
-                  Hktdc.Dispatcher.trigger('openAlert', {
-                    message: sprintf(dialogMessage.workerRuleMember.delete.fail, responseObj.request_id),
-                    title: 'Error'
-                  });
-                }
               }
             });
           };
@@ -1489,26 +1406,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(response);
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.workerRuleMember.save.error
               });
-            } else {
-              console.error(response.responseText);
-              var responseObj;
-              try {
-                responseObj = JSON.parse(response.responseText);
-              } catch (e) {
-                responseObj = {
-                  request_id: 'unknown error code',
-                  error: 'unknown server error'
-                };
-              }
-
-              deferred.reject(responseObj);
-            }
           }
         });
       };
@@ -1552,16 +1453,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve();
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.common.error.system
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('Submit File Error');
-            }
           }
         }));
       };

@@ -65,16 +65,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.processList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on loading process');
-            }
           }
         });
       };
@@ -125,20 +119,11 @@ Hktdc.Views = Hktdc.Views || {};
             return modData;
             // return { data: modData, recordsTotal: modData.length };
           },
-          error: function(xhr, status, err) {
-            console.log(xhr);
-            if (xhr.status === 401) {
-              utils.getAccessToken(function() {
-                self.workerRuleDataTable.ajax.url(self.getAjaxURL()).load();
-              });
-            } else {
-              console.error(xhr.responseText);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Error on getting worker rule list.',
-                type: 'error',
-                title: 'Error'
-              });
-            }
+          error: function(response, status, err) {
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.workerRuleMember.loadList.error
+            });
           }
         },
         createdRow: function(row, data, index) {
@@ -220,18 +205,10 @@ Hktdc.Views = Hktdc.Views || {};
                 Backbone.history.navigate('userrole', {trigger: true});
               },
               error: function(model, response) {
-                if (response.status === 401) {
-                  utils.getAccessToken(function() {
-                    doSave();
+                  utils.apiErrorHandling(response, {
+                      // 401: doFetch,
+                      unknownMessage: dialogMessage.workerRule.delete.error
                   });
-                } else {
-                  console.error(response.responseText);
-                  Hktdc.Dispatcher.trigger('openAlert', {
-                    message: 'error on saving user role',
-                    type: 'error',
-                    title: 'Error'
-                  });
-                }
               }
             });
           };

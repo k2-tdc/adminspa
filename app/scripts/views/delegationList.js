@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, Q, utils, _, moment, sprintf, dialogMessage */
+/* global Hktdc, Backbone, JST, $, Q, utils, _, moment, sprintf, dialogMessage, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -46,9 +46,8 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown'),
-            type: 'error',
-            title: 'Error'
+            title: dialogTitle.error,
+            message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown')
           });
         });
     },
@@ -63,16 +62,9 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(userCollection);
           },
           error: function(collection, response) {
-            utils.apiErrorHandling({
-              apiName: 'get full user list',
-              response: response,
-              apiRequest: doFetch,
-              onError: function(errObj) {
-                deferred.reject({
-                  error: errObj.error,
-                  request_id: errObj.request_id
-                });
-              }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.fullUserList.error
             });
           }
         });
@@ -127,25 +119,11 @@ Hktdc.Views = Hktdc.Views || {};
             });
             return modData;
           },
-          error: function(xhr, status, err) {
-            if (xhr.status === 401) {
-              utils.getAccessToken(function() {
-                self.delegationDataTable.ajax.url(self.getAjaxURL()).load();
-              });
-            } else {
-              var requestId;
-              try {
-                requestId = JSON.parse(xhr.responseText).request_id;
-              } catch (e) {
-                console.error('Error on getting delegation list.');
-                console.error(xhr.responseText);
-                requestId = 'unknown';
-              }
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: sprintf(dialogMessage.common.serverError.fail, requestId || 'unknown'),
-                title: 'Error'
-              });
-            }
+          error: function(response, status, err) {
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.delegation.loadList.error
+            });
           }
         },
         createdRow: function(row, data, index) {
@@ -293,32 +271,10 @@ Hktdc.Views = Hktdc.Views || {};
               }
             },
             error: function(model, response) {
-              utils.apiErrorHandling({
-                apiName: 'delete delegation',
-                response: response,
-                apiRequest:
-                onError
-              })
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doSave();
-                }, function(err) {
-                  deferred.reject({
-                    request_id: false,
-                    error: err
-                  });
+                utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.delegation.delete.error
                 });
-              } else {
-                try {
-                  deferred.reject(JSON.parse(response.responseText));
-                } catch (e) {
-                  console.error(response.responseText);
-                  deferred.reject({
-                    request_id: false,
-                    error: 'error on deleting delegation.'
-                  });
-                }
-              }
             }
           });
         };
@@ -343,7 +299,7 @@ Hktdc.Views = Hktdc.Views || {};
           .fail(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
               message: sprintf(dialogMessage.delegation.batchDelete.fail, err.request_id || 'unknown'),
-              title: 'Error'
+              title: dialogTitle.error
             });
           });
         }

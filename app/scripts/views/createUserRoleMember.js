@@ -67,16 +67,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(departmentCollection);
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting department.');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.departmentList.error
+            });
           }
         });
       };
@@ -94,16 +88,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(userCollection);
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('Error on getting full user list.');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.fullUserList.error
+            });
           }
         });
       };
@@ -287,7 +275,7 @@ Hktdc.Views = Hktdc.Views || {};
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
               type: 'error',
-              title: 'Error',
+              title: dialogTitle.error,
               message: sprintf(dialogMessage.userRoleMember.save.fail, err.request_id || err)
             });
           });
@@ -321,16 +309,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve();
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.userRoleMember.save.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject();
-            }
           }
         });
       };

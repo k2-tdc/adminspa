@@ -78,16 +78,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.processList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting process');
-            }
           }
         });
       };
@@ -106,16 +100,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(stepCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.stepList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting step');
-            }
           }
         });
       };
@@ -153,20 +141,11 @@ Hktdc.Views = Hktdc.Views || {};
             return modData;
             // return { data: modData, recordsTotal: modData.length };
           },
-          error: function(xhr, status, err) {
-            console.log(xhr);
-            if (xhr.status === 401) {
-              utils.getAccessToken(function() {
-                self.templateDataTable.ajax.url(self.getAjaxURL()).load();
-              });
-            } else {
-              console.error(xhr.responseText);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Error on getting email template list.',
-                type: 'error',
-                title: 'Error'
-              });
-            }
+          error: function(response, status, err) {
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.emailTemplate.loadList.error
+            });
           }
         },
         createdRow: function(row, data, index) {
@@ -315,16 +294,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(response);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.emailTemplate.delete.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on deleting template');
-            }
           }
         });
       };
@@ -395,7 +368,7 @@ Hktdc.Views = Hktdc.Views || {};
               } else {
                 Hktdc.Dispatcher.trigger('openAlert', {
                   type: 'error',
-                  title: 'error',
+                  title: dialogTitle.error,
                   message: response.Msg
                 });
               }
@@ -403,7 +376,7 @@ Hktdc.Views = Hktdc.Views || {};
             .catch(function(err) {
               Hktdc.Dispatcher.trigger('openAlert', {
                 type: 'error',
-                title: 'error',
+                title: dialogTitle.error,
                 message: 'delete failed'
               });
               console.error(err);

@@ -83,26 +83,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(profileUserCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject({
-                  error: err,
-                  request_id: false
-                });
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  error: 'error on getting profile users',
-                  request_id: false
-                });
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.profileUserList.error
+            });
           }
         });
       };
@@ -184,25 +168,11 @@ Hktdc.Views = Hktdc.Views || {};
             return modData;
             // return { data: modData, recordsTotal: modData.length };
           },
-          error: function(xhr, status, err) {
-            if (xhr.status === 401) {
-              utils.getAccessToken(function() {
-                self.profileDataTable.ajax.url(self.getAjaxURL()).load();
-              });
-            } else {
-              var requestId;
-              try {
-                requestId = JSON.parse(xhr.responseText).request_id;
-              } catch (e) {
-                console.error('Error on getting email profile list.');
-                console.error(xhr.responseText);
-                requestId = 'unknown';
-              }
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: sprintf(dialogMessage.common.serverError.fail, requestId || 'unknown'),
-                title: 'Error'
-              });
-            }
+          error: function(response, status, err) {
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.emailProfile.loadList.error
+            });
           }
         },
         createdRow: function(row, data, index) {
@@ -302,26 +272,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve();
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject({
-                  error: err,
-                  request_id: false
-                });
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.emailProfile.delete.error
               });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  error: 'error on deleting profile',
-                  request_id: false
-                });
-              }
-            }
           }
         });
       };

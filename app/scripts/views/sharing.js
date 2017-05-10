@@ -93,7 +93,7 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            title: 'Error',
+            title: dialogTitle.error,
             message: sprintf(dialogMessage.common.scriptError.fail, 'unknown')
           });
         });
@@ -109,16 +109,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.processList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting process');
-            }
           }
         });
       };
@@ -136,16 +130,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(userCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.fullUserList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting full user.');
-            }
           }
         });
       };
@@ -165,16 +153,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(sharingUserCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.sharingUserList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting sharing users.');
-            }
           }
         });
       };
@@ -193,16 +175,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(sharingPermissionCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.sharingPermissionList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting permission');
-            }
           }
         });
       };
@@ -221,16 +197,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(stepCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.stepList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting task.');
-            }
           }
         });
       };
@@ -251,16 +221,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(departmentCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.departmentList.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting department');
-            }
           }
         });
       };
@@ -547,13 +511,13 @@ Hktdc.Views = Hktdc.Views || {};
           })
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              title: 'Error',
+              title: dialogTitle.error,
               message: sprintf(dialogMessage.sharing.save.fail, err.request_id || err)
             });
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          title: 'Error',
+          title: dialogTitle.error,
           message: dialogMessage.common.invalid.form
         });
       }
@@ -585,7 +549,7 @@ Hktdc.Views = Hktdc.Views || {};
       //   Hktdc.Dispatcher.trigger('openAlert', {
       //     message: err,
       //     type: 'error',
-      //     title: 'Error'
+      //     title: dialogTitle.error
       //   });
       // });
       // console.log(data);
@@ -604,16 +568,10 @@ Hktdc.Views = Hktdc.Views || {};
               }
             },
             error: function(model, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doSave();
-                }, function(err) {
-                  deferred.reject(err);
+                utils.apiErrorHandling(response, {
+                    // 401: doFetch,
+                    unknownMessage: dialogMessage.sharing.save.error
                 });
-              } else {
-                console.error(response.responseText);
-                deferred.reject('error on saving sharing.');
-              }
             }
           });
         };
@@ -642,7 +600,7 @@ Hktdc.Views = Hktdc.Views || {};
             .catch(function(err) {
               console.error(err);
               Hktdc.Dispatcher.trigger('openAlert', {
-                title: 'Error',
+                title: dialogTitle.error,
                 message: sprintf(dialogMessage.delegation.save.fail, err.request_id || err)
               });
             });
@@ -666,16 +624,10 @@ Hktdc.Views = Hktdc.Views || {};
             }
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.sharing.delete.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on deleting sharing.');
-            }
           }
         });
       };

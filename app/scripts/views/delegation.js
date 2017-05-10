@@ -100,7 +100,7 @@ Hktdc.Views = Hktdc.Views || {};
           Hktdc.Dispatcher.trigger('openAlert', {
             message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown'),
             type: 'error',
-            title: 'Error'
+            title: dialogTitle.error
           });
         });
     },
@@ -115,26 +115,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject({
-                  error: err,
-                  request_id: false
-                });
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  error: 'Error on getting process list',
-                  request_id: false
-                });
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.processList.error
+            });
           }
         });
       };
@@ -159,26 +143,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(userCollection);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  deferred.reject({
-                    error: err,
-                    request_id: false
-                  });
-                });
-              } else {
-                try {
-                  deferred.reject(JSON.parse(response.responseText));
-                } catch (e) {
-                  console.error(response.responseText);
-                  deferred.reject({
-                    error: 'Error on getting full user list',
-                    request_id: false
-                  });
-                }
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.fullUserList.error
+              });
             }
           });
         };
@@ -198,26 +166,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(delegationUserCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject({
-                  request_id: false,
-                  error: err
-                });
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  request_id: false,
-                  error: 'error on getting delegation users'
-                });
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.delegationUserList.error
+            });
           }
         });
       };
@@ -236,26 +188,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(delegationActionCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject({
-                  request_id: false,
-                  error: err
-                });
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  request_id: false,
-                  error: 'error on getting action'
-                });
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.delegationActionList.error
+            });
           }
         });
       };
@@ -274,26 +210,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(stpeCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject({
-                  error: err,
-                  request_id: false
-                });
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  request_id: false,
-                  error: 'Error on getting task.'
-                });
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.stepList.error
+            });
           }
         });
       };
@@ -314,26 +234,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(departmentCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject({
-                  request_id: false,
-                  error: err
-                });
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  error: 'Error on getting department',
-                  request_id: false
-                });
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.departmentList.error
+            });
           }
         });
       };
@@ -617,7 +521,7 @@ Hktdc.Views = Hktdc.Views || {};
           })
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              title: 'Error',
+              title: dialogTitle.error,
               message: sprintf(dialogMessage.delegation.save.fail, err.request_id, err.error || err)
             });
           });
@@ -732,16 +636,10 @@ Hktdc.Views = Hktdc.Views || {};
             }
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.delegation.save.error
               });
-            } else {
-              console.error(response.responseText);
-              deferred.reject();
-            }
           }
         });
       };
@@ -767,7 +665,7 @@ Hktdc.Views = Hktdc.Views || {};
             .catch(function(err) {
               console.error(err);
               Hktdc.Dispatcher.trigger('openAlert', {
-                title: 'Error',
+                title: dialogTitle.error,
                 message: sprintf(dialogMessage.delegation.delete.fail, err.request_id || err.error || err)
               });
             });
@@ -794,26 +692,10 @@ Hktdc.Views = Hktdc.Views || {};
             }
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject({
-                  request_id: false,
-                  error: err
-                });
+              utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.delegation.delete.error
               });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject({
-                  request_id: false,
-                  error: 'error on deleting delegation.'
-                });
-              }
-            }
           }
         });
       };
