@@ -45,6 +45,16 @@
     </div>
     <div class="sep-space"></div>
 
+    <div class="buttons-container">
+      <div class="available-buttons">
+        <% if (showDelete) { %>
+          <button type="button" class="btn btn-primary delBtn">Delete</button>
+        <% } // endif %>
+
+        <button type="button" class="btn btn-primary saveBtn">Save</button>
+      </div>
+    </div>
+    <div class="sep-space"></div>
 
     <% if (showMember) { %>
     <div>
@@ -94,14 +104,6 @@
     <div class="sep-space"></div>
     <% } %>
 
-    <div class="buttons-container">
-      <div class="available-buttons">
-        <% if (showDelete) { %>
-          <button type="button" class="btn btn-primary delBtn">Delete</button>
-        <% } // endif %>
 
-        <button type="button" class="btn btn-primary saveBtn">Save</button>
-      </div>
-    </div>
   </div>
 </div>
