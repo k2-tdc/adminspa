@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _, Blob, XMLHttpRequest, BlobBuilder */
+/* global Hktdc, Backbone, JST, $, _, Blob, XMLHttpRequest, BlobBuilder,utils, dialogMessage */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -82,6 +82,11 @@ Hktdc.Views = Hktdc.Views || {};
             document.body.appendChild(anchorLink);
             anchorLink.click();
           }
+        } else {
+          utils.apiErrorHandling(xhr, {
+            // 401: doFetch,
+            unknownMessage: dialogMessage.download.attachment.error
+          });
         }
       };
       xhr.send(null);

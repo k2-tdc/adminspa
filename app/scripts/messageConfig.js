@@ -168,6 +168,14 @@ var dialogMessage = {
       success: 'Delegation is deleted.'
     }
   },
+  download: {
+    attachment: {
+      error: 'error on download attachment'
+    },
+    workerRulePreview: {
+      error: 'error on download preview'
+    }
+  },
   sharing: {
     loadDetail: {
       error: 'Error on getting delegation detail'

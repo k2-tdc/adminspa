@@ -1315,6 +1315,11 @@ Hktdc.Views = Hktdc.Views || {};
             document.body.appendChild(anchorLink);
             anchorLink.click();
           }
+        } else {
+          utils.apiErrorHandling(xhr, {
+            // 401: doFetch,
+            unknownMessage: dialogMessage.download.workerRulePreview.error
+          });
         }
       };
       xhr.send(formData);
