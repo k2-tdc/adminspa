@@ -120,20 +120,11 @@ Hktdc.Views = Hktdc.Views || {};
             });
             return modData;
           },
-          error: function(xhr, status, err) {
-            console.log(xhr);
-            if (xhr.status === 401) {
-              utils.getAccessToken(function() {
-                self.sharingDataTable.ajax.url(self.getAjaxURL()).load();
-              });
-            } else {
-              console.error(xhr.responseText);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Error on getting sharing list.',
-                type: 'error',
-                title: dialogTitle.error
-              });
-            }
+          error: function(response, status, err) {
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.sharing.loadList.error
+            });
           }
         },
         createdRow: function(row, data, index) {

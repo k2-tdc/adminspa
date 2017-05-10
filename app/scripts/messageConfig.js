@@ -100,6 +100,9 @@ var dialogMessage = {
     loadDetail: {
       error: 'Error on getting role permission detail'
     },
+    loadList: {
+      error: 'Error on getting role permission list'
+    },
     save: {
       error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
     },
@@ -111,6 +114,9 @@ var dialogMessage = {
   workerRule: {
     loadDetail: {
       error: 'Error on getting worker rule detail'
+    },
+    loadList: {
+      error: 'Error on getting worker rule list'
     },
     delete: {
       confirm: 'Do you want to delete this rule?',
@@ -124,6 +130,9 @@ var dialogMessage = {
   workerRuleMember: {
     loadDetail: {
       error: 'Error on getting worker rule setting detail'
+    },
+    loadList: {
+      error: 'Error on getting worker rule setting list'
     },
     delete: {
       confirm: 'Do you want to delete this rule settings?',
@@ -142,6 +151,9 @@ var dialogMessage = {
     loadDetail: {
       error: 'Error on getting delegation detail'
     },
+    loadList: {
+      error: 'Error on getting delegation list'
+    },
     save: {
       success: 'Delegation is saved.',
       error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
@@ -159,6 +171,9 @@ var dialogMessage = {
   sharing: {
     loadDetail: {
       error: 'Error on getting delegation detail'
+    },
+    loadList: {
+      error: 'Error on getting delegation list'
     },
     save: {
       error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
@@ -225,16 +240,16 @@ var dialogMessage = {
       error: 'error on getting profile users.'
     },
     roleList: {
-        error: 'error on getting role'
+      error: 'error on getting role'
     },
     permissionList: {
-        error: 'error on getting process permission'
+      error: 'error on getting process permission'
     },
     sharingUserList: {
-        error: 'error on getting sharing users'
+      error: 'error on getting sharing users'
     },
     sharingPermissionList: {
-        error: 'error on getting permission'
+      error: 'error on getting permission'
     }
   }
 };

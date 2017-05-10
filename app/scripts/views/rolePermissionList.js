@@ -106,20 +106,11 @@ Hktdc.Views = Hktdc.Views || {};
             return modData;
             // return { data: modData, recordsTotal: modData.length };
           },
-          error: function(xhr, status, err) {
-            console.log(xhr);
-            if (xhr.status === 401) {
-              utils.getAccessToken(function() {
-                self.rolePermissionDataTable.ajax.url(self.getAjaxURL()).load();
-              });
-            } else {
-              console.error(xhr.responseText);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Error on getting role permission list.',
-                type: 'error',
-                title: dialogTitle.error
-              });
-            }
+          error: function(response, status, err) {
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.rolePermission.loadList.error
+            });
           }
         },
         createdRow: function(row, data, index) {
