@@ -1000,7 +1000,7 @@ Hktdc.Views = Hktdc.Views || {};
                   UserId1: selectedData.UserID
                 });
                 self.model.set({
-                  UserId1: selectedData.UserId1
+                  UserId1: selectedData.UserID
                 }, {
                   validate: true,
                   field: 'UserId1',
