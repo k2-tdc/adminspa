@@ -90,7 +90,7 @@ window.utils = {
   },
 
   apiErrorHandling: function(response, handler) {
-    // return format: { request_id: xxx, error: xxxxxxx }
+    // return format: { request_id: xxx, error: xxxxxxx, error_description: xxxxx }
     var errorObject;
     var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
 
@@ -126,7 +126,7 @@ window.utils = {
         title: dialogTitle.error,
         message: sprintf(dialogMessage.common.error.system, {
           code: errorObject.request_id,
-          msg: errorObject.error
+          msg: errorObject.error + '. ' + errorObject.error_description
         })
       });
     } else {

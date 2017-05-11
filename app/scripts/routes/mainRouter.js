@@ -451,7 +451,7 @@ Hktdc.Routers = Hktdc.Routers || {};
           var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
           var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
             collection: subheaderMenuListCollection,
-            currentPageName: 'USER PERMISSION'
+            currentPageName: 'ROLE PERMISSION'
           });
           subheaderMenuListView.render();
           $('.subheader-menu-container').html(subheaderMenuListView.el);

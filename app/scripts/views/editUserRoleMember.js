@@ -152,7 +152,10 @@ Hktdc.Views = Hktdc.Views || {};
             Hktdc.Dispatcher.trigger('openAlert', {
               type: 'error',
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.userRoleMember.save.fail, err.request_id || err)
+              message: sprintf(dialogMessage.userRoleMember.save.fail, {
+                code: err.request_id || 'unknown',
+                msg: err.error || 'unknown'
+              })
             });
           });
       } else {

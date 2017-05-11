@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, moment, _, dialogMessage, sprintf*/
+/* global Hktdc, Backbone, JST, Q, utils, $, moment, _, dialogMessage, sprintf, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -56,7 +56,7 @@ Hktdc.Views = Hktdc.Views || {};
             });
             self.renderProcessSelect();
           }
-          
+
           self.renderUserSelect(userCollections);
         })
         .catch(function(err) {
@@ -346,7 +346,10 @@ Hktdc.Views = Hktdc.Views || {};
             Hktdc.Dispatcher.trigger('openAlert', {
               type: 'error',
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.workerRule.save.fail, err.request_id || err)
+              message: sprintf(dialogMessage.workerRule.save.fail, {
+                code: err.request_id || 'unknown',
+                msg: err.error || 'unknown'
+              })
             });
           });
       } else {

@@ -47,7 +47,10 @@ Hktdc.Views = Hktdc.Views || {};
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
             title: dialogTitle.error,
-            message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown')
+            message: sprintf(dialogMessage.common.serverError.fail, {
+              code: err.request_id || 'unknown',
+              msg: err.error || 'unknown'
+            })
           });
         });
     },
@@ -298,7 +301,10 @@ Hktdc.Views = Hktdc.Views || {};
           })
           .fail(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              message: sprintf(dialogMessage.delegation.batchDelete.fail, err.request_id || 'unknown'),
+              message: sprintf(dialogMessage.delegation.batchDelete.fail, {
+                code: err.request_id || 'unknown',
+                msg: err.error || 'unknown'
+              }),
               title: dialogTitle.error
             });
           });

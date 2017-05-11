@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, moment, dialogMessage, sprintf */
+/* global Hktdc, Backbone, JST, Q, utils, $, moment, dialogMessage, sprintf, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -98,7 +98,10 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown'),
+            message: sprintf(dialogMessage.common.serverError.fail, {
+              code: err.request_id || 'unknown',
+              msg: err.error || 'unknown'
+            }),
             type: 'error',
             title: dialogTitle.error
           });
@@ -522,7 +525,9 @@ Hktdc.Views = Hktdc.Views || {};
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.delegation.save.fail, err.request_id, err.error || err)
+              message: sprintf(dialogMessage.delegation.save.fail, {
+                code: err.request_id || 'unknown',
+                msg: err.error || 'unknown'})
             });
           });
       } else {
@@ -666,7 +671,10 @@ Hktdc.Views = Hktdc.Views || {};
               console.error(err);
               Hktdc.Dispatcher.trigger('openAlert', {
                 title: dialogTitle.error,
-                message: sprintf(dialogMessage.delegation.delete.fail, err.request_id || err.error || err)
+                message: sprintf(dialogMessage.delegation.delete.fail, {
+                  code: err.request_id || 'unknown',
+                  msg: err.error || 'unknown'
+                })
               });
             });
         }

@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, Q, utils, dialogMessage, sprintf */
+/* global Hktdc, Backbone, JST, $, Q, utils, dialogMessage, sprintf, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -206,7 +206,10 @@ Hktdc.Views = Hktdc.Views || {};
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.emailTemplate.save.fail, err.request_id || err.error || err)
+              message: sprintf(dialogMessage.emailTemplate.save.fail, {
+                code: err.request_id || 'unknown',
+                msg: err.error || 'unknown'
+              })
             });
           });
       } else {
@@ -237,7 +240,7 @@ Hktdc.Views = Hktdc.Views || {};
         method = 'PUT';
         sendEmailTemplateModel.url = sendEmailTemplateModel.url(parseInt(this.model.toJSON().TemplateId));
       }
-      
+
       var doSave = function() {
         sendEmailTemplateModel.save({}, {
           beforeSend: utils.setAuthHeader,
@@ -271,7 +274,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.doDeleteTemplate()
             .then(function(response) {
               Hktdc.Dispatcher.trigger('closeConfirm');
-              if (String(response.success) === '1') {
+              if (String(response.Success) === '1') {
                 Hktdc.Dispatcher.trigger('openAlert', {
                   type: 'success',
                   title: 'confirmation',
@@ -309,7 +312,7 @@ Hktdc.Views = Hktdc.Views || {};
                 type: 'POST',
                 success: function(mymodel, response) {
                     if (response.Success === '1' || response.Success === 1) {
-                        deferred.resolve();
+                        deferred.resolve(response);
                     } else {
                         deferred.reject(response.Msg);
                     }

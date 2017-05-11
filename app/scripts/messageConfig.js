@@ -14,7 +14,7 @@ var dialogMessage = {
       accessToken: 'Error on getting access token',
       system: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s',
       script: 'Script error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s',
-      unknown: 'Unknown error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
+      unknown: 'Unknown error. <br />%s'
     }
   },
   menu: {
@@ -34,11 +34,11 @@ var dialogMessage = {
     },
     save: {
       success: 'Delegation is saved.',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     delete: {
       confirm: 'Do you want to delete the email template?',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     batchDelete: {
       confirm: 'Do you want to delete the selected email template(s)?'
@@ -53,12 +53,12 @@ var dialogMessage = {
     },
     save: {
       success: 'Delegation is saved.',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     delete: {
       confirm: 'Do you want to delete the email profile?',
       success: 'Email profile is deleted.',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     batchDelete: {
       confirm: 'Do you want to delete the selected profile(s)?'
@@ -72,11 +72,11 @@ var dialogMessage = {
       error: 'Error on getting user role detail'
     },
     save: {
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     delete: {
       confirm: 'Do you want to delete this user role?',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     }
   },
   userRoleMember: {
@@ -85,12 +85,12 @@ var dialogMessage = {
     },
     save: {
       success: 'User Role Member is saved.',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     delete: {
       confirm: 'Do you want to delete this user role member?',
       success: 'User role memeber is deleted.',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     batchDelete: {
       confirm: 'Do you want to delete the selected user role member(s)?'
@@ -104,11 +104,11 @@ var dialogMessage = {
       error: 'Error on getting role permission list'
     },
     save: {
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     delete: {
       confirm: 'Do you want to delete the role permission?',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     }
   },
   workerRule: {
@@ -120,11 +120,11 @@ var dialogMessage = {
     },
     delete: {
       confirm: 'Do you want to delete this rule?',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     save: {
       success: 'Delegation is saved.',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     }
   },
   workerRuleMember: {
@@ -137,11 +137,11 @@ var dialogMessage = {
     delete: {
       confirm: 'Do you want to delete this rule settings?',
       success: 'Rule setting is deleted.',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     save: {
       success: 'Rule setting is saved.',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     batchDelete: {
       confirm: 'Do you want to delete the selected rule?'
@@ -156,12 +156,12 @@ var dialogMessage = {
     },
     save: {
       success: 'Delegation is saved.',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     delete: {
       confirm: 'Do you want to delete the delegation?',
       success: 'Delegation is deleted.',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     batchDelete: {
       confirm: 'Do you want to delete the selected delegation(s)?',
@@ -184,11 +184,11 @@ var dialogMessage = {
       error: 'Error on getting delegation list'
     },
     save: {
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     delete: {
       confirm: 'Do you want to delete the sharing?',
-      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s'
+      error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     batchDelete: {
       confirm: 'Do you want to delete the selected sharing?'

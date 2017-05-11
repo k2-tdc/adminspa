@@ -63,7 +63,10 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: sprintf(dialogMessage.common.serverError.fail, err.request_id || 'unknown'),
+            message: sprintf(dialogMessage.common.serverError.fail, {
+              code: err.request_id || 'unknown',
+              msg: err.error || 'unknown'
+            }),
             type: 'error',
             title: 'Runtime Error'
           });
