@@ -126,7 +126,7 @@ window.utils = {
         title: dialogTitle.error,
         message: sprintf(dialogMessage.common.error.system, {
           code: errorObject.request_id,
-          msg: errorObject.error + '. ' + errorObject.error_description
+          msg: errorObject.error + ' ' + (errorObject.error_description || '')
         })
       });
     } else {
