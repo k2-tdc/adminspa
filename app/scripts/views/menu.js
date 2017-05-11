@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _, utils */
+/* global Hktdc, Backbone, JST, $, _, utils, dialogMessage, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -16,32 +16,9 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function() {
       console.debug('[ menu.js ] - Initialize');
       var self = this;
-      this.render();
-      self.listenTo(Hktdc.Dispatcher, 'checkPagePermission', function(onSuccess) {
-        var path = Backbone.history.getHash().split('?')[0].split('/')[0];
-        self.checkPagePermission(path, function() {
-          onSuccess();
-        }, function() {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: dialogMessage.menu.permission.error,
-            title: dialogTitle.error
-          });
-        });
-      });
-
-      self.listenTo(Hktdc.Dispatcher, 'getMenu', function(opt) {
-        var foundMenu = _.find(self.model.toJSON().Menu, function(menu) {
-          return menu.Name === opt.name;
-        });
-        opt.onSuccess(foundMenu);
-      });
-
-      this.model.on('change:activeTab', this.setActiveMenu.bind(this));
-    },
-
-    render: function() {
       var rawMenu = this.model.toJSON();
       var menu = rawMenu.Menu || [];
+
       /* add PList and User into menu for mobile version */
       var PListMenu = {
         Mlink: '#',
@@ -86,8 +63,38 @@ Hktdc.Views = Hktdc.Views || {};
           RouteName: 'logout'
         }]
       };
-      menu.push(UserMenu);
-      // console.log(menu);
+      if (!_.find(menu, function(m) {
+        return m.Name === rawMenu.User.UserName;
+      })) {
+        menu.push(UserMenu);
+      }
+
+      this.render();
+      self.listenTo(Hktdc.Dispatcher, 'checkPagePermission', function(onSuccess) {
+        var path = Backbone.history.getHash().split('?')[0].split('/')[0];
+        self.checkPagePermission(path, function() {
+          onSuccess();
+        }, function() {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            title: dialogTitle.error,
+            message: dialogMessage.menu.permission.error
+          });
+        });
+      });
+
+      self.listenTo(Hktdc.Dispatcher, 'getMenu', function(opt) {
+        var foundMenu = _.find(self.model.toJSON().Menu, function(menu) {
+          return menu.Name === opt.name;
+        });
+        opt.onSuccess(foundMenu);
+      });
+
+      this.model.on('change:activeTab', this.setActiveMenu.bind(this));
+    },
+
+    render: function() {
+      var rawMenu = this.model.toJSON();
+      var menu = rawMenu.Menu || [];
       /* map the name, the server should return the route later */
       _.each(menu, function(raw) {
         if (raw.sumenu) {
@@ -189,10 +196,10 @@ Hktdc.Views = Hktdc.Views || {};
               }
             },
             error: function(model, response) {
-                utils.apiErrorHandling(response, {
-                    // 401: doFetch,
-                    unknownMessage: dialogMessage.menu.permission.error
-                });
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.menu.permission.error
+              });
             }
           });
         };
