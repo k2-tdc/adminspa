@@ -184,16 +184,16 @@ module.exports = function(grunt) {
       html: '<%= yeoman.app %>/index.html',
       options: {
         /* if NEED uglify */
-        // dest: '<%= yeoman.dist %>'
+        dest: '<%= yeoman.dist %>'
 
         /* else NO uglify */
-        flow: {
-          steps: {
-            js: ['concat'],
-            css: ['concat', 'cssmin']
-          },
-          post: {}
-        }
+        // flow: {
+        //   steps: {
+        //     js: ['concat'],
+        //     css: ['concat', 'cssmin']
+        //   },
+        //   post: {}
+        // }
         /* endif */
       }
     },
@@ -255,6 +255,8 @@ module.exports = function(grunt) {
           src: [
             '*.{ico,txt}',
             'images/{,*/}*.{webp,gif}',
+            'scripts/messageConfig.js',
+            'scripts/main.js',
             'styles/fonts/{,*/}*.*',
             'bower_components/bootstrap-sass-official/assets/fonts/bootstrap/*.*',
           ]
@@ -366,7 +368,7 @@ module.exports = function(grunt) {
     'htmlmin',
     'concat',
     'cssmin',
-    // 'uglify',
+    'uglify',
     'copy',
     'rev',
     'usemin',
