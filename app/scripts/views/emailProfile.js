@@ -76,7 +76,7 @@ Hktdc.Views = Hktdc.Views || {};
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
             title: dialogTitle.error,
-            message: sprintf(dialogMessage.common.serverError.fail, {
+            message: sprintf(dialogMessage.common.error.system, {
               code: err.request_id || 'unknown',
               msg: err.error || 'unknown'
             })
