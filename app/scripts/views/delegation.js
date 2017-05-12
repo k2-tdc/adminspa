@@ -525,7 +525,7 @@ Hktdc.Views = Hktdc.Views || {};
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.delegation.save.fail, {
+              message: sprintf(dialogMessage.delegation.save.error, {
                 code: err.request_id || 'unknown',
                 msg: err.error || 'unknown'})
             });
@@ -634,17 +634,20 @@ Hktdc.Views = Hktdc.Views || {};
           type: rawData.saveType,
           success: function(mymodel, response) {
             // console.log(response);
-            if (response.Success) {
+            if (String(response.Success) === '1') {
               deferred.resolve(response);
             } else {
-              deferred.reject();
+              deferred.reject({
+                request_id: '',
+                error: response.Msg
+              });
             }
           },
           error: function(model, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.delegation.save.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.delegation.save.error
+            });
           }
         });
       };
