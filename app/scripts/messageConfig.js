@@ -200,11 +200,12 @@ var dialogMessage = {
       error: 'Error on getting delegation list'
     },
     save: {
-      success: 'Sharing is deleted.',
+      success: 'Sharing is saved.',
       error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s',
       fail: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     delete: {
+      success: 'Sharing is deleted.',
       confirm: 'Do you want to delete the sharing?',
       error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s',
       fail: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
