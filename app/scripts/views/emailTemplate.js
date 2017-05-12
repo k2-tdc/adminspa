@@ -214,7 +214,7 @@ Hktdc.Views = Hktdc.Views || {};
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          title: 'Warning',
+          title: dialogTitle.warning,
           message: dialogMessage.common.invalid.form
         });
       }

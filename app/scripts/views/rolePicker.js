@@ -17,7 +17,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       var self = this;
-      self.$el.html(self.template());
+      self.$el.html(self.template({ field: self.field }));
       try {
         var pickedRolesCollection = new Hktdc.Collections.RolePicker(this.selectedRole);
         // console.log(this.selectedRole);

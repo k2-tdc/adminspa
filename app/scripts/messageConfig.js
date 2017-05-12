@@ -1,7 +1,8 @@
 var dialogTitle = {
   error: 'Error',
   confirmation: 'Confirmation',
-  information: 'Information'
+  information: 'Information',
+  warning: 'Warning'
 };
 
 // this global variable ONLY store message displayed on DIALOG

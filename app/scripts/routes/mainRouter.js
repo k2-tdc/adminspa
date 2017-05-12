@@ -495,16 +495,19 @@ Hktdc.Routers = Hktdc.Routers || {};
             var ProcessName = '';
             var ProcessDisplayName = '';
             var MenuItemGUID = '';
+            var OldMenuItemGUID = '';
             var rolePermissionCollection;
             if (data) {
               ProcessId = data.toJSON().ProcessId;
               ProcessName = data.toJSON().ProcessName;
               ProcessDisplayName = data.toJSON().ProcessDisplayName;
               MenuItemGUID = data.toJSON().MenuItemGUID;
+              OldMenuItemGUID = data.toJSON().MenuItemGUID;
               var permissions = _.map(data.toJSON().Role, function(permission) {
                 return {
                   RolePermissionGUID: permission.RolePermissionGUID,
                   MenuItemGUID: MenuItemGUID,
+                  OldMenuItemGUID: OldMenuItemGUID,
                   UserRoleGUID: permission.UserRoleGUID
                 };
               });
@@ -523,7 +526,8 @@ Hktdc.Routers = Hktdc.Routers || {};
               deletePermissionArray: [],
               ProcessName: ProcessName,
               ProcessDisplayName: ProcessDisplayName,
-              MenuItemGUID: MenuItemGUID
+              MenuItemGUID: MenuItemGUID,
+              OldMenuItemGUID: OldMenuItemGUID
             });
 
             // console.log(rolePermissionModel.toJSON());

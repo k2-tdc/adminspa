@@ -32,6 +32,11 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderRolePicker(roleCollection);
           });
       });
+
+      self.listenTo(self.model, 'valid', function(validObj) {
+        // console.log('is valid', validObj);
+        utils.toggleInvalidMessage(self.el, validObj.field, false);
+      });
     },
 
     render: function() {
@@ -142,14 +147,13 @@ Hktdc.Views = Hktdc.Views || {};
           processPermissionCollection.fetch({
             beforeSend: utils.setAuthHeader,
             success: function(res) {
-              console.log('res: ', res);
               deferred.resolve(res);
             },
             error: function(collection, response) {
-                utils.apiErrorHandling(response, {
-                    // 401: doFetch,
-                    unknownMessage: dialogMessage.component.permissionList.error
-                });
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.permissionList.error
+              });
             }
           });
         };
@@ -170,11 +174,22 @@ Hktdc.Views = Hktdc.Views || {};
         processSelectView = new Hktdc.Views.ProcessSelect({
           collection: self.model.toJSON().processCollection,
           selectedProcess: self.model.toJSON().ProcessId,
+          attributes: { field: 'ProcessId', name: 'ProcessId' },
           disable: self.model.toJSON().disableProcessSelect,
           onSelected: function(process) {
             self.model.set({
               ProcessId: process.ProcessID,
               ProcessName: process.ProcessName
+            });
+
+            self.model.set({
+              ProcessId: process.ProcessID
+            }, {
+              validate: true,
+              field: 'ProcessId',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'ProcessId', invalidObject.message, true);
+              }
             });
           }
         });
@@ -187,14 +202,24 @@ Hktdc.Views = Hktdc.Views || {};
     renderPermissionSelect: function(permissionCollection) {
       try {
         var self = this;
-        console.log(permissionCollection);
         var permissionSelectView = new Hktdc.Views.RolePermissionSelect({
           collection: permissionCollection,
           selectedRolePermission: self.model.toJSON().MenuItemGUID,
+          attributes: { field: 'MenuItemGUID', name: 'MenuItemGUID' },
           onSelected: function(permission) {
             // console.log(self.model.toJSON().permissionCollection);
             // console.log(permission);
             self.model.set({ MenuItemGUID: permission.MenuItemGUID });
+
+            self.model.set({
+              MenuItemGUID: permission.MenuItemGUID
+            }, {
+              validate: true,
+              field: 'MenuItemGUID',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'MenuItemGUID', invalidObject.message, true);
+              }
+            });
             self.model.toJSON().permissionCollection.each(function(permissionModel) {
               permissionModel.set({
                 MenuItemGUID: permission.MenuItemGUID
@@ -215,6 +240,7 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log(roleCollection.toJSON());
         // console.log(self.model.toJSON().permissionCollection.toJSON());
         var rolePickerView = new Hktdc.Views.RolePicker({
+          field: 'permissionCollection',
           roles: _.map(roleCollection.toJSON(), function(role) {
             role.label = role.Role;
             return role;
@@ -245,14 +271,32 @@ Hktdc.Views = Hktdc.Views || {};
             }
             // self.model.toJSON().permissionCollection.set(new Hktdc.Models.RolePermission(role));
             // console.log(self.model.toJSON().permissionCollection.toJSON());
+            self.model.set({
+              permissionCollection: self.model.toJSON().permissionCollection
+            }, {
+              validate: true,
+              field: 'permissionCollection',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'permissionCollection', invalidObject.message, true);
+              }
+            });
           },
           onRemove: function(role) {
             // console.log(self.model.toJSON().permissionCollection.toJSON());
             // console.log(role);
             self.model.toJSON().permissionCollection.remove(role.UserRoleGUID);
-            if (role.RolePermissionGUID) {
-              self.model.toJSON().deletePermissionArray.push(role);
-            }
+            self.model.set({
+              permissionCollection: self.model.toJSON().permissionCollection
+            }, {
+              validate: true,
+              field: 'permissionCollection',
+              onInvalid: function(invalidObject) {
+                utils.toggleInvalidMessage(self.el, 'permissionCollection', invalidObject.message, true);
+              }
+            });
+            // if (role.RolePermissionGUID) {
+            //   self.model.toJSON().deletePermissionArray.push(role);
+            // }
             // console.log(self.model.toJSON().deletePermissionArray);
             // console.log(self.model.toJSON().permissionCollection.toJSON());
           }
@@ -292,7 +336,7 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var self = this;
       var data = _.map(permissions, function(permission) {
-        return _.pick(permission, 'RolePermissionGUID', 'MenuItemGUID', 'UserRoleGUID');
+        return _.pick(permission, 'RolePermissionGUID', 'MenuItemGUID', 'UserRoleGUID', 'OldMenuItemGUID');
       });
 
       var savePermissionModel = new Hktdc.Models.SaveRolePermission({ data: data });
@@ -360,10 +404,8 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     saveButtonHandler: function() {
-      // console.log('delete: ', this.model.toJSON().deletePermissionArray);
-      // console.log('perm col', this.model.toJSON().permissionCollection.toJSON());
       var self = this;
-      var deleteRolePermission = function() {
+      /* var deleteRolePermission = function() {
         var deletePermission = [];
         _.each(self.model.toJSON().deletePermissionArray, function(permission) {
           if (permission.RolePermissionGUID) {
@@ -375,34 +417,71 @@ Hktdc.Views = Hktdc.Views || {};
         } else {
           return true;
         }
-      };
+      }; */
 
-      Q.all([
-        deleteRolePermission(),
-        self.savePromise(self.model.toJSON().permissionCollection.toJSON())
-      ])
-        .then(function(results) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'saved!',
-            type: 'confirmation',
-            title: 'Confirmation'
-          });
+      this.validateField();
+      if (this.model.isValid()) {
+        Q.all([
+          // deleteRolePermission(),
+          self.savePromise(self.model.toJSON().permissionCollection.toJSON())
+        ])
+          .then(function(results) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'saved!',
+              type: 'confirmation',
+              title: 'Confirmation'
+            });
 
-          // Backbone.history.navigate('permission', {trigger: true});
-          window.history.back();
-        })
-        .fail(function(err) {
-          console.log(err);
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'error on save',
-            type: 'error',
-            title: dialogTitle.error
+            // Backbone.history.navigate('permission', {trigger: true});
+            window.history.back();
+          })
+          .fail(function(err) {
+            console.log(err);
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'error on save',
+              type: 'error',
+              title: dialogTitle.error
+            });
           });
+      } else {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          title: dialogTitle.warning,
+          message: dialogMessage.common.invalid.form
         });
-    }
+      }
+    },
 
-    // genSaveData: function() {
-    //
-    // }
+    validateField: function() {
+      var self = this;
+      this.model.set({
+        ProcessId: this.model.toJSON().ProcessId
+      }, {
+        validate: true,
+        field: 'ProcessId',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'ProcessId', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        MenuItemGUID: this.model.toJSON().MenuItemGUID
+      }, {
+        validate: true,
+        field: 'MenuItemGUID',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'MenuItemGUID', invalidObject.message, true);
+        }
+      });
+
+      this.model.set({
+        permissionCollection: this.model.toJSON().permissionCollection
+      }, {
+        validate: true,
+        field: 'permissionCollection',
+        onInvalid: function(invalidObject) {
+          utils.toggleInvalidMessage(self.el, 'permissionCollection', invalidObject.message, true);
+        }
+      });
+    }
   });
 })();
