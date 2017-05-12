@@ -12,17 +12,18 @@ Hktdc.Models = Hktdc.Models || {};
     },
 
     initialize: function() {
-      var self = this;
-      var today = new Date();
+      // var self = this;
+      // var today = new Date();
       this.isInvalid = {
         ExpiryDate: function() {
-          if (!self.attributes.ExpiryDate) {
-            return validateMessage.required;
-          } else if (moment(self.attributes.ExpiryDate, 'YYYY-MM-DD HH:mm').unix() < moment(today).unix()) {
-            return sprintf(validateMessage.gt, 'today');
-          } else {
-            return false;
-          }
+          // if (
+          //   self.attributes.ExpiryDate &&
+          //   moment(self.attributes.ExpiryDate, 'YYYY-MM-DD HH:mm').unix() < moment(today).unix()
+          // ) {
+          //   return sprintf(validateMessage.gt, 'today');
+          // } else {
+          return false;
+          // }
         }
       };
     },
