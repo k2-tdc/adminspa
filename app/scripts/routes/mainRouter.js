@@ -493,11 +493,13 @@ Hktdc.Routers = Hktdc.Routers || {};
           var onSuccess = function(isCreateRecord, data) {
             var ProcessId = '';
             var ProcessName = '';
+            var ProcessDisplayName = '';
             var MenuItemGUID = '';
             var rolePermissionCollection;
             if (data) {
               ProcessId = data.toJSON().ProcessId;
               ProcessName = data.toJSON().ProcessName;
+              ProcessDisplayName = data.toJSON().ProcessDisplayName;
               MenuItemGUID = data.toJSON().MenuItemGUID;
               var permissions = _.map(data.toJSON().Role, function(permission) {
                 return {
@@ -520,6 +522,7 @@ Hktdc.Routers = Hktdc.Routers || {};
               ProcessId: ProcessId,
               deletePermissionArray: [],
               ProcessName: ProcessName,
+              ProcessDisplayName: ProcessDisplayName,
               MenuItemGUID: MenuItemGUID
             });
 

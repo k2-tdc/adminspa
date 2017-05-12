@@ -105,22 +105,28 @@ Hktdc.Views = Hktdc.Views || {};
 
     loadProcess: function(processId) {
       var deferred = Q.defer();
-      var processCollection = new Hktdc.Collections.Process();
-      var doFetch = function() {
-        processCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            deferred.resolve(processCollection);
-          },
-          error: function(collection, response) {
-            utils.apiErrorHandling(response, {
-              // 401: doFetch,
-              unknownMessage: dialogMessage.component.processList.error
-            });
-          }
-        });
-      };
-      doFetch();
+      var processCollection;
+      if (this.model.toJSON().disableProcessSelect) {
+        processCollection = new Hktdc.Collections.Process();
+        deferred.resolve(processCollection);
+      } else {
+        processCollection = new Hktdc.Collections.Process();
+        var doFetch = function() {
+          processCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              deferred.resolve(processCollection);
+            },
+            error: function(collection, response) {
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.processList.error
+              });
+            }
+          });
+        };
+        doFetch();
+      }
       return deferred.promise;
     },
 
@@ -155,18 +161,26 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderProcessSelect: function() {
       var self = this;
-      var processSelectView = new Hktdc.Views.ProcessSelect({
-        collection: self.model.toJSON().processCollection,
-        selectedProcess: self.model.toJSON().ProcessId,
-        disable: self.model.toJSON().disableProcessSelect,
-        onSelected: function(process) {
-          self.model.set({
-            ProcessId: process.ProcessID,
-            ProcessName: process.ProcessName
-          });
-        }
-      });
-      processSelectView.render();
+      var processSelectView;
+      if (self.model.toJSON().disableProcessSelect) {
+        processSelectView = {
+          el: '<span class="form-data">' + self.model.toJSON().ProcessDisplayName + '</span>'
+        };
+      } else {
+        processSelectView = new Hktdc.Views.ProcessSelect({
+          collection: self.model.toJSON().processCollection,
+          selectedProcess: self.model.toJSON().ProcessId,
+          disable: self.model.toJSON().disableProcessSelect,
+          onSelected: function(process) {
+            self.model.set({
+              ProcessId: process.ProcessID,
+              ProcessName: process.ProcessName
+            });
+          }
+        });
+        processSelectView.render();
+      }
+
       $('.processContainer', self.el).html(processSelectView.el);
     },
 
