@@ -336,10 +336,10 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var self = this;
       var data = _.map(permissions, function(permission) {
-        return _.pick(permission, 'RolePermissionGUID', 'MenuItemGUID', 'UserRoleGUID', 'OldMenuItemGUID');
+        return _.pick(permission, 'RolePermissionGUID', 'MenuItemGUID', 'UserRoleGUID');
       });
 
-      var savePermissionModel = new Hktdc.Models.SaveRolePermission({ data: data });
+      var savePermissionModel = new Hktdc.Models.SaveRolePermission({ data: data, OldMenuItemGUID: self.model.toJSON().OldMenuItemGUID });
       savePermissionModel.on('invalid', function(model, err) {
         Hktdc.Dispatcher.trigger('openAlert', {
           title: dialogTitle.error,

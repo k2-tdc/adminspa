@@ -507,7 +507,6 @@ Hktdc.Routers = Hktdc.Routers || {};
                 return {
                   RolePermissionGUID: permission.RolePermissionGUID,
                   MenuItemGUID: MenuItemGUID,
-                  OldMenuItemGUID: OldMenuItemGUID,
                   UserRoleGUID: permission.UserRoleGUID
                 };
               });

@@ -46,7 +46,7 @@ Hktdc.Views = Hktdc.Views || {};
       xhr.responseType = 'blob';
       xhr.onreadystatechange = function() {
         var anchorLink;
-        if (xhr.readyState === 4){
+        if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             if (typeof window.navigator.msSaveBlob !== 'undefined') {
               var blob;
