@@ -58,12 +58,12 @@ Hktdc.Models = Hktdc.Models || {};
             : false;
         },
         Grade1: function() {
-          return (!self.attributes.Grade1 || String(self.attributes.Grade1) === '0' || self.attributes.Grade1 !== 'undefined')
+          return (!self.attributes.Grade1 || String(self.attributes.Grade1) === '0' || typeof self.attributes.Grade1 === 'undefined')
             ? validateMessage.required
             : false;
         },
         Grade2: function() {
-          return (!self.attributes.Grade2 || String(self.attributes.Grade2) === '0' || self.attributes.Grade2 !== 'undefined')
+          return (!self.attributes.Grade2 || String(self.attributes.Grade2) === '0' || typeof self.attributes.Grade2 === 'undefined')
             ? validateMessage.required
             : false;
         },
