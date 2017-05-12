@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils, JST, Q, $, _ */
+/* global Hktdc, Backbone, utils, JST, Q, $, _, dialogMessage, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -46,7 +46,7 @@ Hktdc.Views = Hktdc.Views || {};
             silent: true
           });
           self.renderProcessSelect();
-          console.log(self.model.toJSON().ProcessId);
+          // console.log(self.model.toJSON().ProcessId);
           return Q.all([
             self.loadProcessPermission(self.model.toJSON().ProcessName),
             self.loadRole(self.model.toJSON().ProcessName)
@@ -56,7 +56,7 @@ Hktdc.Views = Hktdc.Views || {};
         .then(function(results) {
           var permissionCollection = results[0];
           var roleCollection = results[1];
-          console.log('render: ', permissionCollection.toJSON());
+          // console.log('render: ', permissionCollection.toJSON());
           self.renderPermissionSelect(permissionCollection);
           self.renderRolePicker(roleCollection);
           // if (self.model.toJSON().ProcessId) {
@@ -90,10 +90,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(roleCollection);
             },
             error: function(collection, response) {
-                utils.apiErrorHandling(response, {
-                    // 401: doFetch,
-                    unknownMessage: dialogMessage.component.roleList.error
-                });
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.roleList.error
+              });
             }
           });
         };
@@ -113,10 +113,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.component.processList.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.processList.error
+            });
           }
         });
       };
@@ -284,9 +284,8 @@ Hktdc.Views = Hktdc.Views || {};
       var savePermissionModel = new Hktdc.Models.SaveRolePermission({ data: data });
       savePermissionModel.on('invalid', function(model, err) {
         Hktdc.Dispatcher.trigger('openAlert', {
-          message: err,
-          type: 'error',
-          title: dialogTitle.error
+          title: dialogTitle.error,
+          message: err
         });
       });
 
@@ -298,10 +297,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve();
           },
           error: function(model, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.rolePermission.save.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.rolePermission.save.error
+            });
           }
         });
       };
@@ -332,7 +331,8 @@ Hktdc.Views = Hktdc.Views || {};
               });
 
               Hktdc.Dispatcher.trigger('closeConfirm');
-              Backbone.history.navigate('permission', {trigger: true});
+              // Backbone.history.navigate('permission', {trigger: true});
+              window.history.back();
             })
             .fail(function() {
               Hktdc.Dispatcher.trigger('openAlert', {
@@ -374,7 +374,8 @@ Hktdc.Views = Hktdc.Views || {};
             title: 'Confirmation'
           });
 
-          Backbone.history.navigate('permission', {trigger: true});
+          // Backbone.history.navigate('permission', {trigger: true});
+          window.history.back();
         })
         .fail(function(err) {
           console.log(err);
