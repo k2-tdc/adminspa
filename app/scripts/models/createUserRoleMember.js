@@ -19,13 +19,13 @@ Hktdc.Models = Hktdc.Models || {};
           ) ? false : sprintf(validateMessage.eitherRequired, 'User/Query/Department');
         },
         ExpiryDate: function() {
-          if (!self.attributes.ExpiryDate) {
-            return validateMessage.required;
-          } else if (moment(self.attributes.ExpiryDate, 'YYYY-MM-DD HH:mm').unix() < moment(today).unix()) {
-            return sprintf(validateMessage.gt, 'today');
-          } else {
-            return false;
-          }
+          // if (!self.attributes.ExpiryDate) {
+          //   return validateMessage.required;
+          // } else if (moment(self.attributes.ExpiryDate, 'YYYY-MM-DD HH:mm').unix() < moment(today).unix()) {
+          //   return sprintf(validateMessage.gt, 'today');
+          // } else {
+          return false;
+          // }
         }
       };
     },

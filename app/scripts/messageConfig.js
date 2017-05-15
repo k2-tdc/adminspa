@@ -34,7 +34,7 @@ var dialogMessage = {
       error: 'Error on getting email template detail'
     },
     save: {
-      success: 'Delegation is saved.',
+      success: 'Email Template is saved.',
       error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s',
       fail: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
@@ -55,7 +55,7 @@ var dialogMessage = {
       error: 'Error on getting email profile detail'
     },
     save: {
-      success: 'Delegation is saved.',
+      success: 'Email Profile is saved.',
       error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s',
       fail: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
@@ -135,7 +135,7 @@ var dialogMessage = {
       fail: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     },
     save: {
-      success: 'Delegation is saved.',
+      success: 'Worker rule is saved.',
       error: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s',
       fail: 'System failure. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
     }
@@ -195,10 +195,10 @@ var dialogMessage = {
   },
   sharing: {
     loadDetail: {
-      error: 'Error on getting delegation detail'
+      error: 'Error on getting sharing detail'
     },
     loadList: {
-      error: 'Error on getting delegation list'
+      error: 'Error on getting sharing list'
     },
     save: {
       success: 'Sharing is saved.',
