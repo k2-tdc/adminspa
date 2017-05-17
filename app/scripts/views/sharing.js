@@ -170,7 +170,6 @@ Hktdc.Views = Hktdc.Views || {};
     loadPermission: function() {
       var deferred = Q.defer();
       var sharingPermissionCollection = new Hktdc.Collections.SharingPermission();
-      sharingPermissionCollection.url = sharingPermissionCollection.url('Sharing');
       var doFetch = function() {
         sharingPermissionCollection.fetch({
           beforeSend: utils.setAuthHeader,

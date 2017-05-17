@@ -183,7 +183,6 @@ Hktdc.Views = Hktdc.Views || {};
     loadAction: function() {
       var deferred = Q.defer();
       var delegationActionCollection = new Hktdc.Collections.DelegationAction();
-      delegationActionCollection.url = delegationActionCollection.url('Delegation');
       var doFetch = function() {
         delegationActionCollection.fetch({
           beforeSend: utils.setAuthHeader,
