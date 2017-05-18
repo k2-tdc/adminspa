@@ -309,10 +309,11 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getAjaxURL: function() {
-      var queryParams = _.omit(this.model.toJSON(), 'profileUserCollection', 'mode', 'showSearch', '');
-      console.log(queryParams);
-      var queryString = utils.getQueryString(queryParams, true);
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/email-profiles' + queryString;
+      // var queryParams = _.omit(this.model.toJSON(), 'profileUserCollection', 'mode', 'showSearch', '');
+      var profile = (this.model.toJSON().profile && String(this.model.toJSON().profile) !== '0')
+        ? this.model.toJSON().profile
+        : Hktdc.Config.userID;
+      return Hktdc.Config.apiURL + '/users/' + profile + '/email-profiles';
     }
   });
 })();
