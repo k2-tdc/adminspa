@@ -1395,7 +1395,7 @@ Hktdc.Views = Hktdc.Views || {};
           ? moment(rawData.DateTo, 'YYYY-MM-DD').format('YYYYMMDD')
           : '',
         Criteria: rawData.Criteria || '',
-        Remark: rawData.Remark
+        Remark: rawData.Remark || ''
       };
       saveRuleMemberModel.set(data);
 
