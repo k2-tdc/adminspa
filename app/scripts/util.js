@@ -116,6 +116,7 @@ window.utils = {
       //   handler.error(errorObject);
       // });
       window.location.href = oauthUrl;
+      // window.location.href = Hktdc.Config.logoutURL;
     } else if (response.status === 403) {
       console.error('403 error.');
       // handler.error(errorObject);
