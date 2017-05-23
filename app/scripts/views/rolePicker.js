@@ -20,13 +20,10 @@ Hktdc.Views = Hktdc.Views || {};
       self.$el.html(self.template({ field: self.field }));
       try {
         var pickedRolesCollection = new Hktdc.Collections.RolePicker(this.selectedRole);
-        // console.log(this.selectedRole);
-        // console.log(pickedRolesCollection.toJSON());
         var $input = $('.fullRolePicker', self.el);
         $input.autocomplete({
           source: self.roles,
-          delay: 500,
-          minLength: 2,
+          minLength: 0,
           select: function(ev, ui) {
             if (!pickedRolesCollection.get(ui.item.UserRoleGUID)) {
               pickedRolesCollection.add([ui.item]);
