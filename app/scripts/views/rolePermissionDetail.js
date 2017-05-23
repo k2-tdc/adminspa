@@ -76,7 +76,7 @@ Hktdc.Views = Hktdc.Views || {};
           Hktdc.Dispatcher.trigger('openAlert', {
             message: err,
             type: 'error',
-            title: 'Runtime Error'
+            title: dialogTitle.error
           });
         });
     },
@@ -370,7 +370,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var deletePermission = [];
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.rolePermission.delete.confirm,
         onConfirm: function() {
           self.model.toJSON().permissionCollection.each(function(permission) {
@@ -385,7 +385,7 @@ Hktdc.Views = Hktdc.Views || {};
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: 'deleted',
                 type: 'confirmation',
-                title: 'Confirmation'
+                title: dialogTitle.confirmation
               });
 
               Hktdc.Dispatcher.trigger('closeConfirm');
@@ -429,7 +429,7 @@ Hktdc.Views = Hktdc.Views || {};
             Hktdc.Dispatcher.trigger('openAlert', {
               message: 'saved!',
               type: 'confirmation',
-              title: 'Confirmation'
+              title: dialogTitle.confirmation
             });
 
             // Backbone.history.navigate('permission', {trigger: true});

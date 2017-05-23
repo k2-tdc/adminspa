@@ -64,7 +64,7 @@ Hktdc.Views = Hktdc.Views || {};
           Hktdc.Dispatcher.trigger('openAlert', {
             message: err,
             type: 'error',
-            title: 'Runtime Error'
+            title: dialogTitle.error
           });
         });
 
@@ -333,7 +333,7 @@ Hktdc.Views = Hktdc.Views || {};
           .then(function(response) {
             Hktdc.Dispatcher.trigger('openAlert', {
               type: 'success',
-              title: 'Information',
+              title: dialogTitle.information,
               message: dialogMessage.workerRule.save.success
             });
             if (self.model.toJSON().saveType === 'POST' && response.Msg) {
@@ -412,7 +412,7 @@ Hktdc.Views = Hktdc.Views || {};
     deleteRuleButtonHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.workerRule.delete.confirm,
         onConfirm: function() {
           // console.log(self.model.toJSON().selectedWorker);
@@ -428,7 +428,7 @@ Hktdc.Views = Hktdc.Views || {};
                   Hktdc.Dispatcher.trigger('openAlert', {
                     message: 'Deleted',
                     type: 'confirmation',
-                    title: 'Confirmation'
+                    title: dialogTitle.confirmation
                   });
 
                   Backbone.history.navigate('worker-rule', {trigger: true});
@@ -514,12 +514,12 @@ Hktdc.Views = Hktdc.Views || {};
         Hktdc.Dispatcher.trigger('openAlert', {
           message: 'Please select worker rule setting',
           type: 'error',
-          title: 'warning'
+          title: dialogTitle.warning
         });
         return false;
       }
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.workerRuleMember.batchDelete.confirm,
         onConfirm: function() {
           Q.all(_.map(self.model.toJSON().selectedMember, function(settingId) {
@@ -530,7 +530,7 @@ Hktdc.Views = Hktdc.Views || {};
             Hktdc.Dispatcher.trigger('openAlert', {
               message: 'deleted',
               type: 'confirmation',
-              title: 'confirmation'
+              title: dialogTitle.confirmation
             });
             self.doSearch();
           })

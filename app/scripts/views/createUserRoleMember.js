@@ -267,7 +267,7 @@ Hktdc.Views = Hktdc.Views || {};
           .then(function(response) {
             Hktdc.Dispatcher.trigger('openAlert', {
               type: 'success',
-              title: 'Information',
+              title: dialogTitle.information,
               message: dialogMessage.userRoleMember.save.success
             });
             Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
@@ -284,7 +284,7 @@ Hktdc.Views = Hktdc.Views || {};
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          title: 'Warning',
+          title: dialogTitle.warning,
           message: dialogMessage.common.invalid.form
         });
       }

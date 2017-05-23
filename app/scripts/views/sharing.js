@@ -506,7 +506,7 @@ Hktdc.Views = Hktdc.Views || {};
         this.doSaveSharing()
           .then(function(response) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              title: 'Information',
+              title: dialogTitle.information,
               message: dialogMessage.sharing.save.success
             });
             window.history.back();
@@ -593,13 +593,13 @@ Hktdc.Views = Hktdc.Views || {};
     deleteSharing: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.sharing.delete.confirm,
         onConfirm: function() {
           self.doDeleteSharing()
             .then(function() {
               Hktdc.Dispatcher.trigger('openAlert', {
-                title: 'Information',
+                title: dialogTitle.information,
                 message: dialogMessage.delegation.save.success
               });
               Hktdc.Dispatcher.trigger('closeConfirm');

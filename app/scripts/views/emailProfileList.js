@@ -68,7 +68,7 @@ Hktdc.Views = Hktdc.Views || {};
               msg: err.error || 'unknown'
             }),
             type: 'error',
-            title: 'Runtime Error'
+            title: dialogTitle.error
           });
         });
 

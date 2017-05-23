@@ -48,7 +48,7 @@ Hktdc.Views = Hktdc.Views || {};
           Hktdc.Dispatcher.trigger('openAlert', {
             message: err,
             type: 'error',
-            title: 'Runtime Error'
+            title: dialogTitle.error
           });
         });
     },
@@ -308,7 +308,7 @@ Hktdc.Views = Hktdc.Views || {};
         return deferred.promise;
       };
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.sharing.batchDelete.confirm,
         onConfirm: function() {
           Q.all(_.map(self.model.toJSON().selectedSharing, function(sharingId) {
@@ -319,7 +319,7 @@ Hktdc.Views = Hktdc.Views || {};
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: 'deleted',
                 type: 'confirmation',
-                title: 'confirmation'
+                title: dialogTitle.confirmation
               });
               self.doSearch();
             })

@@ -1215,7 +1215,7 @@ Hktdc.Views = Hktdc.Views || {};
           })
           .then(function() {
             Hktdc.Dispatcher.trigger('openAlert', {
-              title: 'Information',
+              title: dialogTitle.information,
               message: dialogMessage.workerRuleMember.save.success
             });
 
@@ -1332,7 +1332,7 @@ Hktdc.Views = Hktdc.Views || {};
     deleteButtonHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.workerRuleMember.delete.confirm,
         onConfirm: function() {
           var delMemberModel = new Hktdc.Models.DeleteWorkerRuleMember();
@@ -1345,7 +1345,7 @@ Hktdc.Views = Hktdc.Views || {};
                 Hktdc.Dispatcher.trigger('closeConfirm');
                 Hktdc.Dispatcher.trigger('openAlert', {
                   message: dialogMessage.workerRuleMember.delete.success,
-                  title: 'Information'
+                  title: dialogTitle.information
                 });
                 Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
               },

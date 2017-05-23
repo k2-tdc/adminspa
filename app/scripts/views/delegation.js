@@ -516,7 +516,7 @@ Hktdc.Views = Hktdc.Views || {};
         this.doSaveDelegation()
           .then(function(response) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              title: 'Information',
+              title: dialogTitle.information,
               message: dialogMessage.delegation.save.success
             });
             window.history.back();
@@ -531,7 +531,7 @@ Hktdc.Views = Hktdc.Views || {};
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          title: 'Alert',
+          title: dialogTitle.error,
           message: dialogMessage.common.invalid.form
         });
       }
@@ -657,13 +657,13 @@ Hktdc.Views = Hktdc.Views || {};
     deleteDelegation: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.delegation.delete.confirm,
         onConfirm: function() {
           self.doDeleteDelegation(self.model.toJSON().DelegationId)
             .then(function() {
               Hktdc.Dispatcher.trigger('openAlert', {
-                title: 'Information',
+                title: dialogTitle.information,
                 message: dialogMessage.delegation.delete.success
               });
               Hktdc.Dispatcher.trigger('closeConfirm');

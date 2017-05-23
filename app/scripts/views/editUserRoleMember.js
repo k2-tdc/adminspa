@@ -103,7 +103,7 @@ Hktdc.Views = Hktdc.Views || {};
     deleteButtonHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.userRoleMember.delete.confirm,
         onConfirm: function() {
           var rawData = self.model.toJSON();
@@ -117,7 +117,7 @@ Hktdc.Views = Hktdc.Views || {};
               success: function() {
                 Hktdc.Dispatcher.trigger('closeConfirm');
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  title: 'Information',
+                  title: dialogTitle.information,
                   message: dialogMessage.userRoleMember.delete.success
                 });
                 Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
@@ -143,7 +143,7 @@ Hktdc.Views = Hktdc.Views || {};
           .then(function(response) {
             Hktdc.Dispatcher.trigger('openAlert', {
               type: 'success',
-              title: 'Information',
+              title: dialogTitle.information,
               message: dialogMessage.userRoleMember.save.success
             });
             Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
@@ -161,7 +161,7 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
           type: 'error',
-          title: 'Alert',
+          title: dialogTitle.error,
           message: dialogMessage.commom.invalid.form
         });
       }

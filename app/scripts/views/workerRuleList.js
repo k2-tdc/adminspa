@@ -47,7 +47,7 @@ Hktdc.Views = Hktdc.Views || {};
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: err,
                 type: 'error',
-                title: 'Runtime Error'
+                title: dialogTitle.error
               });
             });
         }}
@@ -183,7 +183,7 @@ Hktdc.Views = Hktdc.Views || {};
     deleteButtonHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: 'Are you sure to delete?',
         onConfirm: function() {
           // console.log(self.model.toJSON().selectedWorker);
@@ -199,7 +199,7 @@ Hktdc.Views = Hktdc.Views || {};
                 Hktdc.Dispatcher.trigger('openAlert', {
                   message: 'deleted',
                   type: 'confirmation',
-                  title: 'Confirmation'
+                  title: dialogTitle.confirmation
                 });
 
                 Backbone.history.navigate('userrole', {trigger: true});

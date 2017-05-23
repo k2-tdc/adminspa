@@ -350,7 +350,7 @@ Hktdc.Views = Hktdc.Views || {};
     batchDeleteTemplate: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.emailTemplate.batchDelete.confirm,
         onConfirm: function() {
           self.deleteTemplate(self.model.toJSON().selectedTemplate)

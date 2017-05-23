@@ -285,7 +285,7 @@ Hktdc.Views = Hktdc.Views || {};
         return deferred.promise;
       };
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.delegation.batchDelete.confirm,
         onConfirm: function() {
           Q.all(_.map(self.model.toJSON().selectedDelegation, function(sharingId) {
@@ -295,7 +295,7 @@ Hktdc.Views = Hktdc.Views || {};
             Hktdc.Dispatcher.trigger('closeConfirm');
             Hktdc.Dispatcher.trigger('openAlert', {
               message: dialogMessage.delegation.batchDelete.success,
-              title: 'Information'
+              title: dialogTitle.information
             });
             self.doSearch();
           })

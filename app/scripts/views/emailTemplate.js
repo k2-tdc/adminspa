@@ -60,7 +60,7 @@ Hktdc.Views = Hktdc.Views || {};
           Hktdc.Dispatcher.trigger('openAlert', {
             message: err,
             type: 'error',
-            title: 'Runtime Error'
+            title: dialogTitle.error
           });
         });
     },
@@ -197,7 +197,7 @@ Hktdc.Views = Hktdc.Views || {};
         this.doSaveTemplate()
           .then(function(response) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              title: 'Information',
+              title: dialogTitle.information,
               message: dialogMessage.emailTemplate.save.success
             });
             window.history.back();
