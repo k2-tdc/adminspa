@@ -318,18 +318,19 @@ window.Hktdc = {
     };
 
     var originalSave = Backbone.Model.prototype.save;
-    Backbone.Model.prototype.save = function(options) {
+    Backbone.Model.prototype.save = function(attrs, options) {
       var self = this;
       if (env === 'uat' || env === 'chsw') {
+        if (!options) { options = {}; }
         return utils.getAccessToken(function() {
-          originalSave.call(self, options);
+          originalSave.call(self, attrs, options);
         }, function() {
           console.error('can\'t get access token fro API gateway, redirect to login page');
           var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
           window.location.href = oauthUrl;
         });
       } else {
-        return originalSave.call(this, options);
+        return originalSave.call(this, attrs, options);
       }
     };
 
