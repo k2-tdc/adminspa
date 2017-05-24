@@ -30,10 +30,16 @@ Hktdc.Views = Hktdc.Views || {};
             }
             self.onSelect(ui.item);
           },
-
           close: function(ev, ui) {
             $(ev.target).val('');
           }
+        });
+
+        // $input.on('focus', function() {
+        //   $input.autocomplete('search', '');
+        // });
+        $input.on('click', function() {
+          $input.autocomplete('search', $input.val());
         });
 
         var pickerListView = new Hktdc.Views.RolePickerList({
