@@ -58,9 +58,11 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'Runtime Error'
+            title: dialogTitle.error,
+            message: sprintf(dialogMessage.common.error.script, {
+              code: 'unknown',
+              msg: dialogMessage.component.processList.error
+            })
           });
         });
     },
@@ -97,10 +99,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(stpeCollection);
           },
           error: function(collection, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.component.stepList.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.stepList.error
+            });
           }
         });
       };
@@ -113,7 +115,10 @@ Hktdc.Views = Hktdc.Views || {};
       var processSelectView = new Hktdc.Views.ProcessSelect({
         collection: self.model.toJSON().processCollection,
         selectedProcess: self.model.toJSON().ProcessId,
-        attributes: { field: 'ProcessId', name: 'ProcessId' },
+        attributes: {
+          field: 'ProcessId',
+          name: 'ProcessId'
+        },
         onSelected: function(process) {
           self.model.set({
             ProcessId: process.ProcessID,
@@ -147,10 +152,15 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var stepSelectView = new Hktdc.Views.StepSelect({
         collection: self.model.toJSON().stepCollection,
-        attributes: { field: 'StepId', name: 'StepId' },
+        attributes: {
+          field: 'StepId',
+          name: 'StepId'
+        },
         selectedStep: self.model.toJSON().StepId,
         onSelected: function(stepId) {
-          self.model.set({StepId: stepId});
+          self.model.set({
+            StepId: stepId
+          });
           self.model.set({
             StepId: stepId
           }, {
@@ -197,18 +207,19 @@ Hktdc.Views = Hktdc.Views || {};
         this.doSaveTemplate()
           .then(function(response) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              title: 'Information',
+              title: dialogTitle.information,
               message: dialogMessage.emailTemplate.save.success
             });
             window.history.back();
             // Backbone.history.navigate('emailtemplate', {trigger: true});
           })
           .catch(function(err) {
+            console.error(err);
             Hktdc.Dispatcher.trigger('openAlert', {
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.emailTemplate.save.fail, {
-                code: err.request_id || 'unknown',
-                msg: err.error || 'unknown'
+              message: sprintf(dialogMessage.common.error.script, {
+                code: 'unknown',
+                msg: dialogMessage.emailTemplate.save.error
               })
             });
           });
@@ -254,10 +265,10 @@ Hktdc.Views = Hktdc.Views || {};
             }
           },
           error: function(model, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.emailTemplate.save.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.emailTemplate.save.error
+            });
           }
         });
       };
@@ -268,7 +279,7 @@ Hktdc.Views = Hktdc.Views || {};
     deleteButtonHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.emailTemplate.delete.confirm,
         onConfirm: function() {
           self.doDeleteTemplate()
@@ -276,27 +287,29 @@ Hktdc.Views = Hktdc.Views || {};
               Hktdc.Dispatcher.trigger('closeConfirm');
               if (String(response.Success) === '1') {
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  type: 'success',
-                  title: 'confirmation',
-                  message: 'Deleted record.'
+                  title: dialogTitle.information,
+                  message: dialogMessage.emailTemplate.delete.success
                 });
-
                 window.history.back();
               } else {
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  type: 'error',
                   title: dialogTitle.error,
-                  message: response.Msg
+                  message: sprintf(dialogMessage.common.error.system, {
+                    code: 'unknown',
+                    msg: response.error || response.msg || response.Msg || dialogMessage.emailTemplate.delete.fail
+                  })
                 });
               }
             })
             .catch(function(err) {
-              Hktdc.Dispatcher.trigger('openAlert', {
-                type: 'error',
-                title: dialogTitle.error,
-                message: 'delete failed'
-              });
               console.error(err);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                title: dialogTitle.error,
+                message: sprintf(dialogMessage.common.error.script, {
+                  code: 'unknown',
+                  msg: dialogMessage.emailTemplate.delete.error
+                })
+              });
             });
         }
       });
@@ -304,28 +317,32 @@ Hktdc.Views = Hktdc.Views || {};
 
     doDeleteTemplate: function() {
       var deferred = Q.defer();
-      var data = [{ TemplateId: this.model.toJSON().TemplateId }];
-      var DeleteTemplateModel = new Hktdc.Models.DeleteEmailTemplate({data: data});
-        var doSave = function() {
-            DeleteTemplateModel.save({}, {
-                beforeSend: utils.setAuthHeader,
-                type: 'POST',
-                success: function(mymodel, response) {
-                    if (response.Success === '1' || response.Success === 1) {
-                        deferred.resolve(response);
-                    } else {
-                        deferred.reject(response.Msg);
-                    }
-                },
-                error: function(model, response) {
-                    utils.apiErrorHandling(response, {
-                        // 401: doFetch,
-                        unknownMessage: dialogMessage.emailTemplate.delete.error
-                    });
-                }
+      var data = [{
+        TemplateId: this.model.toJSON().TemplateId
+      }];
+      var DeleteTemplateModel = new Hktdc.Models.DeleteEmailTemplate({
+        data: data
+      });
+      var doSave = function() {
+        DeleteTemplateModel.save({}, {
+          beforeSend: utils.setAuthHeader,
+          type: 'POST',
+          success: function(mymodel, response) {
+            if (response.Success === '1' || response.Success === 1) {
+              deferred.resolve(response);
+            } else {
+              deferred.reject(response.Msg);
+            }
+          },
+          error: function(model, response) {
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.emailTemplate.delete.error
             });
-        };
-        doSave();
+          }
+        });
+      };
+      doSave();
       return deferred.promise;
     },
 

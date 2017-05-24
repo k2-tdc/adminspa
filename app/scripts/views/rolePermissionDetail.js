@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils, JST, Q, $, _, dialogMessage, dialogTitle */
+/* global Hktdc, Backbone, utils, JST, Q, $, _, dialogMessage, dialogTitle, sprintf */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -74,9 +74,11 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'Runtime Error'
+            title: dialogTitle.error,
+            message: sprintf(dialogMessage.common.error.script, {
+              code: 'unknown',
+              msg: dialogMessage.rolePermission.save.error
+            })
           });
         });
     },
@@ -370,7 +372,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var deletePermission = [];
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.rolePermission.delete.confirm,
         onConfirm: function() {
           self.model.toJSON().permissionCollection.each(function(permission) {
@@ -383,9 +385,8 @@ Hktdc.Views = Hktdc.Views || {};
           return self.deletePromise(_.pluck(deletePermission, 'RolePermissionGUID'))
             .then(function(results) {
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'deleted',
-                type: 'confirmation',
-                title: 'Confirmation'
+                title: dialogTitle.confirmation,
+                message: dialogMessage.rolePermission.delete.success
               });
 
               Hktdc.Dispatcher.trigger('closeConfirm');
@@ -394,9 +395,11 @@ Hktdc.Views = Hktdc.Views || {};
             })
             .fail(function() {
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'error on delete',
-                type: 'error',
-                title: dialogTitle.error
+                title: dialogTitle.error,
+                message: sprintf(dialogMessage.common.error.script, {
+                  code: 'unknown',
+                  msg: dialogMessage.rolePermission.delete.error
+                })
               });
             });
         }
@@ -427,9 +430,8 @@ Hktdc.Views = Hktdc.Views || {};
         ])
           .then(function(results) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'saved!',
-              type: 'confirmation',
-              title: 'Confirmation'
+              title: dialogTitle.confirmation,
+              message: dialogMessage.rolePermission.save.success
             });
 
             // Backbone.history.navigate('permission', {trigger: true});
@@ -438,9 +440,11 @@ Hktdc.Views = Hktdc.Views || {};
           .fail(function(err) {
             console.log(err);
             Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'error on save',
-              type: 'error',
-              title: dialogTitle.error
+              title: dialogTitle.error,
+              message: sprintf(dialogMessage.common.error.script, {
+                code: 'unknown',
+                msg: dialogMessage.rolePermission.save.error
+              })
             });
           });
       } else {

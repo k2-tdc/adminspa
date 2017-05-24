@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, Q, utils, _ */
+/* global Hktdc, Backbone, JST, $, Q, utils, _, dialogTitle, sprintf, dialogMessage, moment */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -46,9 +46,11 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'Runtime Error'
+            title: dialogTitle.error,
+            message: sprintf(dialogMessage.common.error.script, {
+              code: 'unknown',
+              msg: dialogMessage.component.general.error
+            })
           });
         });
     },
@@ -63,10 +65,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(userCollection);
           },
           error: function(collection, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.component.fullUserList.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.fullUserList.error
+            });
           }
         });
       };
@@ -239,10 +241,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve();
           },
           error: function(model, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.sharing.delete.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.sharing.delete.error
+            });
           }
         });
       };
@@ -274,8 +276,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     getAjaxURL: function() {
       var queryParams = _.pick(this.model.toJSON(), 'UserId');
-      var queryString = utils.getQueryString(queryParams, true);
-      var sharingUser = (queryParams.UserId && queryParams.UserId !== "0") ? queryParams.UserId : Hktdc.Config.userID;
+      // var queryString = utils.getQueryString(queryParams, true);
+      var sharingUser = (queryParams.UserId && queryParams.UserId !== '0') ? queryParams.UserId : Hktdc.Config.userID;
       return Hktdc.Config.apiURL + '/users/' + sharingUser + '/sharing-list';
     },
 
@@ -297,10 +299,10 @@ Hktdc.Views = Hktdc.Views || {};
               }
             },
             error: function(model, response) {
-                utils.apiErrorHandling(response, {
-                    // 401: doFetch,
-                    unknownMessage: dialogMessage.sharing.delete.error
-                });
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.sharing.delete.error
+              });
             }
           });
         };
@@ -308,7 +310,7 @@ Hktdc.Views = Hktdc.Views || {};
         return deferred.promise;
       };
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.sharing.batchDelete.confirm,
         onConfirm: function() {
           Q.all(_.map(self.model.toJSON().selectedSharing, function(sharingId) {
@@ -317,17 +319,19 @@ Hktdc.Views = Hktdc.Views || {};
             .then(function() {
               Hktdc.Dispatcher.trigger('closeConfirm');
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'deleted',
-                type: 'confirmation',
-                title: 'confirmation'
+                title: dialogTitle.confirmation,
+                message: dialogMessage.sharing.batchDelete.success
               });
               self.doSearch();
             })
             .fail(function(err) {
+              console.error(err);
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: err,
-                type: 'error',
-                title: 'error on deleting sharing'
+                title: dialogTitle.confirmation,
+                message: sprintf(dialogMessage.common.error.script, {
+                  code: 'unknown',
+                  msg: dialogMessage.sharing.batchDelete.error
+                })
               });
             });
         }

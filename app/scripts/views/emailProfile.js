@@ -273,7 +273,7 @@ Hktdc.Views = Hktdc.Views || {};
         this.doSaveProfile()
         .then(function(response) {
           Hktdc.Dispatcher.trigger('openAlert', {
-            title: 'Information',
+            title: dialogTitle.information,
             message: dialogMessage.emailProfile.save.success
           });
           window.history.back();
@@ -284,16 +284,15 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           Hktdc.Dispatcher.trigger('openAlert', {
             title: dialogTitle.error,
-            message: sprintf(dialogMessage.emailProfile.save.fail, {
+            message: sprintf(dialogMessage.common.error.script, {
               code: err.request_id || 'unknown',
-              msg: err.error || 'unknown'
+              msg: err.error || dialogMessage.emailProfile.save.error
             })
           });
         });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          type: 'error',
-          title: 'Alert',
+          title: dialogTitle.error,
           message: dialogMessage.common.invalid.form
         });
       }
@@ -366,13 +365,13 @@ Hktdc.Views = Hktdc.Views || {};
     deleteProfile: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.emailProfile.delete.confirm,
         onConfirm: function() {
           self.doDeleteProfile(self.model.toJSON().ProfileId)
             .then(function() {
               Hktdc.Dispatcher.trigger('openAlert', {
-                title: 'Information',
+                title: dialogTitle.information,
                 message: dialogMessage.emailProfile.delete.success
               });
               Hktdc.Dispatcher.trigger('closeConfirm');
@@ -383,9 +382,9 @@ Hktdc.Views = Hktdc.Views || {};
             .catch(function(err) {
               Hktdc.Dispatcher.trigger('openAlert', {
                 title: dialogTitle.error,
-                message: sprintf(dialogMessage.emailProfile.delete.fail, {
+                message: sprintf(dialogMessage.common.error.script, {
                   code: err.request_id || 'unknown',
-                  msg: err.error || 'unknown'
+                  msg: dialogMessage.emailProfile.delete.error
                 })
               });
             });

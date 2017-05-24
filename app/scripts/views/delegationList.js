@@ -47,9 +47,9 @@ Hktdc.Views = Hktdc.Views || {};
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
             title: dialogTitle.error,
-            message: sprintf(dialogMessage.common.error.system, {
+            message: sprintf(dialogMessage.common.error.script, {
               code: err.request_id || 'unknown',
-              msg: err.error || 'unknown'
+              msg: dialogMessage.component.general.error
             })
           });
         });
@@ -285,7 +285,7 @@ Hktdc.Views = Hktdc.Views || {};
         return deferred.promise;
       };
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.delegation.batchDelete.confirm,
         onConfirm: function() {
           Q.all(_.map(self.model.toJSON().selectedDelegation, function(sharingId) {
@@ -295,17 +295,17 @@ Hktdc.Views = Hktdc.Views || {};
             Hktdc.Dispatcher.trigger('closeConfirm');
             Hktdc.Dispatcher.trigger('openAlert', {
               message: dialogMessage.delegation.batchDelete.success,
-              title: 'Information'
+              title: dialogTitle.information
             });
             self.doSearch();
           })
           .fail(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              message: sprintf(dialogMessage.delegation.batchDelete.fail, {
+              title: dialogTitle.error,
+              message: sprintf(dialogMessage.common.error.script, {
                 code: err.request_id || 'unknown',
-                msg: err.error || 'unknown'
-              }),
-              title: dialogTitle.error
+                msg: dialogMessage.delegation.batchDelete.fail
+              })
             });
           });
         }

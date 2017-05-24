@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, utils, Q, $, _, moment, dialogMessage */
+/* global Hktdc, Backbone, JST, utils, Q, $, _, moment, dialogMessage, dialogTitle, sprintf */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -56,9 +56,11 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'Runtime Error'
+            title: dialogTitle.error,
+            message: sprintf(dialogMessage.common.error.script, {
+              code: 'unknown',
+              msg: dialogMessage.component.processList.error
+            })
           });
         });
     },
@@ -245,24 +247,26 @@ Hktdc.Views = Hktdc.Views || {};
           .then(function(response) {
             console.log(response);
             Hktdc.Dispatcher.trigger('openAlert', {
-              type: 'success',
-              title: 'Confirmation',
-              message: 'User role is saved.'
+              title: dialogTitle.confirmation,
+              message: dialogMessage.userRole.save.success
             });
             Backbone.history.navigate('userrole/' + response.Msg, {trigger: true});
             // Backbone.history.navigate('userrole', {trigger: true});
             // window.history.back();
           })
           .catch(function(err) {
+            console.error(err);
             Hktdc.Dispatcher.trigger('openAlert', {
-              type: 'error',
-              title: 'Confirmation',
-              message: err
+              title: dialogTitle.confirmation,
+              message: sprintf(dialogMessage.common.error.script, {
+                code: 'unknown',
+                msg: dialogMessage.userRole.save.error
+              })
             });
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          title: 'Warning',
+          title: dialogTitle.warning,
           message: dialogMessage.common.invalid.form
         });
       }
@@ -343,7 +347,7 @@ Hktdc.Views = Hktdc.Views || {};
     deleteButtonHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Alert',
+        title: dialogTitle.error,
         message: dialogMessage.userRole.delete.confirm,
         onConfirm: function() {
           var saveUserRoleModel = new Hktdc.Models.SaveUserRole();
@@ -356,18 +360,17 @@ Hktdc.Views = Hktdc.Views || {};
               success: function(response) {
                 Hktdc.Dispatcher.trigger('closeConfirm');
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  message: 'deleted',
-                  type: 'confirmation',
-                  title: 'Confirmation'
+                  title: dialogTitle.confirmation,
+                  message: dialogMessage.userRole.delete.success
                 });
 
                 Backbone.history.navigate('userrole', {trigger: true});
               },
               error: function(model, response) {
-                  utils.apiErrorHandling(response, {
-                      // 401: doFetch,
-                      unknownMessage: dialogMessage.userRole.delete.error
-                  });
+                utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.userRole.delete.error
+                });
               }
             });
           };
@@ -397,10 +400,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve();
             },
             error: function(model, response) {
-                utils.apiErrorHandling(response, {
-                    // 401: doFetch,
-                    unknownMessage: dialogMessage.userRoleMember.delete.error
-                });
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.userRoleMember.delete.error
+              });
             }
           });
         };
@@ -408,7 +411,7 @@ Hktdc.Views = Hktdc.Views || {};
         return deferred.promise;
       };
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.userRoleMember.batchDelete.confirm,
         onConfirm: function() {
           Q.all(_.map(self.model.toJSON().selectedMember, function(memberGUID) {
@@ -417,9 +420,8 @@ Hktdc.Views = Hktdc.Views || {};
             .then(function() {
               Hktdc.Dispatcher.trigger('closeConfirm');
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'deleted',
-                type: 'confirmation',
-                title: 'confirmation'
+                title: dialogTitle.confirmation,
+                message: dialogMessage.userRoleMember.delete.success
               });
               Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, true);
               Backbone.history.loadUrl('userrole/' + self.model.toJSON().UserRoleGUID, {
@@ -427,10 +429,13 @@ Hktdc.Views = Hktdc.Views || {};
               });
             })
             .fail(function(err) {
+              console.error(err);
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: err,
-                type: 'error',
-                title: 'error on deleting user role'
+                title: dialogTitle.error,
+                message: sprintf(dialogMessage.common.error.script, {
+                  code: 'unknown',
+                  msg: dialogMessage.userRoleMember.delete.error
+                })
               });
             });
         }

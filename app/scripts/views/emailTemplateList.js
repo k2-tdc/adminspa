@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, utils, _,  $, Q, moment */
+/* global Hktdc, Backbone, JST, utils, _,  $, Q, moment, dialogTitle, dialogMessage, sprintf*/
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -13,11 +13,11 @@ Hktdc.Views = Hktdc.Views || {};
       'click .searchBtn': 'doSearch',
       'click .createBtn': 'goToCreatePage',
       'click .batchDeleteBtn': 'batchDeleteTemplate'
-        // 'click .advanced-btn': 'toggleAdvanceMode',
-        // 'change .user-select': 'updateModelByEvent',
-        // 'change .status-select': 'updateModelByEvent',
-        // 'blur .search-field': 'updateModelByEvent',
-        // 'blur .date': 'updateDateModelByEvent'
+      // 'click .advanced-btn': 'toggleAdvanceMode',
+      // 'change .user-select': 'updateModelByEvent',
+      // 'change .status-select': 'updateModelByEvent',
+      // 'blur .search-field': 'updateModelByEvent',
+      // 'blur .date': 'updateDateModelByEvent'
     },
 
     initialize: function(props) {
@@ -58,9 +58,11 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'Runtime Error'
+            title: dialogTitle.error,
+            message: sprintf(dialogMessage.common.error.script, {
+              code: 'unknown',
+              msg: dialogMessage.component.processList.error
+            })
           });
         });
 
@@ -78,10 +80,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.component.processList.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.processList.error
+            });
           }
         });
       };
@@ -100,10 +102,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(stepCollection);
           },
           error: function(collection, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.component.stepList.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.stepList.error
+            });
           }
         });
       };
@@ -277,15 +279,21 @@ Hktdc.Views = Hktdc.Views || {};
 
     deleteTemplate: function(input) {
       var deferred = Q.defer();
-      var data = (_.isArray(input))
-        ? _.map(input, function(tId) {
-          return {TemplateId: tId };
-        })
-        : [{ TemplateId: input }];
+      var data = (_.isArray(input)) ?
+        _.map(input, function(tId) {
+          return {
+            TemplateId: tId
+          };
+        }) :
+        [{
+          TemplateId: input
+        }];
       var DeleteTemplateModel = Backbone.Model.extend({
         url: Hktdc.Config.apiURL + '/email-templates/delete-templates'
       });
-      var DeleteTemplateInstance = new DeleteTemplateModel({data: data});
+      var DeleteTemplateInstance = new DeleteTemplateModel({
+        data: data
+      });
       var doSave = function() {
         DeleteTemplateInstance.save(null, {
           type: 'POST',
@@ -294,10 +302,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(response);
           },
           error: function(collection, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.emailTemplate.delete.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.emailTemplate.delete.error
+            });
           }
         });
       };
@@ -307,7 +315,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     goToCreatePage: function() {
       console.log('crash');
-      Backbone.history.navigate('emailtemplate/new', {trigger: true});
+      Backbone.history.navigate('emailtemplate/new', {
+        trigger: true
+      });
     },
 
     updateModel: function(field, value) {
@@ -350,7 +360,7 @@ Hktdc.Views = Hktdc.Views || {};
     batchDeleteTemplate: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.emailTemplate.batchDelete.confirm,
         onConfirm: function() {
           self.deleteTemplate(self.model.toJSON().selectedTemplate)
@@ -358,26 +368,30 @@ Hktdc.Views = Hktdc.Views || {};
               Hktdc.Dispatcher.trigger('closeConfirm');
               if (String(response.success) === '1') {
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  type: 'success',
-                  title: 'confirmation',
-                  message: 'Batch Deleted record'
+                  title: dialogTitle.confirmation,
+                  message: dialogMessage.batchDelete.success
                 });
 
                 self.templateDataTable.ajax.reload();
                 // Hktdc.Dispatcher.trigger('reloadMenu');
               } else {
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  type: 'error',
                   title: dialogTitle.error,
-                  message: response.Msg
+                  message: sprintf(dialogMessage.common.error.system, {
+                    code: 'unknown',
+                    msg: response.Msg
+                  })
+                  // message: sprintf(dialogMessage.batchDelete.fail, { code: 'unknown', msg: response.Msg })
                 });
               }
             })
             .catch(function(err) {
               Hktdc.Dispatcher.trigger('openAlert', {
-                type: 'error',
                 title: dialogTitle.error,
-                message: 'delete failed'
+                message: sprintf(dialogMessage.common.error.script, {
+                  code: 'unknown',
+                  msg: dialogMessage.emailTemplate.batchDelete.error
+                })
               });
               console.error(err);
             });

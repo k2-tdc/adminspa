@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf */
+/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -1215,7 +1215,7 @@ Hktdc.Views = Hktdc.Views || {};
           })
           .then(function() {
             Hktdc.Dispatcher.trigger('openAlert', {
-              title: 'Information',
+              title: dialogTitle.information,
               message: dialogMessage.workerRuleMember.save.success
             });
 
@@ -1225,9 +1225,10 @@ Hktdc.Views = Hktdc.Views || {};
             console.error(err);
             Hktdc.Dispatcher.trigger('openAlert', {
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.workerRuleMember.save.fail, {
+              message: sprintf(dialogMessage.common.error.script, {
                 code: err.request_id || 'unknown',
-                msg: err.error || 'unknown'})
+                msg: dialogMessage.workerRuleMember.save.error
+              })
             });
           });
       } else {
@@ -1332,7 +1333,7 @@ Hktdc.Views = Hktdc.Views || {};
     deleteButtonHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.workerRuleMember.delete.confirm,
         onConfirm: function() {
           var delMemberModel = new Hktdc.Models.DeleteWorkerRuleMember();
@@ -1345,15 +1346,15 @@ Hktdc.Views = Hktdc.Views || {};
                 Hktdc.Dispatcher.trigger('closeConfirm');
                 Hktdc.Dispatcher.trigger('openAlert', {
                   message: dialogMessage.workerRuleMember.delete.success,
-                  title: 'Information'
+                  title: dialogTitle.information
                 });
                 Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
               },
               error: function(model, response) {
-                  utils.apiErrorHandling(response, {
-                      // 401: doFetch,
-                      unknownMessage: dialogMessage.workerRuleMember.delete.error
-                  });
+                utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.workerRuleMember.delete.error
+                });
               }
             });
           };

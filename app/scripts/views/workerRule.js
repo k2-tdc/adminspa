@@ -62,9 +62,11 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: err,
-            type: 'error',
-            title: 'Runtime Error'
+            title: dialogTitle.error,
+            message: sprintf(dialogMessage.common.error.script, {
+              code: 'unknown',
+              msg: dialogMessage.component.general.error
+            })
           });
         });
 
@@ -317,10 +319,10 @@ Hktdc.Views = Hktdc.Views || {};
     getAjaxURL: function() {
       var queryParams = _.pick(this.model.toJSON(), 'UserId', 'WorkerId');
       var queryString = utils.getQueryString(queryParams, true);
-      if(queryString !== '') {
-          queryString = '&' + queryString.substr(1);
-          queryString = queryString.replace("UserId", "user-id");
-          queryString = queryString.replace("WorkerId", "worker-id");
+      if (queryString !== '') {
+        queryString = '&' + queryString.substr(1);
+        queryString = queryString.replace('UserId', 'user-id');
+        queryString = queryString.replace('WorkerId', 'worker-id');
       }
       return Hktdc.Config.apiURL + '/worker-rule-settings?worker-rule-id=' + this.model.toJSON().WorkerRuleId + queryString;
     },
@@ -332,8 +334,7 @@ Hktdc.Views = Hktdc.Views || {};
         self.doSaveWorkerRule()
           .then(function(response) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              type: 'success',
-              title: 'Information',
+              title: dialogTitle.information,
               message: dialogMessage.workerRule.save.success
             });
             if (self.model.toJSON().saveType === 'POST' && response.Msg) {
@@ -344,11 +345,10 @@ Hktdc.Views = Hktdc.Views || {};
           })
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              type: 'error',
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.workerRule.save.fail, {
+              message: sprintf(dialogMessage.common.error.script, {
                 code: err.request_id || 'unknown',
-                msg: err.error || 'unknown'
+                msg: dialogMessage.workerRule.save.fail
               })
             });
           });
@@ -380,9 +380,8 @@ Hktdc.Views = Hktdc.Views || {};
       saveWorkerRuleModel.set(saveData);
       saveWorkerRuleModel.on('invalid', function(model, err) {
         Hktdc.Dispatcher.trigger('openAlert', {
-          message: err,
-          type: 'error',
-          title: dialogTitle.error
+          title: dialogTitle.error,
+          message: err
         });
       });
       saveWorkerRuleModel.url = saveWorkerRuleModel.url(self.model.toJSON().WorkerRuleId);
@@ -398,10 +397,10 @@ Hktdc.Views = Hktdc.Views || {};
             }
           },
           error: function(model, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.workerRule.save.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.workerRule.save.error
+            });
           }
         });
       };
@@ -412,7 +411,7 @@ Hktdc.Views = Hktdc.Views || {};
     deleteRuleButtonHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.workerRule.delete.confirm,
         onConfirm: function() {
           // console.log(self.model.toJSON().selectedWorker);
@@ -426,25 +425,26 @@ Hktdc.Views = Hktdc.Views || {};
                 if (String(response.Success) === '1') {
                   Hktdc.Dispatcher.trigger('closeConfirm');
                   Hktdc.Dispatcher.trigger('openAlert', {
-                    message: 'Deleted',
-                    type: 'confirmation',
-                    title: 'Confirmation'
+                    title: dialogTitle.confirmation,
+                    message: dialogMessage.workerRule.delete.success
                   });
 
                   Backbone.history.navigate('worker-rule', {trigger: true});
                 } else {
                   Hktdc.Dispatcher.trigger('openAlert', {
-                    message: response.Msg || 'Error on delete',
-                    type: 'error',
-                    title: dialogTitle.error
+                    title: dialogTitle.error,
+                    message: sprintf(dialogMessage.workerRule.delete.fail, {
+                      code: 'unknown',
+                      msg: response.Msg || 'Error on delete'
+                    })
                   });
                 }
               },
               error: function(model, response) {
-                  utils.apiErrorHandling(response, {
-                      // 401: doFetch,
-                      unknownMessage: dialogMessage.workerRule.delete.error
-                  });
+                utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.workerRule.delete.error
+                });
               }
             });
           };
@@ -500,10 +500,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve();
             },
             error: function(model, response) {
-                utils.apiErrorHandling(response, {
-                    // 401: doFetch,
-                    unknownMessage: dialogMessage.workerRuleMember.delete.error
-                });
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.workerRuleMember.delete.error
+              });
             }
           });
         };
@@ -512,14 +512,13 @@ Hktdc.Views = Hktdc.Views || {};
       };
       if (!(self.model.toJSON().selectedMember && self.model.toJSON().selectedMember.length)) {
         Hktdc.Dispatcher.trigger('openAlert', {
-          message: 'Please select worker rule setting',
-          type: 'error',
-          title: 'warning'
+          title: dialogTitle.warning,
+          message: dialogMessage.workerRule.selectMember.alert
         });
         return false;
       }
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.workerRuleMember.batchDelete.confirm,
         onConfirm: function() {
           Q.all(_.map(self.model.toJSON().selectedMember, function(settingId) {
@@ -528,18 +527,20 @@ Hktdc.Views = Hktdc.Views || {};
           .then(function() {
             Hktdc.Dispatcher.trigger('closeConfirm');
             Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'deleted',
-              type: 'confirmation',
-              title: 'confirmation'
+              title: dialogTitle.confirmation,
+              message: dialogMessage.workerRuleMember.batchDelete.success
             });
             self.doSearch();
           })
           .fail(function(err) {
+            console.error(err);
             Hktdc.Dispatcher.trigger('closeConfirm');
             Hktdc.Dispatcher.trigger('openAlert', {
-              message: err,
-              type: 'error',
-              title: 'error on deleting user role'
+              title: 'error on deleting user role',
+              message: sprintf(dialogMessage.common.error.script, {
+                code: 'unknown',
+                msg: dialogMessage.workerRuleMember.batchDelete.error
+              })
             });
           });
         }

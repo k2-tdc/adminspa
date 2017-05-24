@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf */
+/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -266,25 +266,23 @@ Hktdc.Views = Hktdc.Views || {};
         this.doSaveUserRoleMember()
           .then(function(response) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              type: 'success',
-              title: 'Information',
+              title: dialogTitle.information,
               message: dialogMessage.userRoleMember.save.success
             });
             Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
           })
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              type: 'error',
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.userRoleMember.save.fail, {
+              message: sprintf(dialogMessage.common.error.script, {
                 code: err.request_id || 'unknown',
-                msg: err.error || 'unknown'
+                msg: dialogMessage.userRoleMember.save.fail
               })
             });
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          title: 'Warning',
+          title: dialogTitle.warning,
           message: dialogMessage.common.invalid.form
         });
       }

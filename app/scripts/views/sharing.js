@@ -96,7 +96,7 @@ Hktdc.Views = Hktdc.Views || {};
             title: dialogTitle.error,
             message: sprintf(dialogMessage.common.error.script, {
               code: err.request_id || 'unknown',
-              msg: err.error || 'unknown'
+              msg: dialogMessage.component.general.error
             })
           });
         });
@@ -133,10 +133,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(userCollection);
           },
           error: function(collection, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.component.fullUserList.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.fullUserList.error
+            });
           }
         });
       };
@@ -156,10 +156,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(sharingUserCollection);
           },
           error: function(collection, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.component.sharingUserList.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.sharingUserList.error
+            });
           }
         });
       };
@@ -177,10 +177,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(sharingPermissionCollection);
           },
           error: function(collection, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.component.sharingPermissionList.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.sharingPermissionList.error
+            });
           }
         });
       };
@@ -199,10 +199,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(stepCollection);
           },
           error: function(collection, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.component.stepList.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.stepList.error
+            });
           }
         });
       };
@@ -223,10 +223,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(departmentCollection);
           },
           error: function(collection, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.component.departmentList.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.departmentList.error
+            });
           }
         });
       };
@@ -506,7 +506,7 @@ Hktdc.Views = Hktdc.Views || {};
         this.doSaveSharing()
           .then(function(response) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              title: 'Information',
+              title: dialogTitle.information,
               message: dialogMessage.sharing.save.success
             });
             window.history.back();
@@ -514,9 +514,9 @@ Hktdc.Views = Hktdc.Views || {};
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.sharing.save.error, {
+              message: sprintf(dialogMessage.common.error.script, {
                 code: err.request_id || 'unknown',
-                msg: err.error || 'unknown'
+                msg: dialogMessage.sharing.save.error
               })
             });
           });
@@ -593,13 +593,13 @@ Hktdc.Views = Hktdc.Views || {};
     deleteSharing: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.sharing.delete.confirm,
         onConfirm: function() {
           self.doDeleteSharing()
             .then(function() {
               Hktdc.Dispatcher.trigger('openAlert', {
-                title: 'Information',
+                title: dialogTitle.information,
                 message: dialogMessage.delegation.save.success
               });
               Hktdc.Dispatcher.trigger('closeConfirm');
@@ -609,9 +609,9 @@ Hktdc.Views = Hktdc.Views || {};
               console.error(err);
               Hktdc.Dispatcher.trigger('openAlert', {
                 title: dialogTitle.error,
-                message: sprintf(dialogMessage.delegation.save.fail, {
+                message: sprintf(dialogMessage.common.error.script, {
                   code: err.request_id || 'unknown',
-                  msg: err.error || 'unknown'
+                  msg: dialogMessage.delegation.save.fail
                 })
               });
             });
@@ -635,10 +635,10 @@ Hktdc.Views = Hktdc.Views || {};
             }
           },
           error: function(model, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.sharing.delete.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.sharing.delete.error
+            });
           }
         });
       };

@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf */
+/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -103,7 +103,7 @@ Hktdc.Views = Hktdc.Views || {};
     deleteButtonHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
+        title: dialogTitle.confirmation,
         message: dialogMessage.userRoleMember.delete.confirm,
         onConfirm: function() {
           var rawData = self.model.toJSON();
@@ -117,16 +117,16 @@ Hktdc.Views = Hktdc.Views || {};
               success: function() {
                 Hktdc.Dispatcher.trigger('closeConfirm');
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  title: 'Information',
+                  title: dialogTitle.information,
                   message: dialogMessage.userRoleMember.delete.success
                 });
                 Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
               },
               error: function(model, response) {
-                  utils.apiErrorHandling(response, {
-                      // 401: doFetch,
-                      unknownMessage: dialogMessage.userRoleMember.delete.error
-                  });
+                utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.userRoleMember.delete.error
+                });
               }
             });
           };
@@ -142,26 +142,23 @@ Hktdc.Views = Hktdc.Views || {};
         self.doSaveRoleMember()
           .then(function(response) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              type: 'success',
-              title: 'Information',
+              title: dialogTitle.information,
               message: dialogMessage.userRoleMember.save.success
             });
             Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
           })
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              type: 'error',
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.userRoleMember.save.fail, {
+              message: sprintf(dialogMessage.common.error.script, {
                 code: err.request_id || 'unknown',
-                msg: err.error || 'unknown'
+                msg: dialogMessage.userRoleMember.save.fail
               })
             });
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          type: 'error',
-          title: 'Alert',
+          title: dialogTitle.error,
           message: dialogMessage.commom.invalid.form
         });
       }

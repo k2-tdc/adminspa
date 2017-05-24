@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, _, $, utils, Q */
+/* global Hktdc, Backbone, JST, _, $, utils, Q, dialogTitle, dialogMessage, sprintf */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -45,9 +45,11 @@ Hktdc.Views = Hktdc.Views || {};
             .catch(function(err) {
               console.error(err);
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: err,
-                type: 'error',
-                title: 'Runtime Error'
+                title: dialogTitle.error,
+                message: sprintf(dialogMessage.common.error.script, {
+                  code: 'unknown',
+                  msg: dialogMessage.component.processList.error
+                })
               });
             });
         }}
@@ -65,10 +67,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.component.processList.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.processList.error
+            });
           }
         });
       };
@@ -178,44 +180,6 @@ Hktdc.Views = Hktdc.Views || {};
 
     goToCreatePage: function() {
       Backbone.history.navigate('worker-rule/new', {trigger: true});
-    },
-
-    deleteButtonHandler: function() {
-      var self = this;
-      Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
-        message: 'Are you sure to delete?',
-        onConfirm: function() {
-          // console.log(self.model.toJSON().selectedWorker);
-          var saveUserRoleModel = new Hktdc.Models.SaveWorkerRule();
-          saveUserRoleModel.clear();
-          saveUserRoleModel.url = saveUserRoleModel.url(this.model.toJSON().WorkerRuleId);
-          var doSave = function() {
-            saveUserRoleModel.save(null, {
-              beforeSend: utils.setAuthHeader,
-              type: 'POST',
-              success: function(response) {
-                Hktdc.Dispatcher.trigger('closeConfirm');
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: 'deleted',
-                  type: 'confirmation',
-                  title: 'Confirmation'
-                });
-
-                Backbone.history.navigate('userrole', {trigger: true});
-              },
-              error: function(model, response) {
-                  utils.apiErrorHandling(response, {
-                      // 401: doFetch,
-                      unknownMessage: dialogMessage.workerRule.delete.error
-                  });
-              }
-            });
-          };
-          doSave();
-        }
-      });
     }
-
   });
 })();

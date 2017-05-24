@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, utils, _,  $, Q, sprintf, dialogMessage */
+/* global Hktdc, Backbone, JST, utils, _,  $, Q, sprintf, dialogMessage, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -63,12 +63,11 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
+            title: dialogTitle.error,
             message: sprintf(dialogMessage.common.error.system, {
               code: err.request_id || 'unknown',
               msg: err.error || 'unknown'
-            }),
-            type: 'error',
-            title: 'Runtime Error'
+            })
           });
         });
 
