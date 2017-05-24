@@ -284,15 +284,14 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           Hktdc.Dispatcher.trigger('openAlert', {
             title: dialogTitle.error,
-            message: sprintf(dialogMessage.emailProfile.save.fail, {
+            message: sprintf(dialogMessage.common.error.script, {
               code: err.request_id || 'unknown',
-              msg: err.error || 'unknown'
+              msg: err.error || dialogMessage.emailProfile.save.error
             })
           });
         });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          type: 'error',
           title: dialogTitle.error,
           message: dialogMessage.common.invalid.form
         });
@@ -383,9 +382,9 @@ Hktdc.Views = Hktdc.Views || {};
             .catch(function(err) {
               Hktdc.Dispatcher.trigger('openAlert', {
                 title: dialogTitle.error,
-                message: sprintf(dialogMessage.emailProfile.delete.fail, {
+                message: sprintf(dialogMessage.common.error.script, {
                   code: err.request_id || 'unknown',
-                  msg: err.error || 'unknown'
+                  msg: dialogMessage.emailProfile.delete.error
                 })
               });
             });

@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _, utils */
+/* global Hktdc, Backbone, JST, $, _, utils, dialogMessage, Q */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -22,63 +22,63 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-        var self = this;
-        self.$el.html(self.template(self.model.toJSON()));
-        self.loadProcess()
-            .then(function(processCollection) {
-                var selectedProcess = _.find(processCollection.toJSON(), function(process) {
-                    return String(process.ProcessID) === String(self.model.toJSON().processId);
-                });
-                // console.log(selectedProcess);
-                if (selectedProcess) {
-                    self.model.set({
-                        process: selectedProcess.ProcessName
-                    });
-                }
-                self.renderDataTable();
-                self.renderProcessSelect(processCollection);
-            })
-            .catch(function(err) {
-                console.log(err);
+      var self = this;
+      self.$el.html(self.template(self.model.toJSON()));
+      self.loadProcess()
+        .then(function(processCollection) {
+          var selectedProcess = _.find(processCollection.toJSON(), function(process) {
+            return String(process.ProcessID) === String(self.model.toJSON().processId);
+          });
+          // console.log(selectedProcess);
+          if (selectedProcess) {
+            self.model.set({
+              process: selectedProcess.ProcessName
             });
+          }
+          self.renderDataTable();
+          self.renderProcessSelect(processCollection);
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
     },
 
-      loadProcess: function() {
-          var deferred = Q.defer();
-          var processCollection = new Hktdc.Collections.Process();
-          var doFetch = function() {
-              processCollection.fetch({
-                  beforeSend: utils.setAuthHeader,
-                  success: function() {
-                      deferred.resolve(processCollection);
-                  },
-                  error: function(collection, response) {
-                      utils.apiErrorHandling(response, {
-                          // 401: doFetch,
-                          unknownMessage: dialogMessage.component.processList.error
-                      });
-                  }
-              });
-          };
-          doFetch();
-          return deferred.promise;
-      },
+    loadProcess: function() {
+      var deferred = Q.defer();
+      var processCollection = new Hktdc.Collections.Process();
+      var doFetch = function() {
+        processCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(processCollection);
+          },
+          error: function(collection, response) {
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.processList.error
+            });
+          }
+        });
+      };
+      doFetch();
+      return deferred.promise;
+    },
 
-      renderProcessSelect: function(processCollection) {
-          var self = this;
-          var processSelectView = new Hktdc.Views.ProcessSelect({
-              collection: processCollection,
-              selectedProcess: self.model.toJSON().processId,
-              onSelected: function(process) {
-                  self.model.set({
-                      process: process.ProcessName,
-                      processId: process.ProcessID
-                  });
-              }
+    renderProcessSelect: function(processCollection) {
+      var self = this;
+      var processSelectView = new Hktdc.Views.ProcessSelect({
+        collection: processCollection,
+        selectedProcess: self.model.toJSON().processId,
+        onSelected: function(process) {
+          self.model.set({
+            process: process.ProcessName,
+            processId: process.ProcessID
           });
-          processSelectView.render();
-          $('.processContainer', self.el).html(processSelectView.el);
-      },
+        }
+      });
+      processSelectView.render();
+      $('.processContainer', self.el).html(processSelectView.el);
+    },
 
     renderDataTable: function() {
       var self = this;
@@ -142,25 +142,27 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     goToCreatePage: function() {
-      Backbone.history.navigate('permission/new', {trigger: true});
+      Backbone.history.navigate('permission/new', {
+        trigger: true
+      });
     },
 
     getAjaxURL: function() {
       // var queryParams = _.omit(this.model.toJSON(), 'stepCollection', 'processCollection', 'mode');
       // var queryString = utils.getQueryString(queryParams, true);
       // return Hktdc.Config.apiURL + '/role-permission' + queryString;
-        var queryParams = _.pick(this.model.toJSON(), 'process');
-        var queryString = utils.getQueryString(queryParams, true);
-        return Hktdc.Config.apiURL + '/role-permissions' + queryString;
+      var queryParams = _.pick(this.model.toJSON(), 'process');
+      var queryString = utils.getQueryString(queryParams, true);
+      return Hktdc.Config.apiURL + '/role-permissions' + queryString;
     },
 
-      doSearch: function() {
-          // console.log(this.model.toJSON());
-          var queryParams = _.pick(this.model.toJSON(), 'processId');
-          var currentBase = Backbone.history.getHash().split('?')[0];
-          var queryString = utils.getQueryString(queryParams, true);
-          Backbone.history.navigate(currentBase + queryString);
-          this.rolePermissionDataTable.ajax.url(this.getAjaxURL()).load();
-      }
+    doSearch: function() {
+      // console.log(this.model.toJSON());
+      var queryParams = _.pick(this.model.toJSON(), 'processId');
+      var currentBase = Backbone.history.getHash().split('?')[0];
+      var queryString = utils.getQueryString(queryParams, true);
+      Backbone.history.navigate(currentBase + queryString);
+      this.rolePermissionDataTable.ajax.url(this.getAjaxURL()).load();
+    }
   });
 })();

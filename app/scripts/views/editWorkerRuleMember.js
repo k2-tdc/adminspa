@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf */
+/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -1225,9 +1225,10 @@ Hktdc.Views = Hktdc.Views || {};
             console.error(err);
             Hktdc.Dispatcher.trigger('openAlert', {
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.workerRuleMember.save.fail, {
+              message: sprintf(dialogMessage.common.error.script, {
                 code: err.request_id || 'unknown',
-                msg: err.error || 'unknown'})
+                msg: dialogMessage.workerRuleMember.save.error
+              })
             });
           });
       } else {
@@ -1350,10 +1351,10 @@ Hktdc.Views = Hktdc.Views || {};
                 Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
               },
               error: function(model, response) {
-                  utils.apiErrorHandling(response, {
-                      // 401: doFetch,
-                      unknownMessage: dialogMessage.workerRuleMember.delete.error
-                  });
+                utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.workerRuleMember.delete.error
+                });
               }
             });
           };

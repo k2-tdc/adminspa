@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf */
+/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -123,10 +123,10 @@ Hktdc.Views = Hktdc.Views || {};
                 Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
               },
               error: function(model, response) {
-                  utils.apiErrorHandling(response, {
-                      // 401: doFetch,
-                      unknownMessage: dialogMessage.userRoleMember.delete.error
-                  });
+                utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.userRoleMember.delete.error
+                });
               }
             });
           };
@@ -142,7 +142,6 @@ Hktdc.Views = Hktdc.Views || {};
         self.doSaveRoleMember()
           .then(function(response) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              type: 'success',
               title: dialogTitle.information,
               message: dialogMessage.userRoleMember.save.success
             });
@@ -150,17 +149,15 @@ Hktdc.Views = Hktdc.Views || {};
           })
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
-              type: 'error',
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.userRoleMember.save.fail, {
+              message: sprintf(dialogMessage.common.error.script, {
                 code: err.request_id || 'unknown',
-                msg: err.error || 'unknown'
+                msg: dialogMessage.userRoleMember.save.fail
               })
             });
           });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          type: 'error',
           title: dialogTitle.error,
           message: dialogMessage.commom.invalid.form
         });

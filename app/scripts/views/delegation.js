@@ -98,12 +98,11 @@ Hktdc.Views = Hktdc.Views || {};
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
+            title: dialogTitle.error,
             message: sprintf(dialogMessage.common.error.system, {
               code: err.request_id || 'unknown',
-              msg: err.error || 'unknown'
-            }),
-            type: 'error',
-            title: dialogTitle.error
+              msg: dialogMessage.component.general.error
+            })
           });
         });
     },
@@ -524,9 +523,10 @@ Hktdc.Views = Hktdc.Views || {};
           .catch(function(err) {
             Hktdc.Dispatcher.trigger('openAlert', {
               title: dialogTitle.error,
-              message: sprintf(dialogMessage.delegation.save.error, {
+              message: sprintf(dialogMessage.common.error.script, {
                 code: err.request_id || 'unknown',
-                msg: err.error || 'unknown'})
+                msg: dialogMessage.delegation.save.error
+              })
             });
           });
       } else {
@@ -673,9 +673,9 @@ Hktdc.Views = Hktdc.Views || {};
               console.error(err);
               Hktdc.Dispatcher.trigger('openAlert', {
                 title: dialogTitle.error,
-                message: sprintf(dialogMessage.delegation.delete.fail, {
+                message: sprintf(dialogMessage.common.error.script, {
                   code: err.request_id || 'unknown',
-                  msg: err.error || 'unknown'
+                  msg: dialogMessage.delegation.delete.error
                 })
               });
             });
@@ -702,10 +702,10 @@ Hktdc.Views = Hktdc.Views || {};
             }
           },
           error: function(model, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.delegation.delete.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.delegation.delete.error
+            });
           }
         });
       };
