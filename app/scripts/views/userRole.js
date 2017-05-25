@@ -244,7 +244,7 @@ Hktdc.Views = Hktdc.Views || {};
       self.validateField();
       if (self.model.isValid()) {
         Hktdc.Dispatcher.trigger('openConfirm', {
-          title: dialogTitle.error,
+          title: dialogTitle.confirmation,
           message: dialogMessage.userRole.save.confirm,
           onConfirm: function() {
             self.doSaveUserRole()
@@ -355,7 +355,7 @@ Hktdc.Views = Hktdc.Views || {};
     deleteButtonHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: dialogTitle.error,
+        title: dialogTitle.confirmation,
         message: dialogMessage.userRole.delete.confirm,
         onConfirm: function() {
           var saveUserRoleModel = new Hktdc.Models.SaveUserRole();
