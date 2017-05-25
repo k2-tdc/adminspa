@@ -241,29 +241,35 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     saveButtonHandler: function() {
-      this.validateField();
-      if (this.model.isValid()) {
-        this.doSaveUserRole()
-          .then(function(response) {
-            console.log(response);
-            Hktdc.Dispatcher.trigger('openAlert', {
-              title: dialogTitle.confirmation,
-              message: dialogMessage.userRole.save.success
-            });
-            Backbone.history.navigate('userrole/' + response.Msg, {trigger: true});
-            // Backbone.history.navigate('userrole', {trigger: true});
-            // window.history.back();
-          })
-          .catch(function(err) {
-            console.error(err);
-            Hktdc.Dispatcher.trigger('openAlert', {
-              title: dialogTitle.confirmation,
-              message: sprintf(dialogMessage.common.error.script, {
-                code: 'unknown',
-                msg: dialogMessage.userRole.save.error
+      var self = this;
+      self.validateField();
+      if (self.model.isValid()) {
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: dialogTitle.error,
+          message: dialogMessage.userRole.save.confirm,
+          onConfirm: function() {
+            self.doSaveUserRole()
+              .then(function(response) {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  title: dialogTitle.information,
+                  message: dialogMessage.userRole.save.success
+                });
+                Backbone.history.navigate('userrole/' + response.Msg, {trigger: true});
+                // Backbone.history.navigate('userrole', {trigger: true});
+                // window.history.back();
               })
-            });
-          });
+              .catch(function(err) {
+                console.error(err);
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  title: dialogTitle.confirmation,
+                  message: sprintf(dialogMessage.common.error.script, {
+                    code: 'unknown',
+                    msg: dialogMessage.userRole.save.error
+                  })
+                });
+              });
+          }
+        });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
           title: dialogTitle.warning,

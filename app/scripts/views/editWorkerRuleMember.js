@@ -1205,32 +1205,38 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       self.validateField();
       if (self.model.isValid()) {
-        self.saveRuleSetting()
-          .then(function(response) {
-            var ruleSettingId = response.Msg;
-            return self.sendAttachment(
-              ruleSettingId,
-              self.model.toJSON().selectedAttachmentCollection
-            );
-          })
-          .then(function() {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              title: dialogTitle.information,
-              message: dialogMessage.workerRuleMember.save.success
-            });
-
-            Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, { trigger: true });
-          })
-          .catch(function(err) {
-            console.error(err);
-            Hktdc.Dispatcher.trigger('openAlert', {
-              title: dialogTitle.error,
-              message: sprintf(dialogMessage.common.error.script, {
-                code: err.request_id || 'unknown',
-                msg: dialogMessage.workerRuleMember.save.error
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: dialogTitle.confirmation,
+          message: dialogMessage.workerRuleMember.save.confirm,
+          onConfirm: function() {
+            self.saveRuleSetting()
+              .then(function(response) {
+                var ruleSettingId = response.Msg;
+                return self.sendAttachment(
+                  ruleSettingId,
+                  self.model.toJSON().selectedAttachmentCollection
+                );
               })
-            });
-          });
+              .then(function() {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  title: dialogTitle.information,
+                  message: dialogMessage.workerRuleMember.save.success
+                });
+
+                Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, { trigger: true });
+              })
+              .catch(function(err) {
+                console.error(err);
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  title: dialogTitle.error,
+                  message: sprintf(dialogMessage.common.error.script, {
+                    code: err.request_id || 'unknown',
+                    msg: dialogMessage.workerRuleMember.save.error
+                  })
+                });
+              });
+          }
+        });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
           title: dialogTitle.error,

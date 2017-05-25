@@ -34,6 +34,7 @@ var dialogMessage = {
       error: 'Error on getting email template detail'
     },
     save: {
+      confirm: 'Do you want to Save?',
       success: 'Email Template is saved.',
       error: 'Error on saving email template',
       fail: 'Fail on saving email template'
@@ -59,6 +60,7 @@ var dialogMessage = {
       error: 'Error on getting email profile detail'
     },
     save: {
+      confirm: 'Do you want to save?',
       success: 'Email Profile is saved.',
       error: 'Error on saving email profile',
       fail: 'Fail on saving email profile'
@@ -81,13 +83,14 @@ var dialogMessage = {
       error: 'Error on getting user role detail'
     },
     save: {
+      confirm: 'Do you want to save?',
       success: 'User role is saved.',
       error: 'Error on saving user role',
       fail: 'Fail on saving user role'
     },
     delete: {
-      success: 'User role is deleted.',
       confirm: 'Do you want to delete this user role?',
+      success: 'User role is deleted.',
       error: 'Error on deleting user role',
       fail: 'Fail on deleting user role'
     }
@@ -97,6 +100,7 @@ var dialogMessage = {
       error: 'Error on getting user rule.'
     },
     save: {
+      confirm: 'Do you want to save?',
       success: 'User Role Member is saved.',
       error: 'Error on saving user role member',
       fail: 'Fail on saving user role member'
@@ -122,6 +126,7 @@ var dialogMessage = {
       error: 'Error on getting role permission list'
     },
     save: {
+      confirm: 'Do you want to save?',
       success: 'Role Permission is saved.',
       error: 'Error on saving role permission',
       fail: 'Error on saving role permission'
@@ -150,6 +155,7 @@ var dialogMessage = {
       fail: 'Error on deleting worker rule'
     },
     save: {
+      confirm: 'Do you want to save?',
       success: 'Worker rule is saved.',
       error: 'Error on saving worker rule',
       fail: 'Error on saving worker rule'
@@ -169,6 +175,7 @@ var dialogMessage = {
       fail: 'Error on deleting worker rule setting'
     },
     save: {
+      confirm: 'Do you want to save?',
       success: 'Rule setting is saved.',
       error: 'Error on saving worker rule setting',
       fail: 'Error on saving worker rule setting'
@@ -188,6 +195,7 @@ var dialogMessage = {
       error: 'Error on getting delegation list'
     },
     save: {
+      confirm: 'Do you want to save?',
       success: 'Delegation is saved.',
       error: 'Error on saving delegation',
       fail: 'Error on saving delegation'
@@ -219,6 +227,7 @@ var dialogMessage = {
       error: 'Error on getting sharing list'
     },
     save: {
+      confirm: 'Do you want to save?',
       success: 'Sharing is saved.',
       error: 'Error on saving sharing',
       fail: 'Error on saving sharing'

@@ -510,25 +510,32 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     saveDelegation: function() {
-      this.validateField();
-      if (this.model.isValid()) {
-        this.doSaveDelegation()
-          .then(function(response) {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              title: dialogTitle.information,
-              message: dialogMessage.delegation.save.success
-            });
-            window.history.back();
-          })
-          .catch(function(err) {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              title: dialogTitle.error,
-              message: sprintf(dialogMessage.common.error.script, {
-                code: err.request_id || 'unknown',
-                msg: dialogMessage.delegation.save.error
+      var self = this;
+      self.validateField();
+      if (self.model.isValid()) {
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: dialogTitle.confirmation,
+          message: dialogMessage.delegation.save.confirm,
+          onConfirm: function() {
+            self.doSaveDelegation()
+              .then(function(response) {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  title: dialogTitle.information,
+                  message: dialogMessage.delegation.save.success
+                });
+                window.history.back();
               })
-            });
-          });
+              .catch(function(err) {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  title: dialogTitle.error,
+                  message: sprintf(dialogMessage.common.error.script, {
+                    code: err.request_id || 'unknown',
+                    msg: dialogMessage.delegation.save.error
+                  })
+                });
+              });
+          }
+        });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
           title: dialogTitle.error,

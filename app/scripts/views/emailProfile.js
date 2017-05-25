@@ -268,27 +268,34 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     saveProfile: function() {
-      this.validateField();
-      if (this.model.isValid()) {
-        this.doSaveProfile()
-        .then(function(response) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            title: dialogTitle.information,
-            message: dialogMessage.emailProfile.save.success
-          });
-          window.history.back();
-          // Backbone.history.navigate('emailprofile', {
-          //   trigger: true
-          // });
-        })
-        .catch(function(err) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            title: dialogTitle.error,
-            message: sprintf(dialogMessage.common.error.script, {
-              code: err.request_id || 'unknown',
-              msg: err.error || dialogMessage.emailProfile.save.error
-            })
-          });
+      var self = this;
+      self.validateField();
+      if (self.model.isValid()) {
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: dialogTitle.confirmation,
+          message: dialogMessage.emailProfile.save.confirm,
+          onConfirm: function() {
+            self.doSaveProfile()
+              .then(function(response) {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  title: dialogTitle.information,
+                  message: dialogMessage.emailProfile.save.success
+                });
+                window.history.back();
+                // Backbone.history.navigate('emailprofile', {
+                //   trigger: true
+                // });
+              })
+              .catch(function(err) {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  title: dialogTitle.error,
+                  message: sprintf(dialogMessage.common.error.script, {
+                    code: err.request_id || 'unknown',
+                    msg: err.error || dialogMessage.emailProfile.save.error
+                  })
+                });
+              });
+          }
         });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {

@@ -139,23 +139,29 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       self.validateField();
       if (self.model.isValid()) {
-        self.doSaveRoleMember()
-          .then(function(response) {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              title: dialogTitle.information,
-              message: dialogMessage.userRoleMember.save.success
-            });
-            Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
-          })
-          .catch(function(err) {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              title: dialogTitle.error,
-              message: sprintf(dialogMessage.common.error.script, {
-                code: err.request_id || 'unknown',
-                msg: dialogMessage.userRoleMember.save.fail
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: dialogTitle.confirmation,
+          message: dialogMessage.userRoleMember.save.confirm,
+          onConfirm: function() {
+            self.doSaveRoleMember()
+              .then(function(response) {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  title: dialogTitle.information,
+                  message: dialogMessage.userRoleMember.save.success
+                });
+                Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
               })
-            });
-          });
+              .catch(function(err) {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  title: dialogTitle.error,
+                  message: sprintf(dialogMessage.common.error.script, {
+                    code: err.request_id || 'unknown',
+                    msg: dialogMessage.userRoleMember.save.fail
+                  })
+                });
+              });
+          }
+        });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
           title: dialogTitle.error,

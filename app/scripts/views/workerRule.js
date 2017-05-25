@@ -331,27 +331,33 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       self.validateField();
       if (self.model.isValid()) {
-        self.doSaveWorkerRule()
-          .then(function(response) {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              title: dialogTitle.information,
-              message: dialogMessage.workerRule.save.success
-            });
-            if (self.model.toJSON().saveType === 'POST' && response.Msg) {
-              Backbone.history.navigate('worker-rule/' + response.Msg, {
-                trigger: true
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: dialogTitle.confirmation,
+          message: dialogMessage.workerRule.save.confirm,
+          onConfirm: function() {
+            self.doSaveWorkerRule()
+            .then(function(response) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                title: dialogTitle.information,
+                message: dialogMessage.workerRule.save.success
               });
-            }
-          })
-          .catch(function(err) {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              title: dialogTitle.error,
-              message: sprintf(dialogMessage.common.error.script, {
-                code: err.request_id || 'unknown',
-                msg: dialogMessage.workerRule.save.fail
-              })
+              if (self.model.toJSON().saveType === 'POST' && response.Msg) {
+                Backbone.history.navigate('worker-rule/' + response.Msg, {
+                  trigger: true
+                });
+              }
+            })
+            .catch(function(err) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                title: dialogTitle.error,
+                message: sprintf(dialogMessage.common.error.script, {
+                  code: err.request_id || 'unknown',
+                  msg: dialogMessage.workerRule.save.fail
+                })
+              });
             });
-          });
+          }
+        });
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
           title: dialogTitle.error,
