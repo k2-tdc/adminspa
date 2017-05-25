@@ -88,10 +88,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(processCollection);
           },
           error: function(collection, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.component.processList.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.processList.error
+            });
           }
         });
       };
@@ -113,10 +113,10 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.resolve(fullUserCollection);
             },
             error: function(collection, response) {
-                utils.apiErrorHandling(response, {
-                    // 401: doFetch,
-                    unknownMessage: dialogMessage.component.fullUserList.error
-                });
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.component.fullUserList.error
+              });
             }
           });
         };

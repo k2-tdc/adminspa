@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf, dialogTitle */
+/* global Hktdc, Backbone, JST, Q, utils, $, _, moment, dialogMessage, sprintf, dialogTitle, XMLHttpRequest, FormData, NProgress, Blob, BlobBuilder */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -620,7 +620,7 @@ Hktdc.Views = Hktdc.Views || {};
         showDateRange: ruleModules.dateRange,
         showCheckbox: ruleModules.checkbox,
         showRemark: ruleModules.remark,
-        showReference: ruleModules.reference,
+        showReference: ruleModules.reference
       });
       // console.log(this.model.toJSON());
       this.render();
@@ -1246,7 +1246,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     previewButtonHandler: function() {
-      var queryParams = _.omit(this.model.toJSON(), 'departmentCollection', 'applicantCollection');
+      // var queryParams = _.omit(this.model.toJSON(), 'departmentCollection', 'applicantCollection');
       var rawData = this.model.toJSON();
       var url = Hktdc.Config.apiURL + '/worker-rules/' + rawData.WorkerRuleId + '/preview';
       var xhr = new XMLHttpRequest();
@@ -1417,10 +1417,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(response);
           },
           error: function(model, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.workerRuleMember.save.error
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.workerRuleMember.save.error
+            });
           }
         });
       };
@@ -1446,9 +1446,9 @@ Hktdc.Views = Hktdc.Views || {};
       };
       var data = new FormData();
       var sendAttachmentModel = new Hktdc.Models.SendAttachment();
-      var filename = _.map(files, function(file) {
-        return (file.file) && file.file.name;
-      });
+      // var filename = _.map(files, function(file) {
+      //   return (file.file) && file.file.name;
+      // });
 
       sendAttachmentModel.url = sendAttachmentModel.url(refId);
 
@@ -1464,10 +1464,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve();
           },
           error: function(model, response) {
-              utils.apiErrorHandling(response, {
-                  // 401: doFetch,
-                  unknownMessage: dialogMessage.common.error.system
-              });
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.common.error.system
+            });
           }
         }));
       };
