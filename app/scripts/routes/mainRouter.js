@@ -7,7 +7,7 @@ Hktdc.Routers = Hktdc.Routers || {};
 
   Hktdc.Routers.Main = Backbone.Router.extend({
     routes: {
-      '': 'emailProfileList',
+      '': 'delegationList',
 
       'emailtemplate': 'emailTemplateList',
       'emailtemplate/new': 'editEmailTemplate',
