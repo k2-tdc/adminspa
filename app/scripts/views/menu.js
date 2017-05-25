@@ -144,7 +144,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       try {
         var routeName = (route.indexOf('/') >= 0) ? routeMap[route.split('/')[0].toUpperCase()] : route.toUpperCase();
-        var routeBase = routeName.split('?')[0] || 'EMAILPROFILE';
+        var routeBase = routeName.split('?')[0] || 'DELEGATION';
         setTimeout(function() {
           if ($('li[routename="' + routeBase + '"]')) {
             $('nav#menu').data('mmenu').setSelected($('li[routename="' + routeBase + '"]'));
