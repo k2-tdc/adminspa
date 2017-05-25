@@ -355,6 +355,9 @@ Hktdc.Views = Hktdc.Views || {};
                   msg: dialogMessage.workerRule.save.fail
                 })
               });
+            })
+            .fin(function() {
+              Hktdc.Dispatcher.trigger('closeConfirm');
             });
           }
         });
@@ -447,6 +450,7 @@ Hktdc.Views = Hktdc.Views || {};
                 }
               },
               error: function(model, response) {
+                Hktdc.Dispatcher.trigger('closeConfirm');
                 utils.apiErrorHandling(response, {
                   // 401: doFetch,
                   unknownMessage: dialogMessage.workerRule.delete.error

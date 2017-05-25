@@ -227,6 +227,9 @@ Hktdc.Views = Hktdc.Views || {};
                     msg: dialogMessage.emailTemplate.save.error
                   })
                 });
+              })
+              .fin(function() {
+                Hktdc.Dispatcher.trigger('closeConfirm');
               });
           }
         });
@@ -291,7 +294,6 @@ Hktdc.Views = Hktdc.Views || {};
         onConfirm: function() {
           self.doDeleteTemplate()
             .then(function(response) {
-              Hktdc.Dispatcher.trigger('closeConfirm');
               if (String(response.Success) === '1') {
                 Hktdc.Dispatcher.trigger('openAlert', {
                   title: dialogTitle.information,
@@ -317,6 +319,9 @@ Hktdc.Views = Hktdc.Views || {};
                   msg: dialogMessage.emailTemplate.delete.error
                 })
               });
+            })
+            .fin(function() {
+              Hktdc.Dispatcher.trigger('closeConfirm');
             });
         }
       });

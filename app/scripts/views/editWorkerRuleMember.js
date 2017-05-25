@@ -1234,6 +1234,9 @@ Hktdc.Views = Hktdc.Views || {};
                     msg: dialogMessage.workerRuleMember.save.error
                   })
                 });
+              })
+              .fin(function() {
+                Hktdc.Dispatcher.trigger('closeConfirm');
               });
           }
         });
@@ -1357,6 +1360,7 @@ Hktdc.Views = Hktdc.Views || {};
                 Backbone.history.navigate('worker-rule/' + self.model.toJSON().WorkerRuleId, {trigger: true});
               },
               error: function(model, response) {
+                Hktdc.Dispatcher.trigger('closeConfirm');
                 utils.apiErrorHandling(response, {
                   // 401: doFetch,
                   unknownMessage: dialogMessage.workerRuleMember.delete.error

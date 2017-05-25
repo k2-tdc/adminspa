@@ -283,6 +283,9 @@ Hktdc.Views = Hktdc.Views || {};
                     msg: dialogMessage.userRoleMember.save.fail
                   })
                 });
+              })
+              .fin(function() {
+                Hktdc.Dispatcher.trigger('closeConfirm');
               });
           }
         });

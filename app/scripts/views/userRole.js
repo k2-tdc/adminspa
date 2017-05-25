@@ -266,6 +266,9 @@ Hktdc.Views = Hktdc.Views || {};
                     msg: dialogMessage.userRole.save.error
                   })
                 });
+              })
+              .fin(function() {
+                Hktdc.Dispatcher.trigger('closeConfirm');
               });
           }
         });
@@ -372,6 +375,7 @@ Hktdc.Views = Hktdc.Views || {};
                 Backbone.history.navigate('userrole', {trigger: true});
               },
               error: function(model, response) {
+                Hktdc.Dispatcher.trigger('closeConfirm');
                 utils.apiErrorHandling(response, {
                   // 401: doFetch,
                   unknownMessage: dialogMessage.userRole.delete.error

@@ -123,6 +123,7 @@ Hktdc.Views = Hktdc.Views || {};
                 Backbone.history.navigate('userrole/' + self.model.toJSON().UserRoleGUID, {trigger: true});
               },
               error: function(model, response) {
+                Hktdc.Dispatcher.trigger('closeConfirm');
                 utils.apiErrorHandling(response, {
                   // 401: doFetch,
                   unknownMessage: dialogMessage.userRoleMember.delete.error
@@ -159,6 +160,9 @@ Hktdc.Views = Hktdc.Views || {};
                     msg: dialogMessage.userRoleMember.save.fail
                   })
                 });
+              })
+              .fin(function() {
+                Hktdc.Dispatcher.trigger('closeConfirm');
               });
           }
         });

@@ -533,6 +533,9 @@ Hktdc.Views = Hktdc.Views || {};
                     msg: dialogMessage.delegation.save.error
                   })
                 });
+              })
+              .fin(function() {
+                Hktdc.Dispatcher.trigger('closeConfirm');
               });
           }
         });
@@ -673,7 +676,7 @@ Hktdc.Views = Hktdc.Views || {};
                 title: dialogTitle.information,
                 message: dialogMessage.delegation.delete.success
               });
-              Hktdc.Dispatcher.trigger('closeConfirm');
+              // Hktdc.Dispatcher.trigger('closeConfirm');
               window.history.back();
             })
             .catch(function(err) {
@@ -685,6 +688,9 @@ Hktdc.Views = Hktdc.Views || {};
                   msg: dialogMessage.delegation.delete.error
                 })
               });
+            })
+            .fin(function() {
+              Hktdc.Dispatcher.trigger('closeConfirm');
             });
         }
       });

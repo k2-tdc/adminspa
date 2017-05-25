@@ -389,7 +389,7 @@ Hktdc.Views = Hktdc.Views || {};
                 message: dialogMessage.rolePermission.delete.success
               });
 
-              Hktdc.Dispatcher.trigger('closeConfirm');
+              // Hktdc.Dispatcher.trigger('closeConfirm');
               // Backbone.history.navigate('permission', {trigger: true});
               window.history.back();
             })
@@ -401,6 +401,9 @@ Hktdc.Views = Hktdc.Views || {};
                   msg: dialogMessage.rolePermission.delete.error
                 })
               });
+            })
+            .fin(function() {
+              Hktdc.Dispatcher.trigger('closeConfirm');
             });
         }
       });
@@ -450,6 +453,9 @@ Hktdc.Views = Hktdc.Views || {};
                     msg: dialogMessage.rolePermission.save.error
                   })
                 });
+              })
+              .fin(function() {
+                Hktdc.Dispatcher.trigger('closeConfirm');
               });
           }
         });

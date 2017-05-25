@@ -294,6 +294,9 @@ Hktdc.Views = Hktdc.Views || {};
                     msg: err.error || dialogMessage.emailProfile.save.error
                   })
                 });
+              })
+              .fin(function() {
+                Hktdc.Dispatcher.trigger('closeConfirm');
               });
           }
         });
@@ -381,7 +384,6 @@ Hktdc.Views = Hktdc.Views || {};
                 title: dialogTitle.information,
                 message: dialogMessage.emailProfile.delete.success
               });
-              Hktdc.Dispatcher.trigger('closeConfirm');
               Backbone.history.navigate('emailprofile', {
                 trigger: true
               });
@@ -394,6 +396,9 @@ Hktdc.Views = Hktdc.Views || {};
                   msg: dialogMessage.emailProfile.delete.error
                 })
               });
+            })
+            .fin(function() {
+              Hktdc.Dispatcher.trigger('closeConfirm');
             });
         }
       });
