@@ -166,7 +166,7 @@ Hktdc.Views = Hktdc.Views || {};
       var allMenu = allMainMenu.concat(allSubMenu);
       var menuObj = _.find(allMenu, function(menu) {
         if (path === '') {
-          return menu.RouteName.toLowerCase() === 'emailprofile';
+          return menu.RouteName.toLowerCase() === 'delegation';
         }
         return menu.RouteName.toLowerCase() === path;
       });
