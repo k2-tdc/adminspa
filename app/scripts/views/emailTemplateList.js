@@ -279,13 +279,13 @@ Hktdc.Views = Hktdc.Views || {};
 
     deleteTemplate: function(input) {
       var deferred = Q.defer();
-      var data = (_.isArray(input)) ?
-        _.map(input, function(tId) {
+      var data = (_.isArray(input))
+        ? _.map(input, function(tId) {
           return {
             TemplateId: tId
           };
-        }) :
-        [{
+        })
+        : [{
           TemplateId: input
         }];
       var DeleteTemplateModel = Backbone.Model.extend({

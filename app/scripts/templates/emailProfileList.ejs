@@ -23,18 +23,23 @@
       <form class="form-horizontal">
         <% if (showSearch) { %>
           <div class="form-group row">
-            <div class="col-sm-2">
+            <div class="col-md-2">
               <div class="form-label text-right">Profile</div>
             </div>
             <div class="col-md-6 profileUserContainer">
               <!-- status Select list here -->
             </div>
+            <div class="col-md-2">
+              <% if (showSearch) { %>
+                <input type="button" class="btn btn-primary searchBtn" value="Search" id="btnSearchEmailProfile">
+              <% } %>
+            </div>
           </div>
         <% } %>
 
         <div class="form-group">
-          <label for="status" class="col-sm-2 control-label"></label>
-          <div class="col-sm-6 user-container">
+          <label for="status" class="col-md-2 control-label"></label>
+          <div class="col-md-6 user-container">
 
           </div>
         </div>
@@ -43,9 +48,6 @@
         <div class="form-group buttons-container">
           <div class="text-center available-buttons">
             <input type="button" class="btn btn-primary createBtn" value="New" id="btnCreateEmailProfile">
-            <% if (showSearch) { %>
-              <input type="button" class="btn btn-primary searchBtn" value="Search" id="btnSearchEmailProfile">
-            <% } %>
           </div>
         </div>
 
