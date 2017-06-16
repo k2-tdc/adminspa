@@ -91,7 +91,7 @@ Hktdc.Models = Hktdc.Models || {};
       } else {
         return !(
           !this.isInvalid.UserID() &&
-          !this.isInvalid.TaskID() &&
+          //!this.isInvalid.TaskID() &&
           !this.isInvalid.Dept() &&
           !this.isInvalid.DelegateUserID() &&
           !this.isInvalid.StartDate() &&
