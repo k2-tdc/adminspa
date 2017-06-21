@@ -34,6 +34,13 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       self.$el.html(self.template(self.model.toJSON()));
       var loadResource = function() {
+			Hktdc.Dispatcher.trigger('getMenu', {
+				name: 'Process Worker',
+				onSuccess: function(menu) {
+				  self.model.set({
+					menuId: menu.MenuId
+				  });
+				}});
         return (self.model.toJSON().saveType === 'POST')
           ? Q.all([
             self.loadUsers(),
@@ -80,7 +87,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     loadProcess: function() {
       var deferred = Q.defer();
-      var processCollection = new Hktdc.Collections.Process();
+      //var processCollection = new Hktdc.Collections.Process();
+	  var processCollection = new Hktdc.Collections.WorkerRuleProcess();
+      processCollection.url = processCollection.url(this.model.toJSON().menuId);
       var doFetch = function() {
         processCollection.fetch({
           beforeSend: utils.setAuthHeader,
