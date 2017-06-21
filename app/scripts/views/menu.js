@@ -39,22 +39,35 @@ Hktdc.Views = Hktdc.Views || {};
         })
       };
       // console.log('logouturl: ', Hktdc.Config.logoutURL);
-      var UserMenu = {
-        Mlink: '#',
-        Name: rawMenu.User.UserName,
-        Route: '/#',
-        RouteName: rawMenu.User.UserID,
-        Scount: null,
-        onlyMobileAndTablet: true,
-        sumenu: [{
-          Mlink: '#logout',
-          onlyMobileAndTablet: true,
-          Name: 'Logout',
-          Route: '/#logout',
-          Scount: null,
-          RouteName: 'logout'
-        }]
-      };
+      var UserMenu = {};
+      if(Hktdc.Config.isAppWebView){
+          UserMenu = {
+            Mlink: '#',
+            Name: rawMenu.User.UserName,
+            Route: '/#',
+            RouteName: rawMenu.User.UserID,
+            Scount: null,
+            onlyMobileAndTablet: true
+          }
+      }
+      else{
+          UserMenu = {
+            Mlink: '#',
+            Name: rawMenu.User.UserName,
+            Route: '/#',
+            RouteName: rawMenu.User.UserID,
+            Scount: null,
+            onlyMobileAndTablet: true,
+            sumenu: [{
+              Mlink: '#logout',
+              onlyMobileAndTablet: true,
+              Name: 'Logout',
+              Route: '/#logout',
+              Scount: null,
+              RouteName: 'logout'
+            }]
+          }
+      }
       if (!_.find(menu, function(m) {
         return m.Name === rawMenu.User.UserName;
       })) {
