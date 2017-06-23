@@ -250,7 +250,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       self.model.toJSON().processCollection.unshift({
         ProcessID: 0,
-        ProcessDisplayName: '-- All Workflow --',
+        ProcessDisplayName: '-- All Workflow below--',
         ProcessName: 'All'
       });
       var processSelectView = new Hktdc.Views.ProcessSelect({
