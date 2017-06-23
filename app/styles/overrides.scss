@@ -341,6 +341,10 @@ div.dataTables_wrapper div.dataTables_processing{
 @import "workerrule";
 
 /* START -- app web view */
+body.app-web-view {
+  zoom: 90%;
+}
+
 #content{
   &.app-web-view{
 	font-size:12px;
