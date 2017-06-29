@@ -92,7 +92,7 @@ window.utils = {
   apiErrorHandling: function(response, handler) {
     // return format: { request_id: xxx, error: xxxxxxx, error_description: xxxxx }
     var errorObject;
-    var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
+    var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURIComponent(window.location.href);
 
     try {
       var responseObj = JSON.parse(response.responseText);
@@ -211,7 +211,7 @@ window.utils = {
     var accessToken = '';
     var refreshToken = Cookies.get('REFRESH-TOKEN');
 
-    var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
+    var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURIComponent(window.location.href);
     // var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.Hktdc.Config.SPAHomeUrl);
 
     /* if no refresh token */
