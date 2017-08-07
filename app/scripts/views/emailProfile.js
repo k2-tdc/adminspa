@@ -45,19 +45,30 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    render: function() {
+   
+   render: function() {
       var self = this;
-      // console.log(this.model.toJSON());
-      this.$el.html(this.template(this.model.toJSON()));
-      Q.all([
-        self.loadProcess(),
-        Q.fcall(function() {
-          if (self.model.toJSON().showProfile) {
-            return self.loadProfileUser();
-          }
-          return [];
-        })
-      ])
+      self.$el.html(self.template(self.model.toJSON()));
+      
+      var loadResource = function() {
+              Hktdc.Dispatcher.trigger('getMenu', {
+                name: 'Email Profile',
+                onSuccess: function(menu) {
+                  self.model.set({
+                  menuId: menu.MenuId
+                  });
+                }});
+                return  Q.all([
+                self.loadProcess(),
+                Q.fcall(function() {
+                  if (self.model.toJSON().showProfile) {
+                    return self.loadProfileUser();
+                  }
+                  return [];
+                })
+              ])
+            };
+        loadResource()
         .then(function(results) {
           var processCollection = results[0];
           var profileUserCollection = results[1];
@@ -71,22 +82,27 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderProcessSelect();
           self.renderProfileUserSelect();
         })
-
+        
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
             title: dialogTitle.error,
-            message: sprintf(dialogMessage.common.error.system, {
+            message: sprintf(dialogMessage.common.error.script, {
               code: err.request_id || 'unknown',
-              msg: err.error || 'unknown'
+              msg: dialogMessage.component.general.error
             })
           });
         });
     },
-
+   
+   
+ 
     loadProcess: function() {
       var deferred = Q.defer();
-      var processCollection = new Hktdc.Collections.Process();
+      //var processCollection = new Hktdc.Collections.Process();
+      var processCollection = new Hktdc.Collections.WorkerRuleProcess();
+      processCollection.url = processCollection.url(this.model.toJSON().menuId);
+      //alert(processCollection.url);
       var doFetch = function() {
         processCollection.fetch({
           beforeSend: utils.setAuthHeader,

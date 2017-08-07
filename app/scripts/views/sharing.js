@@ -57,16 +57,26 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    render: function() {
+	render: function() {
       var self = this;
-      this.$el.html(this.template(this.model.toJSON()));
-
-      Q.all([
+      self.$el.html(self.template(self.model.toJSON()));
+      
+      var loadResource = function() {
+			Hktdc.Dispatcher.trigger('getMenu', {
+				name: 'Sharing',
+				onSuccess: function(menu) {
+				  self.model.set({
+					menuId: menu.MenuId
+				  });
+				}});
+        return Q.all([
         self.loadProcess(),
         self.loadFullUser(),
         self.loadDepartment(),
         self.loadPermission()
-      ])
+                   ]);
+      };
+      loadResource()
         .then(function(results) {
           var processCollection = results[0];
           var userCollection = results[1];
@@ -89,7 +99,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderPermissionSelect(actionCollection);
           self.renderDatePicker();
         })
-
+        
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
@@ -101,10 +111,15 @@ Hktdc.Views = Hktdc.Views || {};
           });
         });
     },
-
+	
+	
     loadProcess: function() {
       var deferred = Q.defer();
-      var processCollection = new Hktdc.Collections.Process();
+      
+	  //var processCollection = new Hktdc.Collections.Process();
+      var processCollection = new Hktdc.Collections.WorkerRuleProcess();
+      processCollection.url = processCollection.url(this.model.toJSON().menuId);
+	  //alert(processCollection.url);
       var doFetch = function() {
         processCollection.fetch({
           beforeSend: utils.setAuthHeader,

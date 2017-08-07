@@ -15,7 +15,8 @@ Hktdc.Models = Hktdc.Models || {};
       ProcessID: null,
       ProcessName: '',
       RoleType: '',
-      UserId: ''
+      UserId: '',
+	  menuId:''
     },
 
     validate: function(attrs, options) {},

@@ -15,6 +15,7 @@ Hktdc.Models = Hktdc.Models || {};
       processCollection: null,
       stepCollection: null,
       selectedTemplate: []
+	  
     },
 
     validate: function(attrs, options) {},

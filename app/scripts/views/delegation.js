@@ -63,16 +63,26 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    render: function() {
+	 render: function() {
       var self = this;
-      this.$el.html(this.template(this.model.toJSON()));
-
-      Q.all([
-        self.loadProcess(),
-        self.loadFullUser(),
-        self.loadDepartment(),
-        self.loadAction()
-      ])
+      self.$el.html(self.template(self.model.toJSON()));
+      
+      var loadResource = function() {
+			Hktdc.Dispatcher.trigger('getMenu', {
+				name: 'Delegation',
+				onSuccess: function(menu) {
+				  self.model.set({
+					menuId: menu.MenuId
+				  });
+				}});
+        return   Q.all([
+                        self.loadProcess(),
+                        self.loadFullUser(),
+                        self.loadDepartment(),
+                        self.loadAction()
+                      ]);
+      };
+      loadResource()
         .then(function(results) {
           var processCollection = results[0];
           var userCollection = results[1];
@@ -94,22 +104,24 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderActionSelect(actionCollection);
           self.renderDatePicker();
         })
-
         .catch(function(err) {
           console.error(err);
           Hktdc.Dispatcher.trigger('openAlert', {
             title: dialogTitle.error,
-            message: sprintf(dialogMessage.common.error.system, {
+            message: sprintf(dialogMessage.common.error.script, {
               code: err.request_id || 'unknown',
               msg: dialogMessage.component.general.error
             })
           });
         });
     },
-
+	
     loadProcess: function() {
       var deferred = Q.defer();
-      var processCollection = new Hktdc.Collections.Process();
+      //var processCollection = new Hktdc.Collections.Process();
+	var processCollection = new Hktdc.Collections.WorkerRuleProcess();
+      processCollection.url = processCollection.url(this.model.toJSON().menuId);
+      //alert(processCollection.url);
       var doFetch = function() {
         processCollection.fetch({
           beforeSend: utils.setAuthHeader,
